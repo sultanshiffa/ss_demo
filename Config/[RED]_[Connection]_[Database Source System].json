@@ -1,0 +1,8 @@
+
+    {
+        "Operation": "modify",
+        "Configuration": {
+            "name": "Database Source System",
+            "dtm-set-name": "Azure SQL Server from SQL Server"
+        }
+    }

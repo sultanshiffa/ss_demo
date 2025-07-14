@@ -1,0 +1,123 @@
+# ScriptVersion:003 MinVersion:10400 MaxVersion:* TargetType:Common ModelType:* ScriptType:PowerShell (64-bit)
+# --    (c) Wherescape Inc 2025. WhereScape Inc permits you to copy this Module solely for use with the RED software, and to modify this Module            -- #
+# --    for the purposes of using that modified Module with the RED software, but does not permit copying or modification for any other purpose.           -- #
+#==============================================================================
+# Script Name      :    wsl_scheduler_lookup.ps1
+# Description      :    External Scheduler lookup script for Azkaban Executor tags.
+# Author           :    WhereScape Inc
+#==============================================================================
+# Notes / History
+# 001 : Initial release.
+# 002 : Removed unnecessary mandatory WSL_META_* and other environment variables.
+# 003 : Cleanse API URL by removing trailing '/' before using it.
+#==============================================================================
+
+try {
+
+$ErrorActionPreference = "Stop"
+$startTime = $(Get-Date)
+
+function Get-MandatoryEnvironmentVariable($var) {
+    $value = [System.Environment]::GetEnvironmentVariable($var)
+    if ($null -eq $value) {
+        throw "Required environment variable '$var' is not set"
+    }
+    $value
+}
+
+$WSL_SCH_RESTAPI_URL = Get-MandatoryEnvironmentVariable 'WSL_SCH_RESTAPI_URL'
+$WSL_SCH_RESTAPI_USER = Get-MandatoryEnvironmentVariable 'WSL_SCH_RESTAPI_USER'
+$WSL_SCH_RESTAPI_PWD = Get-MandatoryEnvironmentVariable 'WSL_SCH_RESTAPI_PWD'
+
+$null = New-Module {
+    function Write-WslOutput {
+        Write-Output $args
+        Write-WslDetail $args
+    }
+
+    function Write-WslDetail {
+        $msg = $args | Out-String
+        [System.Console]::Error.Write($msg)
+    }
+
+    $global:wslDebugEnabled = $false
+
+    function Enable-WslDebug {
+        $global:wslDebugEnabled = $true
+    }
+
+    function Write-WslDebug {
+        if ($global:wslDebugEnabled) {
+            Write-WslDetail $args
+        }
+    }
+
+    function Time-Section($Name, $Expression) {
+        Write-WslDetail "$Name..."
+        $time = Measure-Command $Expression
+        Write-WslDetail "... $Name took $($time.TotalSeconds)s."
+    }
+}
+
+# Enable-WslDebug
+
+$azkabanUri = $WSL_SCH_RESTAPI_URL.TrimEnd('/')
+$azkabanUser = $WSL_SCH_RESTAPI_USER
+$azkabanPassword = $WSL_SCH_RESTAPI_PWD
+
+Time-Section "Logging in to Azkaban" {
+    $loginBody = @{
+        action = 'login'
+        username = $azkabanUser
+        password = $azkabanPassword
+    }
+    $loginResponse = Invoke-WebRequest -Uri $azkabanUri -UseBasicParsing -Method 'POST' -Body $loginBody
+    $loginResult = $loginResponse | ConvertFrom-Json
+    $script:sessionId = $loginResult.'session.id'
+    Write-WslDebug "session id = $sessionId"
+}
+
+$body = @{
+    'session.id' = $sessionId
+}
+Time-Section "Fetching executors" {
+    $createResponse = Invoke-WebRequest -Uri "$azkabanUri/executor?ajax=fetchExecutors" -UseBasicParsing -Method 'GET' -Body $body -MaximumRedirection 0
+    Write-WslDetail "fetchExecutors response: $createResponse"
+    $script:response = $createResponse | ConvertFrom-Json
+}
+
+$elapsedTime = New-TimeSpan -Start $startTime
+
+Write-Output 1
+Write-Output "Fetched $($response.executors.Count) executor(s) in $($elapsedTime.TotalSeconds)s"
+Write-Output "{"
+Write-Output "  ""executors"": ["
+for ($e=0; $e -lt $response.executors.Count; $e++) {
+    $executor = $response.executors[$e]
+    if (($e + 1) -lt $response.executors.Count) {
+        $execSeparator = ","
+    } else {
+        $execSeparator = ""
+    }
+    Write-Output "    {"
+    Write-Output "      ""tags"": ["
+    for ($t=0; $t -lt $executor.data.tags.Count; $t++) {
+        $executorTag = $executor.data.tags[$t]
+        if (($t + 1) -lt $executor.data.tags.Count) {
+            $tagSeparator = ","
+        } else {
+            $tagSeparator = ""
+        }
+        Write-Output "        ""$executorTag""$tagSeparator"
+    }
+    Write-Output "      ]"
+    Write-Output "    }$execSeparator"
+}
+Write-Output "  ]"
+Write-Output "}"
+
+} catch {
+    Write-Output -2
+    Write-Output "Exception halted load scheduler tags"
+    throw $_.Exception
+}

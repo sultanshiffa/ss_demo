@@ -1,0 +1,49 @@
+# ScriptVersion:005 MinVersion:8310 MaxVersion:* TargetType:* ModelType:* ScriptType:Python
+import json
+import requests
+import os
+import sys
+from requests.auth import HTTPBasicAuth
+sys.path.append(os.environ.get('WSL_WORKDIR',''))
+
+
+# Create a authentication object
+class UserAuth:
+    def __init__(self, restURL, userId, password, headers, requestType, payload):
+        # Create a empty session object
+        self.session = requests.Session()
+
+        # Import required UI Configuration Tokens
+        self.restURL = restURL
+        self.userId = userId
+        self.password = password
+        self.headers = headers
+        self.requestType = requestType
+        self.payload = payload
+
+    def customAuth(self):
+        # Write your own authentication code here
+        # Auth...
+        # ...
+        # ...
+        
+        # Save the session to self.session
+        self.session = "Default"
+
+
+    def entryMethod(self):
+        # NOTE: This is the entry point for the authentication process, you can use this method to call your own authentication methods. 
+        # This method is called by File Parser in the main script during authentication.
+
+        # NOTE: THIS METHOD SHOULD ALWAYS ACCEPT "0" ARGUMENTS AND RETURN A SESSION OBJECT
+
+        # Call the appropriate authentication method
+        self.customAuth()
+        # self.anyOtherAuth(arg1, arg2, arg3, arg*)
+        # self.anyOtherAuth2(arg1, arg*)
+
+
+        # Return the session object
+        return self.session, self.headers
+
+

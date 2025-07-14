@@ -1,0 +1,67 @@
+{# -- TemplateVersion:001 MinVersion:8510 MaxVersion:* TargetType:SqlServer ModelType:* TemplateType:DDL                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# --    © WhereScape Inc 2024. Wherescape Inc permits you to copy this Template solely for use with the RED software, and to modify this Template          -- #}
+{# --    for the purposes of using that modified Template with the RED software, but does not permit copying or modification for any other purpose.         -- #}
+{# --                                                                                                                                                       -- #}
+{# -- =============================================================================                                                                         -- #}
+{# --                                                                                                                                                       -- #}
+{# -- DBMS Name          : Azure SQL Server                                                                                                                 -- #}
+{# -- Template Name      : wsl_sqlserver_create_view                                                                                                            -- #}
+{# -- Template Version   : 8.5.1.0                                                                                                                          -- #}
+{# -- Description        : This template creates a Azure SQL DB database view                                                                               -- #}
+{# --                                                                                                                                                       -- #}
+{# -- =============================================================================                                                                         -- #}
+{# --                                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# -- Notes / History                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+
+CREATE VIEW [{{table.schema}}].[{{table.name}}] ({% br %}
+  {%- for column in table.columns %}
+  {%- if loop.first %}  {% endif -%}
+  {%- if not loop.first %} ,{% endif %} {{column.name}}{%- br -%}
+  {% endfor %}
+){% br %}
+{% if table.storage.optionalCreateClause != "" -%}
+WITH ({% br %}
+  {{table.storage.optionalCreateClause}}{% br %}
+){% br %}
+{%- endif -%}
+AS{% br %}
+SELECT{%- br %}
+{%- for column in table.columns %}
+  {%- set sSourceColumn = column.source %}
+  {%- if loop.last -%}
+    {{sSourceColumn }}{%- br %}
+  {%- else -%}
+    {{sSourceColumn }},{%- br %}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- set sSource = "" %}
+{%- set sSourceSchema = "" %}
+{%- set sSourceDatabase = "" %}
+{%- for column in table.columns %}
+{%-   if column.sourceTable is defined %}
+{%-     fetch column.sourceTable %}
+{%-     if column.sourceTable.name | trim != "" %}
+{%-       if sSource | trim == "" %}
+{%-         set sSource = column.sourceTable.name -%}
+{%-         set sSourceSchema = column.sourceTable.schema -%}
+{%-         set sSourceDatabase = column.sourceTable.database -%}
+{%-       endif %}
+{%-     endif %}
+{%-   endif %}
+{%- endfor -%}
+
+{%- fetch table.columns[0].sourceTable -%}
+{%- set sSource = table.columns[0].sourceTable.name -%}
+{%- if table.viewInfo.whereClause | trim != "" %}
+  {%- if (table.viewInfo.whereClause | trim).toUpperCase().indexOf("FROM") != 0 -%}
+    FROM [{{sSourceDatabase}}].[{{sSourceSchema}}].[{{sSource}}]{% br %}
+  {%- endif %}
+  {{- table.viewInfo.whereClause}}{% br %}
+{% else -%}
+  FROM [{{sSourceDatabase}}].[{{sSourceSchema}}].[{{sSource}}]{% br %}
+{%- endif %};{% br %}

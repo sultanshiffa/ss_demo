@@ -370,7 +370,7 @@
 						<CurrentValue>19</CurrentValue>
 					</Procedure>
 					<KPI_Fact_Table Type="UnsignedInt32" Name="KPI Fact Table">
-						<DefaultValue>3</DefaultValue>
+						<DefaultValue>7</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</KPI_Fact_Table>
 					<Host_Script Type="UnsignedInt32" Name="Host Script">
@@ -410,7 +410,7 @@
 						<CurrentValue>1</CurrentValue>
 					</Connection>
 					<Dimension_View Type="UnsignedInt32" Name="Dimension View">
-						<DefaultValue>4</DefaultValue>
+						<DefaultValue>2</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</Dimension_View>
 					<Export Type="UnsignedInt32" Name="Export">
@@ -418,11 +418,11 @@
 						<CurrentValue>15</CurrentValue>
 					</Export>
 					<Cube Type="UnsignedInt32" Name="Cube">
-						<DefaultValue>5</DefaultValue>
+						<DefaultValue>6</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</Cube>
 					<Cube_Virtual Type="UnsignedInt32" Name="Cube Virtual">
-						<DefaultValue>6</DefaultValue>
+						<DefaultValue>1</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</Cube_Virtual>
 					<View Type="UnsignedInt32" Name="View">
@@ -434,15 +434,15 @@
 						<CurrentValue>14</CurrentValue>
 					</Retro>
 					<Retro_Copy Type="UnsignedInt32" Name="Retro Copy">
-						<DefaultValue>7</DefaultValue>
+						<DefaultValue>4</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</Retro_Copy>
 					<OLAP_Cube Type="UnsignedInt32" Name="OLAP Cube">
-						<DefaultValue>1</DefaultValue>
+						<DefaultValue>3</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</OLAP_Cube>
 					<OLAP_Dimension Type="UnsignedInt32" Name="OLAP Dimension">
-						<DefaultValue>2</DefaultValue>
+						<DefaultValue>5</DefaultValue>
 						<CurrentValue>0</CurrentValue>
 					</OLAP_Dimension>
 					<Data_Store Type="UnsignedInt32" Name="Data Store">
@@ -3688,6 +3688,41 @@
 					</Custom2>
 				</Default_Update_Procedure_Options>
 			</Default_Update_Procedure_Options>
+			<Generated_Code_Statistics>
+				<Generated_Code_Statistics>
+					<Include_Statistics_in_Generated_Stage_Update_Procedure Type="WideString" Name="Include Statistics in Generated Stage Update Procedure">
+						<DefaultValue></DefaultValue>
+					</Include_Statistics_in_Generated_Stage_Update_Procedure>
+					<Stage_Table_Inserted_Rows_Threshold_for_Statistics Type="UnsignedInt32" Name="Stage Table Inserted Rows Threshold for Statistics">
+						<DefaultValue>1000</DefaultValue>
+						<CurrentValue>1000</CurrentValue>
+					</Stage_Table_Inserted_Rows_Threshold_for_Statistics>
+					<Include_Statistics_in_Generated_Dimension_Update_Procedure Type="WideString" Name="Include Statistics in Generated Dimension Update Procedure">
+						<DefaultValue></DefaultValue>
+					</Include_Statistics_in_Generated_Dimension_Update_Procedure>
+					<Dimension_Table_Inserted_Rows_Threshold_for_Statistics Type="UnsignedInt32" Name="Dimension Table Inserted Rows Threshold for Statistics">
+						<DefaultValue>1000</DefaultValue>
+						<CurrentValue>1000</CurrentValue>
+					</Dimension_Table_Inserted_Rows_Threshold_for_Statistics>
+					<Include_Statistics_in_Generated_Fact_Update_Procedure Type="WideString" Name="Include Statistics in Generated Fact Update Procedure">
+						<DefaultValue></DefaultValue>
+					</Include_Statistics_in_Generated_Fact_Update_Procedure>
+					<Fact_Table_Inserted_Rows_Threshold_for_Statistics Type="UnsignedInt32" Name="Fact Table Inserted Rows Threshold for Statistics">
+						<DefaultValue>1000</DefaultValue>
+						<CurrentValue>1000</CurrentValue>
+					</Fact_Table_Inserted_Rows_Threshold_for_Statistics>
+					<Include_Statistics_during_Partition_Exchange Type="WideString" Name="Include Statistics during Partition Exchange">
+						<DefaultValue></DefaultValue>
+					</Include_Statistics_during_Partition_Exchange>
+					<Include_Statistics_in_Generated_Fact_Partition_Update_Procedure Type="WideString" Name="Include Statistics in Generated Fact Partition Update Procedure">
+						<DefaultValue></DefaultValue>
+					</Include_Statistics_in_Generated_Fact_Partition_Update_Procedure>
+					<Fact_Partition_Table_Inserted_Rows_Threshold_for_Statistics Type="UnsignedInt32" Name="Fact Partition Table Inserted Rows Threshold for Statistics">
+						<DefaultValue>1000</DefaultValue>
+						<CurrentValue>1000</CurrentValue>
+					</Fact_Partition_Table_Inserted_Rows_Threshold_for_Statistics>
+				</Generated_Code_Statistics>
+			</Generated_Code_Statistics>
 		</Code_Generation>
 		<Storage>
 			<Target_Location Name="Target Location">
@@ -3844,63 +3879,63 @@
 			</Target_Location>
 			<Table_Storage Name="Table Storage">
 				<Procedure_Storage></Procedure_Storage>
-				<KPI_Fact_Table_Storage>
-					<KPI_Fact_Table_Storage Type="WideString" Name="KPI Fact Table Storage">
+				<KPI_Fact_Table_Filegroup>
+					<KPI_Fact_Table_Filegroup Type="WideString" Name="KPI Fact Table Filegroup">
 						<DefaultValue></DefaultValue>
-					</KPI_Fact_Table_Storage>
-					<KPI_Fact_Table_Index_Storage Type="WideString" Name="KPI Fact Table Index Storage">
+					</KPI_Fact_Table_Filegroup>
+					<KPI_Fact_Table_Index_Filegroup Type="WideString" Name="KPI Fact Table Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</KPI_Fact_Table_Index_Storage>
-				</KPI_Fact_Table_Storage>
+					</KPI_Fact_Table_Index_Filegroup>
+				</KPI_Fact_Table_Filegroup>
 				<Host_Script_Storage></Host_Script_Storage>
 				<Template_Storage></Template_Storage>
-				<Fact_Table_Storage>
-					<Fact_Table_Storage Type="WideString" Name="Fact Table Storage">
+				<Fact_Table_Filegroup>
+					<Fact_Table_Filegroup Type="WideString" Name="Fact Table Filegroup">
 						<DefaultValue></DefaultValue>
-					</Fact_Table_Storage>
-					<Fact_Table_Index_Storage Type="WideString" Name="Fact Table Index Storage">
+					</Fact_Table_Filegroup>
+					<Fact_Table_Index_Filegroup Type="WideString" Name="Fact Table Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Fact_Table_Index_Storage>
-				</Fact_Table_Storage>
-				<Dimension_Storage>
-					<Dimension_Storage Type="WideString" Name="Dimension Storage">
+					</Fact_Table_Index_Filegroup>
+				</Fact_Table_Filegroup>
+				<Dimension_Filegroup>
+					<Dimension_Filegroup Type="WideString" Name="Dimension Filegroup">
 						<DefaultValue></DefaultValue>
-					</Dimension_Storage>
-					<Dimension_Index_Storage Type="WideString" Name="Dimension Index Storage">
+					</Dimension_Filegroup>
+					<Dimension_Index_Filegroup Type="WideString" Name="Dimension Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Dimension_Index_Storage>
-				</Dimension_Storage>
-				<Stage_Table_Storage>
-					<Stage_Table_Storage Type="WideString" Name="Stage Table Storage">
+					</Dimension_Index_Filegroup>
+				</Dimension_Filegroup>
+				<Stage_Table_Filegroup>
+					<Stage_Table_Filegroup Type="WideString" Name="Stage Table Filegroup">
 						<DefaultValue></DefaultValue>
-					</Stage_Table_Storage>
-					<Stage_Table_Index_Storage Type="WideString" Name="Stage Table Index Storage">
+					</Stage_Table_Filegroup>
+					<Stage_Table_Index_Filegroup Type="WideString" Name="Stage Table Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Stage_Table_Index_Storage>
-				</Stage_Table_Storage>
-				<Load_Table_Storage>
-					<Load_Table_Storage Type="WideString" Name="Load Table Storage">
+					</Stage_Table_Index_Filegroup>
+				</Stage_Table_Filegroup>
+				<Load_Table_Filegroup>
+					<Load_Table_Filegroup Type="WideString" Name="Load Table Filegroup">
 						<DefaultValue></DefaultValue>
-					</Load_Table_Storage>
-					<Load_Table_Index_Storage Type="WideString" Name="Load Table Index Storage">
+					</Load_Table_Filegroup>
+					<Load_Table_Index_Filegroup Type="WideString" Name="Load Table Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Load_Table_Index_Storage>
-				</Load_Table_Storage>
-				<Aggregate_Storage>
-					<Aggregate_Storage Type="WideString" Name="Aggregate Storage">
+					</Load_Table_Index_Filegroup>
+				</Load_Table_Filegroup>
+				<Aggregate_Filegroup>
+					<Aggregate_Filegroup Type="WideString" Name="Aggregate Filegroup">
 						<DefaultValue></DefaultValue>
-					</Aggregate_Storage>
-					<Aggregate_Index_Storage Type="WideString" Name="Aggregate Index Storage">
+					</Aggregate_Filegroup>
+					<Aggregate_Index_Filegroup Type="WideString" Name="Aggregate Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Aggregate_Index_Storage>
-				</Aggregate_Storage>
+					</Aggregate_Index_Filegroup>
+				</Aggregate_Filegroup>
 				<Index_Storage></Index_Storage>
 				<Connection_Storage></Connection_Storage>
 				<Dimension_View_Storage></Dimension_View_Storage>
 				<Export_Storage></Export_Storage>
 				<Cube_Storage></Cube_Storage>
 				<Cube_Virtual_Storage></Cube_Virtual_Storage>
-				<View_Storage></View_Storage>
+				<View_Filegroup></View_Filegroup>
 				<Retro_Storage></Retro_Storage>
 				<Retro_Copy_Storage>
 					<Retro_Copy_Storage Type="WideString" Name="Retro Copy Storage">
@@ -3912,62 +3947,62 @@
 				</Retro_Copy_Storage>
 				<OLAP_Cube_Storage></OLAP_Cube_Storage>
 				<OLAP_Dimension_Storage></OLAP_Dimension_Storage>
-				<Data_Store_Storage>
-					<Data_Store_Storage Type="WideString" Name="Data Store Storage">
+				<Data_Store_Filegroup>
+					<Data_Store_Filegroup Type="WideString" Name="Data Store Filegroup">
 						<DefaultValue></DefaultValue>
-					</Data_Store_Storage>
-					<Data_Store_Index_Storage Type="WideString" Name="Data Store Index Storage">
+					</Data_Store_Filegroup>
+					<Data_Store_Index_Filegroup Type="WideString" Name="Data Store Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Data_Store_Index_Storage>
-				</Data_Store_Storage>
-				<EDW_3NF_Storage>
-					<EDW_3NF_Storage Type="WideString" Name="EDW 3NF Storage">
+					</Data_Store_Index_Filegroup>
+				</Data_Store_Filegroup>
+				<EDW_3NF_Filegroup>
+					<EDW_3NF_Filegroup Type="WideString" Name="EDW 3NF Filegroup">
 						<DefaultValue></DefaultValue>
-					</EDW_3NF_Storage>
-					<EDW_3NF_Index_Storage Type="WideString" Name="EDW 3NF Index Storage">
+					</EDW_3NF_Filegroup>
+					<EDW_3NF_Index_Filegroup Type="WideString" Name="EDW 3NF Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</EDW_3NF_Index_Storage>
-				</EDW_3NF_Storage>
-				<Hub_Storage>
-					<Hub_Storage Type="WideString" Name="Hub Storage">
+					</EDW_3NF_Index_Filegroup>
+				</EDW_3NF_Filegroup>
+				<Hub_Filegroup>
+					<Hub_Filegroup Type="WideString" Name="Hub Filegroup">
 						<DefaultValue></DefaultValue>
-					</Hub_Storage>
-					<Hub_Index_Storage Type="WideString" Name="Hub Index Storage">
+					</Hub_Filegroup>
+					<Hub_Index_Filegroup Type="WideString" Name="Hub Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Hub_Index_Storage>
-				</Hub_Storage>
-				<Satellite_Storage>
-					<Satellite_Storage Type="WideString" Name="Satellite Storage">
+					</Hub_Index_Filegroup>
+				</Hub_Filegroup>
+				<Satellite_Filegroup>
+					<Satellite_Filegroup Type="WideString" Name="Satellite Filegroup">
 						<DefaultValue></DefaultValue>
-					</Satellite_Storage>
-					<Satellite_Index_Storage Type="WideString" Name="Satellite Index Storage">
+					</Satellite_Filegroup>
+					<Satellite_Index_Filegroup Type="WideString" Name="Satellite Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Satellite_Index_Storage>
-				</Satellite_Storage>
-				<Link_Storage>
-					<Link_Storage Type="WideString" Name="Link Storage">
+					</Satellite_Index_Filegroup>
+				</Satellite_Filegroup>
+				<Link_Filegroup>
+					<Link_Filegroup Type="WideString" Name="Link Filegroup">
 						<DefaultValue></DefaultValue>
-					</Link_Storage>
-					<Link_Index_Storage Type="WideString" Name="Link Index Storage">
+					</Link_Filegroup>
+					<Link_Index_Filegroup Type="WideString" Name="Link Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Link_Index_Storage>
-				</Link_Storage>
-				<Custom1_Storage>
-					<Custom1_Storage Type="WideString" Name="Custom1 Storage">
+					</Link_Index_Filegroup>
+				</Link_Filegroup>
+				<Custom1_Filegroup>
+					<Custom1_Filegroup Type="WideString" Name="Custom1 Filegroup">
 						<DefaultValue></DefaultValue>
-					</Custom1_Storage>
-					<Custom1_Index_Storage Type="WideString" Name="Custom1 Index Storage">
+					</Custom1_Filegroup>
+					<Custom1_Index_Filegroup Type="WideString" Name="Custom1 Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Custom1_Index_Storage>
-				</Custom1_Storage>
-				<Custom2_Storage>
-					<Custom2_Storage Type="WideString" Name="Custom2 Storage">
+					</Custom1_Index_Filegroup>
+				</Custom1_Filegroup>
+				<Custom2_Filegroup>
+					<Custom2_Filegroup Type="WideString" Name="Custom2 Filegroup">
 						<DefaultValue></DefaultValue>
-					</Custom2_Storage>
-					<Custom2_Index_Storage Type="WideString" Name="Custom2 Index Storage">
+					</Custom2_Filegroup>
+					<Custom2_Index_Filegroup Type="WideString" Name="Custom2 Index Filegroup">
 						<DefaultValue></DefaultValue>
-					</Custom2_Index_Storage>
-				</Custom2_Storage>
+					</Custom2_Index_Filegroup>
+				</Custom2_Filegroup>
 				<UIConfig_Storage></UIConfig_Storage>
 			</Table_Storage>
 			<Default_Optional_CREATE_Clause>
@@ -4019,6 +4054,104 @@
 					</Default_Optional_CREATE_Clause_for_Custom2>
 				</Optional_CREATE_Clause>
 			</Default_Optional_CREATE_Clause>
+			<Index_Type>
+				<Foreign_Key_Index_Type Name="Foreign Key Index Type">
+					<SQL_Foreign_Key_Index_Type_for_KPI_Fact_Table Type="WideString" Name="SQL Foreign Key Index Type for KPI Fact Table">
+						<DefaultValue>Nonclustered Index</DefaultValue>
+						<CurrentValue>Nonclustered Index</CurrentValue>
+					</SQL_Foreign_Key_Index_Type_for_KPI_Fact_Table>
+					<ORACLE_Foreign_Key_Index_Type_for_KPI_Fact_Table Type="WideString" Name="ORACLE Foreign Key Index Type for KPI Fact Table">
+						<DefaultValue>BITMAP</DefaultValue>
+						<CurrentValue>BITMAP</CurrentValue>
+					</ORACLE_Foreign_Key_Index_Type_for_KPI_Fact_Table>
+					<SQL_Foreign_Key_Index_Type_for_Fact_Table Type="WideString" Name="SQL Foreign Key Index Type for Fact Table">
+						<DefaultValue>Nonclustered Index</DefaultValue>
+						<CurrentValue>Nonclustered Index</CurrentValue>
+					</SQL_Foreign_Key_Index_Type_for_Fact_Table>
+					<ORACLE_Foreign_Key_Index_Type_for_Fact_Table Type="WideString" Name="ORACLE Foreign Key Index Type for Fact Table">
+						<DefaultValue>BITMAP</DefaultValue>
+						<CurrentValue>BITMAP</CurrentValue>
+					</ORACLE_Foreign_Key_Index_Type_for_Fact_Table>
+					<SQL_Foreign_Key_Index_Type_for_Dimension Type="WideString" Name="SQL Foreign Key Index Type for Dimension">
+						<DefaultValue>Nonclustered Index</DefaultValue>
+						<CurrentValue>Nonclustered Index</CurrentValue>
+					</SQL_Foreign_Key_Index_Type_for_Dimension>
+					<ORACLE_Foreign_Key_Index_Type_for_Dimension Type="WideString" Name="ORACLE Foreign Key Index Type for Dimension">
+						<DefaultValue>BITMAP</DefaultValue>
+						<CurrentValue>BITMAP</CurrentValue>
+					</ORACLE_Foreign_Key_Index_Type_for_Dimension>
+					<SQL_Foreign_Key_Index_Type_for_Aggregate Type="WideString" Name="SQL Foreign Key Index Type for Aggregate">
+						<DefaultValue>Nonclustered Index</DefaultValue>
+						<CurrentValue>Nonclustered Index</CurrentValue>
+					</SQL_Foreign_Key_Index_Type_for_Aggregate>
+					<ORACLE_Foreign_Key_Index_Type_for_Aggregate Type="WideString" Name="ORACLE Foreign Key Index Type for Aggregate">
+						<DefaultValue>BITMAP</DefaultValue>
+						<CurrentValue>BITMAP</CurrentValue>
+					</ORACLE_Foreign_Key_Index_Type_for_Aggregate>
+				</Foreign_Key_Index_Type>
+				<Primary_Index_Type Name="Primary Index Type">
+					<Default_Primary_Index_Type_for_KPI_Fact_Table Type="Enumeration" Name="Default Primary Index Type for KPI Fact Table">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_KPI_Fact_Table>
+					<Default_Primary_Index_Type_for_Fact_Table Type="Enumeration" Name="Default Primary Index Type for Fact Table">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Fact_Table>
+					<Default_Primary_Index_Type_for_Dimension Type="Enumeration" Name="Default Primary Index Type for Dimension">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Dimension>
+					<Default_Primary_Index_Type_for_Stage_Table Type="Enumeration" Name="Default Primary Index Type for Stage Table">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Stage_Table>
+					<Default_Primary_Index_Type_for_Load_Table Type="Enumeration" Name="Default Primary Index Type for Load Table">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Load_Table>
+					<Default_Primary_Index_Type_for_Aggregate Type="Enumeration" Name="Default Primary Index Type for Aggregate">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Aggregate>
+					<Default_Primary_Index_Type_for_Retro Type="Enumeration" Name="Default Primary Index Type for Retro">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Retro>
+					<Default_Primary_Index_Type_for_Retro_Copy Type="Enumeration" Name="Default Primary Index Type for Retro Copy">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Retro_Copy>
+					<Default_Primary_Index_Type_for_Data_Store Type="Enumeration" Name="Default Primary Index Type for Data Store">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Data_Store>
+					<Default_Primary_Index_Type_for_EDW_3NF Type="Enumeration" Name="Default Primary Index Type for EDW 3NF">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_EDW_3NF>
+					<Default_Primary_Index_Type_for_Hub Type="Enumeration" Name="Default Primary Index Type for Hub">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Hub>
+					<Default_Primary_Index_Type_for_Satellite Type="Enumeration" Name="Default Primary Index Type for Satellite">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Satellite>
+					<Default_Primary_Index_Type_for_Link Type="Enumeration" Name="Default Primary Index Type for Link">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Link>
+					<Default_Primary_Index_Type_for_Custom1 Type="Enumeration" Name="Default Primary Index Type for Custom1">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Custom1>
+					<Default_Primary_Index_Type_for_Custom2 Type="Enumeration" Name="Default Primary Index Type for Custom2">
+						<DefaultValue>Non-Unique Primary Index (NUPI)</DefaultValue>
+						<CurrentValue>Non-Unique Primary Index (NUPI)</CurrentValue>
+					</Default_Primary_Index_Type_for_Custom2>
+				</Primary_Index_Type>
+			</Index_Type>
 		</Storage>
 		<Metadata_Versioning>
 			<Metadata_Versioning>
@@ -25074,6 +25207,340 @@
 		</Data_Vault>
 		<Available_Load_Types>
 			<Available_Load_Types Name="Available Load Types">
+				<SQL_Server_Target Name="SQL Server Target">
+					<Database_Connection Name="Database Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Database_link_load Type="Boolean" Name="Database link load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Database_link_load>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</Database_Connection>
+					<ODBC_Connection Name="ODBC Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<ODBC_load Type="Boolean" Name="ODBC load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</ODBC_load>
+						<Native_ODBC Type="Boolean" Name="Native ODBC">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Native_ODBC>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</ODBC_Connection>
+					<UNIXLinux_Connection Name="UNIX/Linux Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</UNIXLinux_Connection>
+					<Windows_Connection Name="Windows Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<File_load Type="Boolean" Name="File load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</File_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+						<XML_file_load Type="Boolean" Name="XML file load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</XML_file_load>
+					</Windows_Connection>
+					<Microsoft_Analysis_Server_2005_Connection Name="Microsoft Analysis Server 2005+ Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+					</Microsoft_Analysis_Server_2005_Connection>
+					<Hadoop_Connection Name="Hadoop® Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+						<Native_SSH Type="Boolean" Name="Native SSH">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Native_SSH>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+					</Hadoop_Connection>
+				</SQL_Server_Target>
+				<Teradata_Target Name="Teradata Target">
+					<Database_Connection Name="Database Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Database_link_load Type="Boolean" Name="Database link load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Database_link_load>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</Database_Connection>
+					<ODBC_Connection Name="ODBC Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<ODBC_load Type="Boolean" Name="ODBC load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</ODBC_load>
+						<Native_ODBC Type="Boolean" Name="Native ODBC">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Native_ODBC>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<TPT_load Type="Boolean" Name="TPT load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</TPT_load>
+						<TPT_Script_load Type="Boolean" Name="TPT Script load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</TPT_Script_load>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</ODBC_Connection>
+					<UNIXLinux_Connection Name="UNIX/Linux Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<File_load Type="Boolean" Name="File load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</File_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</UNIXLinux_Connection>
+					<Windows_Connection Name="Windows Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<File_load Type="Boolean" Name="File load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</File_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+						<XML_file_load Type="Boolean" Name="XML file load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</XML_file_load>
+					</Windows_Connection>
+					<Microsoft_Analysis_Server_2005_Connection Name="Microsoft Analysis Server 2005+ Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+					</Microsoft_Analysis_Server_2005_Connection>
+					<Hadoop_Connection Name="Hadoop® Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+						<Native_SSH Type="Boolean" Name="Native SSH">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Native_SSH>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+					</Hadoop_Connection>
+				</Teradata_Target>
+				<Oracle_Target Name="Oracle Target">
+					<Database_Connection Name="Database Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Database_link_load Type="Boolean" Name="Database link load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Database_link_load>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</Database_Connection>
+					<ODBC_Connection Name="ODBC Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<ODBC_load Type="Boolean" Name="ODBC load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</ODBC_load>
+						<Native_ODBC Type="Boolean" Name="Native ODBC">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Native_ODBC>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</ODBC_Connection>
+					<UNIXLinux_Connection Name="UNIX/Linux Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<File_load Type="Boolean" Name="File load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</File_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+					</UNIXLinux_Connection>
+					<Windows_Connection Name="Windows Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Integration_Services_load Type="Boolean" Name="Integration Services load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Integration_Services_load>
+						<File_load Type="Boolean" Name="File load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</File_load>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+						<XML_file_load Type="Boolean" Name="XML file load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</XML_file_load>
+					</Windows_Connection>
+					<Microsoft_Analysis_Server_2005_Connection Name="Microsoft Analysis Server 2005+ Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+					</Microsoft_Analysis_Server_2005_Connection>
+					<Hadoop_Connection Name="Hadoop® Connection">
+						<Externally_loaded Type="Boolean" Name="Externally loaded">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Externally_loaded>
+						<Script_based_load Type="Boolean" Name="Script based load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Script_based_load>
+						<Native_SSH Type="Boolean" Name="Native SSH">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Native_SSH>
+						<Apache_Sqoop_load Type="Boolean" Name="Apache Sqoop load">
+							<DefaultValue>true</DefaultValue>
+							<CurrentValue>true</CurrentValue>
+						</Apache_Sqoop_load>
+					</Hadoop_Connection>
+				</Oracle_Target>
 				<Hive_Target Name="Hive Target">
 					<Database_Connection Name="Database Connection">
 						<Externally_loaded Type="Boolean" Name="Externally loaded">

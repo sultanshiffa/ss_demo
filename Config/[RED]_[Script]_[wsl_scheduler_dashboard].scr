@@ -1,0 +1,100 @@
+# ScriptVersion:002 MinVersion:10200 MaxVersion:* TargetType:Common ModelType:* ScriptType:PowerShell (64-bit)
+# --    (c) Wherescape Inc 2024. WhereScape Inc permits you to copy this Module solely for use with the RED software, and to modify this Module            -- #
+# --    for the purposes of using that modified Module with the RED software, but does not permit copying or modification for any other purpose.           -- #
+#==============================================================================
+# Script Name      :    wsl_scheduler_dashboard.ps1
+# Description      :    External Scheduler Azkaban Dashboard launcher script.
+# Author           :    WhereScape Inc
+#==============================================================================
+# Notes / History
+# 001 : Initial release.
+# 002 : Removed unnecessary mandatory WSL_META_* and other environment variables. 
+#==============================================================================
+
+try {
+
+$ErrorActionPreference = "Stop"
+$startTime = $(Get-Date)
+
+function Get-MandatoryEnvironmentVariable($var) {
+    $value = [System.Environment]::GetEnvironmentVariable($var)
+    if ($null -eq $value) {
+        throw "Required environment variable '$var' is not set"
+    }
+    $value
+}
+
+$WSL_SCH_RESTAPI_URL = Get-MandatoryEnvironmentVariable 'WSL_SCH_RESTAPI_URL'
+$WSL_SCH_RESTAPI_USER = Get-MandatoryEnvironmentVariable 'WSL_SCH_RESTAPI_USER'
+$WSL_SCH_RESTAPI_PWD = Get-MandatoryEnvironmentVariable 'WSL_SCH_RESTAPI_PWD'
+$WSL_SCH_DASHBOARD_URL = Get-MandatoryEnvironmentVariable 'WSL_SCH_DASHBOARD_URL'
+$WSL_SCH_DASHBOARD_USER = Get-MandatoryEnvironmentVariable 'WSL_SCH_DASHBOARD_USER'
+$WSL_SCH_DASHBOARD_PWD = Get-MandatoryEnvironmentVariable 'WSL_SCH_DASHBOARD_PWD'
+
+$null = New-Module {
+    function Write-WslOutput {
+        Write-Output $args
+        Write-WslDetail $args
+    }
+
+    function Write-WslDetail {
+        $msg = $args | Out-String
+        [System.Console]::Error.Write($msg)
+    }
+
+    $global:wslDebugEnabled = $false
+
+    function Enable-WslDebug {
+        $global:wslDebugEnabled = $true
+    }
+
+    function Write-WslDebug {
+        if ($global:wslDebugEnabled) {
+            Write-WslDetail $args
+        }
+    }
+
+    function Time-Section($Name, $Expression) {
+        Write-WslDetail "$Name..."
+        $time = Measure-Command $Expression
+        Write-WslDetail "... $Name took $($time.TotalSeconds)s."
+    }
+}
+
+# Enable-WslDebug
+
+$azkabanUri = $WSL_SCH_RESTAPI_URL # 'http://localhost:8081'
+$azkabanUser = $WSL_SCH_DASHBOARD_USER
+$azkabanPassword = $WSL_SCH_DASHBOARD_PWD
+
+Time-Section "Logging in to Azkaban" {
+    $loginBody = @{
+        action = 'login'
+        username = $azkabanUser
+        password = $azkabanPassword
+    }
+    $loginResponse = Invoke-WebRequest -Uri $azkabanUri -UseBasicParsing -Method 'POST' -Body $loginBody
+    $loginResult = $loginResponse | ConvertFrom-Json
+    $script:sessionId = $loginResult.'session.id'
+    Write-WslDebug "session id = $sessionId"
+}
+
+$url = $WSL_SCH_DASHBOARD_URL
+if ($url -Match '\?') {
+    $url += '&'
+} else {
+    $url += '?'
+}
+$url += "session.id=$sessionId"
+
+$elapsedTime = New-TimeSpan -Start $startTime
+
+Write-Output 1
+Write-Output "Logged in to the scheduler dashboard in $($elapsedTime.TotalSeconds)s"
+Write-Output "{ ""url"": ""$url"" }"
+
+} catch {
+    Write-Output -2
+    Write-Output "Exception halted dashboard login"
+    throw $_.Exception
+}

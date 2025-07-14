@@ -1,0 +1,1575 @@
+# ScriptVersion:005 MinVersion:8610 MaxVersion:* TargetType:BigQuery ModelType:* ScriptType:Auto Execute - PowerShell
+#--==============================================================================
+#-- Script Name      :    Wsl_post_install_enablement_pack
+#-- Description      :    To setup the properties post installation of RED10 setup
+#-- Author           :    WhereScape
+#--==============================================================================
+
+param (
+  $unmatchedParameter,
+  [switch]$help = $false,
+  [string]$metaDsn = ${env:RED_META_DSN},
+  [string]$metaDsnArch = ${env:RED_META_DSN_ARCH},
+  [string]$metaUser = ${env:RED_META_USER},
+  [string]$metaPwd = ${env:RED_META_PWD},
+  [string]$metaBase = ${env:RED_META_DB},
+  [string]$redProfile = ${env:RED_PROFILE},
+  [string]$snowflakeConnectionName = ${env:WSL_TGT_DSN},
+  [string]$tgtDB = ${env:WSL_TGT_DBID},
+  [string]$tgtUser = ${env:WSL_TGT_USER},
+  [string]$tgtPwd = ${env:WSL_TGT_PWD},
+  [string]$templateSet = 'Powershell',
+  [string]$logLevel = 5,
+  [string]$outputMode = 'json',
+  [string]$scriptType = "pscript",
+  [string]$metaType = "PGSQL",
+  [string]$runtimeConnName = 'Default Windows Runtime',
+  [int]$startAtStep = 1
+)
+
+function Get-TargetNames {
+  [CmdletBinding()]
+  param (
+      [Parameter(Mandatory = $true)]
+      [string]$Json
+  )
+
+  # Convert the JSON string to a PowerShell object
+  $obj = ConvertFrom-Json $Json
+
+  # Check if the MessageType key value is RecordTree
+  if ($obj.MessageType -eq 'RecordTree') {
+      # Initialize an empty array to store the values
+      $values = @()
+
+      # Loop through the Children array and append the Value values to the array
+      foreach ($child in $obj.MessageBody.Children) {
+          $values += $child.Value
+      }
+
+      # Return the array of values
+      return $values
+  } else {
+      return $null
+  }
+}
+
+function Update-PostInstallScriptType {
+  param(
+      [string]$Sql = @"
+      UPDATE red.ws_scr_header
+      SET sh_script_language_key = (
+          SELECT sl_key
+          FROM red.ws_script_language
+          WHERE sl_name = 'PowerShell (64-bit)'
+      )
+      WHERE sh_name = 'wsl_post_install_enablement_pack';
+"@,
+      [string]$Dsn = "${ENV:WSL_META_DSN}",
+      [string]$Uid = "${ENV:WSL_META_USER}",
+      [string]$Pass = "${ENV:WSL_META_PWD}"
+  )
+
+  $odbcConn = New-Object System.Data.Odbc.OdbcConnection
+  $odbcConn.ConnectionString = "DSN=$Dsn"
+  if (![string]::IsNullOrEmpty($Uid)) {
+      $odbcConn.ConnectionString += ";UID=$Uid"
+  }
+  if (![string]::IsNullOrEmpty($Pass)) {
+      $odbcConn.ConnectionString += ";PWD=$Pass"
+  }
+  $odbcCommand = New-Object System.Data.Odbc.OdbcCommand($Sql, $odbcConn)
+  try {
+      $odbcConn.Open()
+      $odbcCommand.ExecuteNonQuery() | Out-Null
+      $odbcConn.Close()
+      return $true
+  }
+  catch {
+      return $false
+  }
+}
+
+function Show-ComboBoxDialog {
+  [CmdletBinding()]
+  param (
+      [string]$Title = 'Select Target Name',
+      [string]$Message = 'Enter your Target Name:',
+      [string[]]$Options = @(''),
+      [string]$DefaultOption = 'Select Target Name',
+      [string]$IconPath = '',
+      [bool]$ReadOnly = $false
+  )
+
+  Add-Type -AssemblyName System.Windows.Forms
+  Add-Type -AssemblyName System.Drawing
+
+  $form = New-Object System.Windows.Forms.Form
+  $form.Text = $Title
+  $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+  $form.MaximizeBox = $false
+  $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+  $form.Size = New-Object System.Drawing.Size(300, 180)
+
+  if (Test-Path $IconPath) {
+      $icon = New-Object System.Drawing.Icon($IconPath)
+      $form.Icon = $icon
+  }
+
+  $label = New-Object System.Windows.Forms.Label
+  $label.Location = New-Object System.Drawing.Point(10, 15)
+  $label.Size = New-Object System.Drawing.Size(280, 30)
+  $label.Text = $Message
+  $form.Controls.Add($label)
+
+  $comboBox = New-Object System.Windows.Forms.ComboBox
+  $comboBox.Location = New-Object System.Drawing.Point(10, 55)
+  $comboBox.Size = New-Object System.Drawing.Size(260, 20)
+  $null = $Options | ForEach-Object { $comboBox.Items.Add($_) }
+  $comboBox.SelectedIndex = $Options.IndexOf($DefaultOption)
+
+  if ($ReadOnly) {
+      $comboBox.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+  }
+
+  $form.Controls.Add($comboBox)
+
+
+  $okButton = New-Object System.Windows.Forms.Button
+  $okButton.Location = New-Object System.Drawing.Point(105, 90)
+  $okButton.Size = New-Object System.Drawing.Size(75, 23)
+  $okButton.Text = 'OK'
+  $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+  $form.AcceptButton = $okButton
+  $form.Controls.Add($okButton)
+
+  $cancelButton = New-Object System.Windows.Forms.Button
+  $cancelButton.Location = New-Object System.Drawing.Point(185, 90)
+  $cancelButton.Size = New-Object System.Drawing.Size(75, 23)
+  $cancelButton.Text = 'Cancel'
+  $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+  $form.CancelButton = $cancelButton
+  $form.Controls.Add($cancelButton)
+
+  $result = $form.ShowDialog()
+
+  if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+      if ($comboBox.SelectedIndex -eq -1) {
+          return $comboBox.Text
+      } else {
+          return $comboBox.SelectedItem
+      }
+  } else {
+      return $null
+  }
+}
+
+function Show-ComboBoxDialogWithCheckboxes {
+  [CmdletBinding()]
+  param (
+      [string]$Title = 'Select Target Name',
+      [string]$Message = 'Enter your Target Name:',
+      [string[]]$Options = @(''),
+      [string]$DefaultOption = 'Select Target Name',
+      [string]$IconPath = ''
+  )
+
+  Add-Type -AssemblyName System.Windows.Forms
+  Add-Type -AssemblyName System.Drawing
+
+  $form = New-Object System.Windows.Forms.Form
+  $form.Text = $Title
+  $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+  $form.MaximizeBox = $false
+  $form.StartPosition = [System.Windows.Forms.FormStartPosition]::CenterScreen
+  $form.Size = New-Object System.Drawing.Size(320, 330)
+
+  if (Test-Path $IconPath) {
+      $icon = New-Object System.Drawing.Icon($IconPath)
+      $form.Icon = $icon
+  }
+
+  $label = New-Object System.Windows.Forms.Label
+  $label.Location = New-Object System.Drawing.Point(10, 15)
+  $label.Size = New-Object System.Drawing.Size(320, 30)
+  $label.Text = $Message
+  $form.Controls.Add($label)
+
+  $comboBox = New-Object System.Windows.Forms.ComboBox
+  $comboBox.Location = New-Object System.Drawing.Point(10, 45)
+  $comboBox.Size = New-Object System.Drawing.Size(280, 20)
+  $null = $Options | ForEach-Object { $comboBox.Items.Add($_) }
+  $comboBox.SelectedIndex = $Options.IndexOf($DefaultOption)
+  $comboBox.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+  $form.Controls.Add($comboBox)
+
+  $checkboxExplanation = "Select suitable boxes to install selected options"
+  $checkboxExplanationLabel = New-Object System.Windows.Forms.Label
+  $checkboxExplanationLabel.Location = New-Object System.Drawing.Point(10, 85)
+  $checkboxExplanationLabel.Size = New-Object System.Drawing.Size(280, 40)
+  $checkboxExplanationLabel.Text = $checkboxExplanation
+  $checkboxExplanationLabel.AutoSize = $true
+  $checkboxExplanationLabel.Anchor = 'Top'
+  $checkboxExplanationLabel.TextAlign = 'TopLeft'
+  $form.Controls.Add($checkboxExplanationLabel)
+
+  # Add the checkboxes
+  $checkBox1 = New-Object System.Windows.Forms.CheckBox
+  $checkBox1.Location = New-Object System.Drawing.Point(10, 110)
+  $checkBox1.Size = New-Object System.Drawing.Size(260, 20)
+  $checkBox1.Text = 'Options Configuration'
+  $checkBox1.Checked = $true
+  $form.Controls.Add($checkBox1)
+
+  $checkBox2 = New-Object System.Windows.Forms.CheckBox
+  $checkBox2.Location = New-Object System.Drawing.Point(10, 135)
+  $checkBox2.Size = New-Object System.Drawing.Size(260, 20)
+  $checkBox2.Text = 'Deployment Applications'
+  $checkBox2.Checked = $true
+  $form.Controls.Add($checkBox2)
+
+  $checkBox3 = New-Object System.Windows.Forms.CheckBox
+  $checkBox3.Location = New-Object System.Drawing.Point(10, 160)
+  $checkBox3.Size = New-Object System.Drawing.Size(260, 20)
+  $checkBox3.Text = 'Python Libraries'
+  $checkBox3.Checked = $true
+  $form.Controls.Add($checkBox3)
+
+  $checkBox4 = New-Object System.Windows.Forms.CheckBox
+  $checkBox4.Location = New-Object System.Drawing.Point(10, 185)
+  $checkBox4.Size = New-Object System.Drawing.Size(260, 20)
+  $checkBox4.Text = 'Powershell Modules'
+  $checkBox4.Checked = $true
+  $form.Controls.Add($checkBox4)
+
+  # Add the new checkbox for 'Extended properties'
+  $checkBox5 = New-Object System.Windows.Forms.CheckBox
+  $checkBox5.Location = New-Object System.Drawing.Point(10, 210)
+  $checkBox5.Size = New-Object System.Drawing.Size(260, 20)
+  $checkBox5.Text = 'Reset Extended Properties'
+  $checkBox5.Checked = $false
+  $form.Controls.Add($checkBox5)
+
+  $okButton = New-Object System.Windows.Forms.Button
+  $okButton.Location = New-Object System.Drawing.Point(125, 245)
+  $okButton.Size = New-Object System.Drawing.Size(75, 23)
+  $okButton.Text = 'OK'
+  $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+  $form.AcceptButton = $okButton
+  $form.Controls.Add($okButton)
+
+  $cancelButton = New-Object System.Windows.Forms.Button
+  $cancelButton.Location = New-Object System.Drawing.Point(215, 245)
+  $cancelButton.Size = New-Object System.Drawing.Size(75, 23)
+  $cancelButton.Text = 'Cancel'
+  $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+  $form.CancelButton = $cancelButton
+  $form.Controls.Add($cancelButton)
+
+  $result = $form.ShowDialog()
+
+  if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+      if ($comboBox.SelectedIndex -eq -1) {
+          return $comboBox.Text, @($checkBox1.Checked, $checkBox2.Checked, $checkBox3.Checked, $checkBox4.Checked, $checkBox5.Checked)
+      } else {
+          return $comboBox.SelectedItem, @($checkBox1.Checked, $checkBox2.Checked, $checkBox3.Checked, $checkBox4.Checked, $checkBox5.Checked)
+      }
+  } else {
+    $null = Update-PostInstallScriptType
+    Write-Host 1
+    Exit
+  }
+}
+
+
+
+function Show-YesNoDialog {
+  param(
+      [string]$Title,
+      [string]$Message
+  )
+
+  Add-Type -AssemblyName System.Windows.Forms
+  $result = [System.Windows.Forms.MessageBox]::Show($Message, $Title, [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Information)
+
+  return $result
+}
+
+
+function Get-TemplateSet ([string]$iconPath = "") {
+  Add-Type -AssemblyName System.Windows.Forms
+  Add-Type -AssemblyName System.Drawing
+  Add-Type -AssemblyName System.Windows.Forms.DataVisualization
+
+  # Define the form and its properties
+  $form = New-Object System.Windows.Forms.Form
+  $form.Text = "Select Template Set"
+  $form.Size = New-Object System.Drawing.Size(400, 220)
+  $form.StartPosition = "CenterScreen"
+  $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+  $form.MaximizeBox = $false
+  if ($iconPath -ne "") {
+      $form.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($iconPath)
+  }
+
+  # Define the label and its properties
+  $label = New-Object System.Windows.Forms.Label
+  $label.Location = New-Object System.Drawing.Point(50, 20)
+  $label.AutoSize = $true
+  $label.Font = New-Object System.Drawing.Font("Tahoma", 12, [System.Drawing.FontStyle]::Regular)
+  $label.Text = "Select a template set to install:"
+
+  # Define the radio buttons and their properties
+  $radioButton1 = New-Object System.Windows.Forms.RadioButton
+  $radioButton1.Location = New-Object System.Drawing.Point(50, 60)
+  $radioButton1.AutoSize = $true
+  $radioButton1.Font = New-Object System.Drawing.Font("Tahoma", 10, [System.Drawing.FontStyle]::Regular)
+  $radioButton1.Text = "Python"
+  $radioButton1.Checked = $true
+  $radioButton1.UseVisualStyleBackColor = $true
+
+  $radioButton2 = New-Object System.Windows.Forms.RadioButton
+  $radioButton2.Location = New-Object System.Drawing.Point(50, 90)
+  $radioButton2.AutoSize = $true
+  $radioButton2.Font = New-Object System.Drawing.Font("Tahoma", 10, [System.Drawing.FontStyle]::Regular)
+  $radioButton2.Text = "PowerShell"
+  $radioButton2.UseVisualStyleBackColor = $true
+
+  # Define the OK button and its properties
+  $okButton = New-Object System.Windows.Forms.Button
+  $okButton.Location = New-Object System.Drawing.Point(150, 140)
+  $okButton.Size = New-Object System.Drawing.Size(100, 30)
+  $okButton.Font = New-Object System.Drawing.Font("Tahoma", 10, [System.Drawing.FontStyle]::Regular)
+  $okButton.Text = "OK"
+  $okButton.UseVisualStyleBackColor = $true
+  $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+
+  # Add the controls to the form
+  $form.Controls.Add($label)
+  $form.Controls.Add($radioButton1)
+  $form.Controls.Add($radioButton2)
+  $form.Controls.Add($okButton)
+
+  # Display the form as a dialog box
+  $null = $form.ShowDialog()
+
+  # Check which radio button was selected
+  if ($radioButton1.Checked) {
+      $templateSet = "Python"
+  } else {
+      $templateSet = "PowerShell"
+  }
+
+  return $templateSet
+}
+
+function Hide-Window {
+  $t = '[DllImport("user32.dll")] public static extern bool ShowWindow(int handle, int state);'
+  add-type -name win -member $t -namespace native
+  $parent = (Get-WmiObject Win32_Process | Select-Object ProcessID, ParentProcessID | Where-Object { $_.ProcessID -eq ([System.Diagnostics.Process]::GetCurrentProcess()).id }).ParentProcessID
+  $currwind = ([System.Diagnostics.Process]::GetProcessById($parent) | Get-Process).MainWindowHandle
+  $null = [native.win]::ShowWindow($currwind, 0)
+  ${env:mainWindowHandle} = $currwind
+}
+
+# Pop up message to inform user about the installation process
+function Show-StartUpPopupMessage {
+  $message = @"
+The installation process will set up and configure the enablement pack, install necessary Python and PowerShell modules and libraries.
+
+During installation you will be prompted to select the Enablement pack folder location and set either Python or PowerShell default template set. Additionally, you will have the option to choose the target location for deploying applications.
+
+Select the appropriate options when prompted to ensure a successful installation.
+
+Click 'OK' to continue with the installation process. Click 'Cancel' to cancel the installation process and redirect to RED.
+"@
+  Add-Type -AssemblyName System.Windows.Forms
+  $result = [System.Windows.Forms.MessageBox]::Show($message, "Post Installation Setup for Enablement Pack", [System.Windows.Forms.MessageBoxButtons]::OKCancel, [System.Windows.Forms.MessageBoxIcon]::Information)
+
+  if ($result -eq 'Cancel') {
+    $null = Update-PostInstallScriptType
+    Write-Host 1
+    Exit
+  }
+}
+
+# --------------------------------------------------------------------------
+#----------- Functions specific to RED 10.2 profile file changes -----------
+function Get-UserChoiceForProfile ([string]$iconPath = "") {
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+    Add-Type -AssemblyName System.Windows.Forms.DataVisualization
+
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Please Select Required Field"
+    $form.Size = New-Object System.Drawing.Size(450, 250)
+    $form.StartPosition = "CenterScreen"
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+    $form.MaximizeBox = $false
+    if ($iconPath -ne "") {
+        $form.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($iconPath)
+    }
+
+    $label = New-Object System.Windows.Forms.Label
+    $label.Location = New-Object System.Drawing.Point(50, 30)
+    $label.AutoSize = $true
+    $label.Font = New-Object System.Drawing.Font("Tahoma", 12, [System.Drawing.FontStyle]::Regular)
+    $label.Text = "Do you want to create a new profile file?"
+
+    $radioButton1 = New-Object System.Windows.Forms.RadioButton
+    $radioButton1.Location = New-Object System.Drawing.Point(50, 80)
+    $radioButton1.AutoSize = $true
+    $radioButton1.Font = New-Object System.Drawing.Font("Tahoma", 10, [System.Drawing.FontStyle]::Regular)
+    $radioButton1.Text = "Yes, Create new one"
+    $radioButton1.Checked = $true
+    $radioButton1.UseVisualStyleBackColor = $true
+
+    $radioButton2 = New-Object System.Windows.Forms.RadioButton
+    $radioButton2.Location = New-Object System.Drawing.Point(50, 110)
+    $radioButton2.AutoSize = $true
+    $radioButton2.Font = New-Object System.Drawing.Font("Tahoma", 10, [System.Drawing.FontStyle]::Regular)
+    $radioButton2.Text = "No, Use existing one"
+    $radioButton2.UseVisualStyleBackColor = $true
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(200, 160)
+    $okButton.Size = New-Object System.Drawing.Size(100, 30)
+    $okButton.Font = New-Object System.Drawing.Font("Tahoma", 10, [System.Drawing.FontStyle]::Regular)
+    $okButton.Text = "OK"
+    $okButton.UseVisualStyleBackColor = $true
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+
+    $form.Controls.Add($label)
+    $form.Controls.Add($radioButton1)
+    $form.Controls.Add($radioButton2)
+    $form.Controls.Add($okButton)
+
+    $null = $form.ShowDialog()
+
+    if ($radioButton1.Checked) {
+        $UserChoiceForProfile = "Yes, Create new one"
+    } else {
+        $UserChoiceForProfile = "No, Use existing one"
+    }
+
+    return $UserChoiceForProfile
+}
+
+
+function Show-DropDown {
+    param (
+        [string[]]$files,
+        [string]$folderPath,
+        [string]$IconPath = ''
+    )
+
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Select the Profile File"
+    $form.Size = New-Object System.Drawing.Size(420, 140)
+    $form.StartPosition = "CenterScreen"
+
+    $comboBox = New-Object System.Windows.Forms.ComboBox
+    $comboBox.Location = New-Object System.Drawing.Point(10, 20)
+    $comboBox.Size = New-Object System.Drawing.Size(390, 30)
+    $comboBox.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+    $comboBox.Font = New-Object System.Drawing.Font("Arial", 12)
+    $comboBox.Items.AddRange($files)
+
+    $button = New-Object System.Windows.Forms.Button
+    $button.Text = "OK"
+    $button.Location = New-Object System.Drawing.Point(160, 60)
+    $button.Size = New-Object System.Drawing.Size(90, 30)
+
+    if (Test-Path $IconPath) {
+        $icon = New-Object System.Drawing.Icon($IconPath)
+        $form.Icon = $icon
+    }
+
+    $selectedFilePath = $null
+
+    $button.Add_Click({
+        if ($comboBox.SelectedItem -ne $null) {
+            $selectedFilePath = Join-Path -Path $folderPath -ChildPath $comboBox.SelectedItem
+            $form.Tag = $selectedFilePath
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+            $form.Close()
+        } else {
+            [System.Windows.Forms.MessageBox]::Show("Please select a file.")
+        }
+    })
+
+    $form.Controls.Add($comboBox)
+    $form.Controls.Add($button)
+
+    $form.Topmost = $true
+    $form.Add_Shown({$form.Activate()})
+    [void]$form.ShowDialog()
+
+    return $form.Tag
+}
+
+function Get-ProfileFileName {
+    param (
+        [string]$message = "Enter Profile File Name",
+        [string]$IconPath = ''
+    )
+
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Profile File Name"
+    $form.Size = New-Object System.Drawing.Size(300, 160)
+    $form.StartPosition = "CenterScreen"
+
+    if (Test-Path $IconPath) {
+        $icon = New-Object System.Drawing.Icon($IconPath)
+        $form.Icon = $icon
+    }
+
+    $messageLabel = New-Object System.Windows.Forms.Label
+    $messageLabel.Location = New-Object System.Drawing.Point(10, 10)
+    $messageLabel.Size = New-Object System.Drawing.Size(280, 30)
+    $messageLabel.Text = $message
+    $form.Controls.Add($messageLabel)
+
+    $fileNameTextBox = New-Object System.Windows.Forms.TextBox
+    $fileNameTextBox.Location = New-Object System.Drawing.Point(10, 50)
+    $fileNameTextBox.Size = New-Object System.Drawing.Size(260, 30)
+    $form.Controls.Add($fileNameTextBox)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(110, 78)
+    $okButton.Size = New-Object System.Drawing.Size(75, 35)
+    $okButton.Text = "OK"
+    $okButton.Add_Click({
+        if ([string]::IsNullOrWhiteSpace($fileNameTextBox.Text)) {
+            $null = [System.Windows.Forms.MessageBox]::Show("Profile name cannot be empty", "Input Required", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+        } else {
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+            $form.Close()
+        }
+    })
+    $form.Controls.Add($okButton)
+
+    do {
+        $dialogResult = $form.ShowDialog()
+
+        if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK -and -not [string]::IsNullOrWhiteSpace($fileNameTextBox.Text)) {
+            return $fileNameTextBox.Text
+        } else {
+            $null = [System.Windows.Forms.MessageBox]::Show("Please enter a valid profile file name.", "Input Required", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
+        }
+    } while ($true)
+}
+
+function Get-ConnectionDetails {
+    param (
+        [string]$connectionName,
+        [string]$IconPath = ''
+    )
+
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Target Connection Details"
+    $form.Size = New-Object System.Drawing.Size(460, 400)
+    $form.StartPosition = "CenterScreen"
+
+    if (Test-Path $IconPath) {
+        $icon = New-Object System.Drawing.Icon($IconPath)
+        $form.Icon = $icon
+    }
+
+    $messageLabel = New-Object System.Windows.Forms.Label
+    $messageLabel.Location = New-Object System.Drawing.Point(10, 10)
+    $messageLabel.Size = New-Object System.Drawing.Size(420, 30)
+    $messageLabel.Text = "Enter Details For $connectionName"
+    $messageLabel.Font = New-Object System.Drawing.Font("Arial", 12)
+    $form.Controls.Add($messageLabel)
+
+    $userIdLabel = New-Object System.Windows.Forms.Label
+    $userIdLabel.Location = New-Object System.Drawing.Point(10, 50)
+    $userIdLabel.Size = New-Object System.Drawing.Size(120, 25)
+    $userIdLabel.Text = "User ID"
+    $userIdLabel.Font = New-Object System.Drawing.Font("Arial", 10)
+    $form.Controls.Add($userIdLabel)
+
+    $userIdTextBox = New-Object System.Windows.Forms.TextBox
+    $userIdTextBox.Location = New-Object System.Drawing.Point(150, 50)
+    $userIdTextBox.Size = New-Object System.Drawing.Size(280, 25)
+    $form.Controls.Add($userIdTextBox)
+
+    $passwordLabel = New-Object System.Windows.Forms.Label
+    $passwordLabel.Location = New-Object System.Drawing.Point(10, 85)
+    $passwordLabel.Size = New-Object System.Drawing.Size(120, 25)
+    $passwordLabel.Text = "Password"
+    $passwordLabel.Font = New-Object System.Drawing.Font("Arial", 10)
+    $form.Controls.Add($passwordLabel)
+
+    $passwordTextBox = New-Object System.Windows.Forms.TextBox
+    $passwordTextBox.Location = New-Object System.Drawing.Point(150, 85)
+    $passwordTextBox.Size = New-Object System.Drawing.Size(280, 25)
+    $passwordTextBox.UseSystemPasswordChar = $true
+    $form.Controls.Add($passwordTextBox)
+
+    $connectionStringLabel = New-Object System.Windows.Forms.Label
+    $connectionStringLabel.Location = New-Object System.Drawing.Point(10, 120)
+    $connectionStringLabel.Size = New-Object System.Drawing.Size(120, 25)
+    $connectionStringLabel.Text = "Connection String"
+    $connectionStringLabel.Font = New-Object System.Drawing.Font("Arial", 10)
+    $form.Controls.Add($connectionStringLabel)
+
+    $connectionStringTextBox = New-Object System.Windows.Forms.TextBox
+    $connectionStringTextBox.Location = New-Object System.Drawing.Point(150, 120)
+    $connectionStringTextBox.Size = New-Object System.Drawing.Size(280, 60)
+    $connectionStringTextBox.Multiline = $true
+    $connectionStringTextBox.ScrollBars = [System.Windows.Forms.ScrollBars]::Vertical
+    $connectionStringTextBox.Text = "DSN=`$DSN`$;UID=`$USER`$;PWD=`$PASSWORD`$;"
+    $form.Controls.Add($connectionStringTextBox)
+
+    $dsnLabel = New-Object System.Windows.Forms.Label
+    $dsnLabel.Location = New-Object System.Drawing.Point(10, 190)
+    $dsnLabel.Size = New-Object System.Drawing.Size(120, 25)
+    $dsnLabel.Text = "DSN"
+    $dsnLabel.Font = New-Object System.Drawing.Font("Arial", 10)
+    $form.Controls.Add($dsnLabel)
+
+    $dsnComboBox = New-Object System.Windows.Forms.ComboBox
+    $dsnComboBox.Location = New-Object System.Drawing.Point(150, 190)
+    $dsnComboBox.Size = New-Object System.Drawing.Size(280, 25)
+    $dsnComboBox.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
+    $form.Controls.Add($dsnComboBox)
+
+    $dsns = Get-OdbcDsn | Sort-Object Name
+    foreach ($dsn in $dsns) {
+        $dsnComboBox.Items.Add($dsn.Name) | Out-Null
+    }
+
+    $warningLabel = New-Object System.Windows.Forms.Label
+    $warningLabel.Location = New-Object System.Drawing.Point(10, 225)
+    $warningLabel.Size = New-Object System.Drawing.Size(420, 30)
+    $warningLabel.ForeColor = [System.Drawing.Color]::Red
+    $warningLabel.Text = ""
+    $form.Controls.Add($warningLabel)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(200, 260)
+    $okButton.Size = New-Object System.Drawing.Size(75, 30)
+    $okButton.Text = "OK"
+    $okButton.Add_Click({
+        if ([string]::IsNullOrWhiteSpace($userIdTextBox.Text) -or
+            [string]::IsNullOrWhiteSpace($passwordTextBox.Text) -or
+            [string]::IsNullOrWhiteSpace($connectionStringTextBox.Text) -or
+            [string]::IsNullOrWhiteSpace($dsnComboBox.SelectedItem)) {
+            $warningLabel.Text = "All fields must be filled out!"
+        } else {
+            $form.DialogResult = [System.Windows.Forms.DialogResult]::OK
+            $form.Close()
+        }
+    })
+    $form.Controls.Add($okButton)
+
+    $dialogResult = $form.ShowDialog()
+
+    if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK) {
+        return @{
+            UserId = $userIdTextBox.Text
+            Password = $passwordTextBox.Text
+            ConnectionString = $connectionStringTextBox.Text
+            DSN = $dsnComboBox.SelectedItem
+        }
+    } else {
+        return $null
+    }
+}
+
+function Get-RepositoryConnectionString {
+    param(
+        [string]$Sql = @"
+SELECT SUBSTRING(dc_connect_string
+        FROM POSITION('ODBCCON=' IN dc_connect_string) + LENGTH(SUBSTRING(dc_connect_string FROM 'ODBCCON=(\d+)')) +9
+        FOR CAST(SUBSTRING(dc_connect_string FROM 'ODBCCON=(\d+)') AS INT)
+    ) AS connection_string
+FROM red.ws_dbc_connect
+WHERE dc_name = 'Repository';
+"@,
+        [string]$Dsn = "${ENV:WSL_META_DSN}",
+        [string]$Uid = "${ENV:WSL_META_USER}",
+        [string]$Pass = "${ENV:WSL_META_PWD}"
+    )
+
+    $odbcConn = New-Object System.Data.Odbc.OdbcConnection
+    $odbcConn.ConnectionString = "DSN=$Dsn"
+    if (![string]::IsNullOrEmpty($Uid)) {
+        $odbcConn.ConnectionString += ";UID=$Uid"
+    }
+    if (![string]::IsNullOrEmpty($Pass)) {
+        $odbcConn.ConnectionString += ";PWD=$Pass"
+    }
+    $odbcCommand = New-Object System.Data.Odbc.OdbcCommand($Sql, $odbcConn)
+    $connectionString = $null
+    try {
+        $odbcConn.Open()
+        $reader = $odbcCommand.ExecuteReader()
+        if ($reader.Read()) {
+            $connectionString = $reader["connection_string"]
+        }
+        $reader.Close()
+        $odbcConn.Close()
+
+        # If no connection string was returned, set it to the default
+        if ([string]::IsNullOrEmpty($connectionString)) {
+            $connectionString = "DSN=`$DSN`$;UID=`$USER`$;PWD=`$PASSWORD`$;"
+        }
+
+        return $connectionString
+    }
+    catch {
+        $odbcConn.Close()
+        return "DSN=`$DSN`$;UID=`$USER`$;PWD=`$PASSWORD`$;"
+    }
+}
+
+
+# -------------------------------------------------------------------------
+# -----------------------------------------
+# SET ALL PARAMETERS ----------------------
+# -----------------------------------------
+Import-Module -FullyQualifiedName "$WSL_SCRIPT_installer_common_CODE$" -DisableNameChecking
+Import-Module -FullyQualifiedName "$WSL_SCRIPT_installer_target_CODE$" -DisableNameChecking
+
+# Set the default temporary directory
+$dstDir = "C:\temp\"
+$logLevel = 5
+$outputMode = "json"
+
+# Minimum Red version for the function in this installer
+$minRedVersion = '8.5.1.0'
+
+# Set globals from installer_target.psm1
+Set-GlobalVars
+
+# Get Red version from environment variable
+$redInstallDir = Get-RedVersion ${ENV:WSL_BINDIR}
+$redInstallDir = $($redInstallDir.TrimEnd('\').Trim())
+
+
+# Build required file and folder paths
+$redCliPath = Join-Path -Path $redInstallDir -ChildPath "RedCli.exe"
+$defDtmDir = Join-Path -Path $redInstallDir -ChildPath "Administrator\Data Type Mappings"
+$defDfsDir = Join-Path -Path $redInstallDir -ChildPath "Administrator\Function Sets"
+
+# Get the redcli path
+$redCliPath = Join-Path -Path $redInstallDir -ChildPath "RedCli.exe"
+
+# Compare minimum redcli version and set path for log generation
+$minRedVerForCompare = [int]$( $minRedVersion -replace "(\d+)\.(\d+)\.(\d+)\.(\d+)", '${1}${2}${3}0${4}' )
+$runTimestamp = Get-Date -Format 'MMddhhmmss'
+$logFile = "$env:TEMP\WsEnablementPackInstall_$runTimestamp.log"
+
+# common RedCli arguments
+
+$commonRedCliArgs = @"
+--meta-dsn "$metaDsn" --meta-dsn-arch "$metaDsnArch" --meta-user-name "$metaUser" --meta-password "$metaPwd" --meta-database "$metaBase" --log-level "$logLevel" --output-mode "$outputMode"
+"@
+
+
+function Get-TargetConnectionArray {
+    $tgtConnList = @()
+    $cmdReturn = Execute-Command "RedCli CMD" $redCliPath "connection list-all $commonRedCliArgs"
+    $cmdResultJson = ($cmdReturn.stdout -split "`n" | Select-String -Pattern '"MessageType":"Result"').Line.Trim().TrimEnd("Content-Type: application/json; charset=utf-8")
+    $cmdResultJson = $cmdResultJson | ConvertFrom-Json
+    $cmdRecordTreeJson = ($cmdReturn.stdout -split "`n" | Select-String -Pattern '"MessageType":"RecordTree"').Line.Trim().TrimEnd("Content-Type: application/json; charset=utf-8")
+    $cmdRecordTreeJson = $cmdRecordTreeJson | ConvertFrom-Json
+    if (![string]::IsNullOrEmpty($cmdResultJson.MessageBody.Outcome)) {
+        $resultOutcome = $cmdResultJson.MessageBody.Outcome
+        if ($resultOutcome -eq 'Success') {
+            $getConnList = $cmdRecordTreeJson.MessageBody.Children.Children.ForEach({ if ($_.Name -match 'Name') {$_.Value}})
+            foreach($getConn in $getConnList) {
+                $connList = '"'+$getConn+'"'
+                $tgtCmdReturn = Execute-Command "RedCli CMD" $redCliPath "target list-all --connection-name $connList $commonRedCliArgs"
+                $tgtCmdResultJson = ($tgtCmdReturn.stdout -split "`n" | Select-String -Pattern '"MessageType":"Result"').Line.Trim().TrimEnd("Content-Type: application/json; charset=utf-8")
+                $tgtCmdResultJson = $tgtCmdResultJson | ConvertFrom-Json
+                $tgtCmdRecordTreeJson = ($tgtCmdReturn.stdout -split "`n" | Select-String -Pattern '"MessageType":"RecordTree"').Line.Trim().TrimEnd("Content-Type: application/json; charset=utf-8")
+                $tgtCmdRecordTreeJson = $tgtCmdRecordTreeJson | ConvertFrom-Json
+                if (![string]::IsNullOrEmpty($tgtCmdResultJson.MessageBody.Outcome)) {
+                    $tgtResultOutcome = $tgtCmdResultJson.MessageBody.Outcome
+                    if ($tgtResultOutcome -eq 'Success') {
+                        if (![string]::IsNullOrEmpty($tgtCmdRecordTreeJson.MessageBody.Children[0].Value)) {
+                            $tgtConnList += $getConn
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return $tgtConnList
+}
+
+# IMP: As per new design, the TRIGGER_STARTUP_SCRIPT extended property check will not be required and instead the target connection list will be displayed to the user after info pop up message. If the user want to go out of script, he can click on the cancel button and the script will exit. If the user wants to continue, he can click on the OK button and the script will continue to the next step.
+
+# # Get the extended property value for TRIGGER_STARTUP_SCRIPT to check the first execution of the script
+# $extendedRedCliArgs = @"
+# ext-prop-value show --object-name "$tgtDsn" --value-name "TRIGGER_STARTUP_SCRIPT"
+# "@
+# $res = Execute-RedCli-Command-PG $extendedRedCliArgs $commonRedCliArgs
+
+function Get-TargetNameArray {
+  $targetNamesCmd = @"
+  target list-all --connection-name "$tgtDsn"
+"@
+  $cmdReturn = Execute-Command "RedCli CMD" $redCliPath "$targetNamesCmd $commonRedCliArgs"
+
+  if ($cmdReturn.stdout -match '"MessageType":"RecordTree"') {
+    $cmdRecordTreeJson = ($cmdReturn.stdout -split "`n" | Select-String -Pattern '"MessageType":"RecordTree"').Line
+    $cmdRecordTreeJson = $cmdRecordTreeJson.Trim().TrimEnd("Content-Type: application/json; charset=utf-8")
+    $targetNameArray = Get-TargetNames -Json $cmdRecordTreeJson
+  }
+  else {
+    $targetNameArray = @()
+  }
+  return $targetNameArray
+}
+
+# Default $res value is "FALSE" to trigger the execution of the script
+$res = "TRUE"
+
+# Continue if the extended property is not false
+if ($res.ToUpper() -ne "FALSE") {
+
+  # ---------------------------------------------------------------------------------------------------
+  #
+  #             MAIN INSTALLER PROGRAM BEGINS
+  #
+  # ---------------------------------------------------------------------------------------------------
+
+  # Hide-Window
+
+  # Display the welcome setup message
+  Show-StartUpPopupMessage
+
+  # Get the target connection list using the Get-TargetConnectionArray function
+  $tgtConnList = Get-TargetConnectionArray
+  if ($tgtConnList -contains 'Range Table Location') {
+    $tgtConnList = $tgtConnList | Where-Object { $_ -ne 'Range Table Location' }
+  }
+  $userSelectedTgtDsn = Show-ComboBoxDialogWithCheckboxes -Title 'Target Connection' -Message 'Select the target connection to configure' -Options $tgtConnList -DefaultOption $tgtConnList[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+  # Update $tgtDsn with the user selected target connection
+  $tgtDsn = $userSelectedTgtDsn[0]
+  $optionsCheck = $userSelectedTgtDsn[1][0]
+  $deploymentCheck = $userSelectedTgtDsn[1][1]
+  $pythonLibCheck = $userSelectedTgtDsn[1][2]
+  $powershellModuleCheck = $userSelectedTgtDsn[1][3]
+  $resetExtendedPropertyCheck = $userSelectedTgtDsn[1][4]
+
+
+  # Get Build Location from User
+  $application = New-Object -ComObject Shell.Application
+  $buildpath = ($application.BrowseForFolder(0, 'Choose Enablement Pack Folder', 0)).Self.Path
+
+  # If target is 'Databricks' or 'Azure-Synapse' then set the template set to 'Python'
+  $global:buildDetailsHashtable  = Get-Content "$buildpath\Installer Libs\EnablementPack.properties" | ConvertFrom-StringData
+  $targetName = $global:buildDetailsHashtable.'TargetName'
+
+  if ($targetName -eq 'Databricks' -or $targetName -eq 'Azure-Synapse' -or $targetName -eq 'Google-BigQuery' -or $targetName -eq 'AzureSqlServer' -or $targetName -eq 'Teradata'  -or $targetName -eq 'Redshift' -or $targetName -eq 'Oracle' -or $targetName -eq 'Fabric' -or $targetName -eq 'SqlServer') {
+    $templateSet = 'Python'
+  } else {
+    $templateSet = Get-TemplateSet -iconPath "$redInstallDir\Icons\red.ico"
+  }
+
+  # Check the template type if python then set script type to pyscript
+  if ($templateSet -eq 'Python') {
+    $scriptType = 'pyscript'
+  }
+
+  # Create the results hashtable array
+  [hashtable[]]$results = @()
+
+  try {
+    if ($targetName -eq "Teradata"){
+      $targetNames = Get-TargetNameArray
+      foreach ($currentTargetName in $targetNames) {
+        $dropDatabaseName = @"
+        target modify --con-name "$tgtDsn" --name "$currentTargetName" --database "$currentTargetName" --schema ""
+"@
+            $x = Execute-RedCliCommands $dropDatabaseName $commonRedCliArgs
+      }
+    }
+
+    $installStep = 1
+    #Find and Test the RedCli Version
+    $x = Set-RedCliVersion $redCliPath $minRedVersion
+    # Set the RED metadata type based on the RedCli version (EP's support either SQL or PostgreSQL)
+    $runtimeConnName = 'Default Windows Runtime'
+	if (($redCliVersion -match "^10\.3\." -or $redCliVersion -match "^10\.4\.") -and $targetName -eq "SqlServer") {
+		$dbtype = "SQL Server"
+	} elseif (($redCliVersion -match "^10\.3\." -or $redCliVersion -match "^10\.4\.") -and $targetName -eq "Teradata") {
+		$dbtype = "Teradata"
+	} elseif (($redCliVersion -match "^10\.3\." -or $redCliVersion -match "^10\.4\.") -and $targetName -eq "Oracle") {
+		$dbtype = "Oracle"
+	} else {
+		$dbtype = "Custom"
+	}
+
+
+  #10.2 specific changes to create/use existing profile based on user's choice
+  if ($redCliVersion.Trim() -match '^10\.(2|[3-5])\.') {
+    $UserChoiceForProfile = Get-UserChoiceForProfile -iconPath "$redInstallDir\Icons\red.ico"
+    $profileFolderPath = Join-Path -Path $env:APPDATA -ChildPath "wherescape\Red"
+    if ($UserChoiceForProfile -eq "No, Use existing one") {
+      $profileFiles = Get-ChildItem -Path $profileFolderPath -File | Select-Object -ExpandProperty Name | Sort-Object
+      $redProfile = Show-DropDown -files $profileFiles -folderPath $profileFolderPath -IconPath "$redInstallDir\Icons\red.ico"
+    } elseif ($UserChoiceForProfile -eq "Yes, Create new one") {
+      #Get Target connection details
+      $userInputsTgt = Get-ConnectionDetails -connectionName $tgtDsn -IconPath "$redInstallDir\Icons\red.ico"
+      # Encrypt the password
+      $encryptedPassword = Get-EncryptedPwd -Password $($userInputsTgt.Password)
+      $connectionString = Get-RepositoryConnectionString
+      # Define the JSON object
+      $jsonObject = [PSCustomObject]@{
+          connections = @(
+              [PSCustomObject]@{
+                  connectionName = $tgtDsn
+                  connectionString = $($userInputsTgt.ConnectionString)
+                  dsn = $($userInputsTgt.DSN)
+                  password = $encryptedPassword
+                  userId = $($userInputsTgt.UserId)
+              }
+          )
+          redConnectionMethod = "Advanced Connect"
+          redConnectionString = $connectionString
+          redDatabase = ${env:RED_META_DB}
+          redDsn = ${env:RED_META_DSN}
+          redDsnArchitecture = ${env:RED_META_DSN_ARCH}
+          redServer = ${env:WSL_META_SERVER}
+          redServerPort = (Get-OdbcDsn -Name "${env:RED_META_DSN}").Attribute.Port
+          redUserId = ${env:RED_META_USER}
+          redUserPwd = Get-EncryptedPwd -Password ${env:RED_META_PWD}
+      }
+      # Convert to JSON format
+      $jsonString = $jsonObject | ConvertTo-Json -Depth 10
+
+      $profileFileName = Get-ProfileFileName -message "Please enter the profile file name:" -IconPath "$redInstallDir\Icons\red.ico"
+      $redProfile = Join-Path -Path $profileFolderPath -ChildPath ("$profileFileName.profile")
+      $utf8NoBom = [System.Text.Encoding]::UTF8.GetBytes($jsonString)
+      [System.IO.File]::WriteAllBytes($redProfile, $utf8NoBom)
+
+      Add-Type -AssemblyName System.Windows.Forms
+      # Display a message box to indicate success
+      $null = [System.Windows.Forms.MessageBox]::Show("Profile file created successfully at:$redProfile", "File Created", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+    }
+    $commonRedCliArgs = @"
+--meta-dsn "$metaDsn" --meta-dsn-arch "$metaDsnArch" --meta-user-name "$metaUser" --meta-password "$metaPwd" --meta-database "$metaBase" --red-profile "$redProfile" --log-level "$logLevel" --output-mode "$outputMode"
+"@
+  }
+
+  # Check if PoshProgressBar module is installed
+  if (-not(Get-Module -Name PoshProgressBar -ListAvailable)) {
+    # Install PoshProgressBar module if not installed
+    Install-Module -Name PoshProgressBar -SkipPublisherCheck -Force
+  }
+
+  # if PoshProgressBar module is not installed
+  if (-not(Get-Module -Name PoshProgressBar -ListAvailable)) {
+    $isProgressBar = $false
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.MessageBox]::Show("The installation of the progress bar module has failed. As a result, the progress bar feature will not be available during the installation process. However, the installation will continue without any interruption.", "Post Installation Setup for Enablement Pack", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+  }else {
+    $isProgressBar = $true
+    $Progressbar = New-ProgressBar -MaterialDesign -IsIndeterminate $False -IconPath "$redInstallDir\Icons\red.ico" -Type Horizontal -Size Large -PrimaryColor Red
+  }
+
+    if ($isProgressBar -eq $true) {
+      Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "RED Metadata Setup" -CurrentOperation "Getting Wherescape RED license" -PercentComplete 10
+    }
+
+    # Get Wherescape RED License
+    $installStep = 2
+    $licenseResults = Get-LicenseFromRedCli $redCliPath $metaType
+    $res = $licenseResults[0]
+    $license = $licenseResults[1]
+    $x = [PSCustomObject]$res | Format-Table -AutoSize -Wrap -Property Step, Outcome, Operation, Information
+    $global:results += $res
+    if ($res.Outcome -eq 'Failure' -or $res.Outcome -eq 'Error') {
+      # stop the script
+      Write-Error "Please install a valid WhereScape RED license for target database type custom = $tgtLicenseLabel"
+      if ($isProgressBar -eq $true) {
+        Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "WhereScape RED License Verification Failed" -CurrentOperation "Please install a valid WhereScape RED license for target database type custom = $tgtLicenseLabel" -PercentComplete 100
+      }
+      Exit
+    }
+
+
+    # Check Wherescape RED License
+    $installStep = 3
+    $res = Test-License $license
+    $x = [PSCustomObject]$res | Format-Table -AutoSize -Wrap -Property Step, Outcome, Operation, Information
+    $global:results += $res
+    if ($res.Outcome -eq 'Failure' -or $res.Outcome -eq 'Error') {
+      # stop the script
+      Write-Error "Please install a valid WhereScape RED License for target database type Custom = $tgtLicenseLabel"
+      if ($isProgressBar -eq $true) {
+        Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "WhereScape RED License Verification Failed" -CurrentOperation "Please install a valid WhereScape RED license for target database type custom = $tgtLicenseLabel" -PercentComplete 100
+      }
+      Exit
+    }
+
+    if ($isProgressBar -eq $true) {
+      Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Enablement Pack Setup" -CurrentOperation "Installing parameters" -PercentComplete 15
+    }
+
+
+    #Add Parameters
+    $installStep = 100
+    $x = Execute-RedCliCommands (Get-GeneralSetupCmds) $commonRedCliArgs
+
+    $extcmd =  @"
+    ext-prop-value show --object-name "$tgtDsn" --value-name "BUILD_NAME"
+"@
+    $res = Execute-RedCli-Command-PG $extcmd $commonRedCliArgs
+
+    if ($res.Outcome -eq 'Success'){
+      $installStep += 1
+      $global:buildDetailsHashtable  = Get-Content "$buildpath\Installer Libs\EnablementPack.properties" | ConvertFrom-StringData
+      $build_name = $global:buildDetailsHashtable.'build_name'
+      $addbuildno =  @"
+      ext-prop-value modify --object-name "$tgtDsn" --value-data "$build_name" --value-name "BUILD_NAME"
+"@
+      $x = Execute-RedCliCommands $addbuildno $commonRedCliArgs
+    }
+
+    if ($isProgressBar -eq $true) {
+      Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Enablement Pack Setup" -CurrentOperation "Setting windows connections" -PercentComplete 20
+    }
+
+    #Set Extended Properties and Windows Connection
+    $installStep = 200
+    $x = Execute-RedCliCommands (Get-ConnectionSetupCmds) $commonRedCliArgs
+
+  if ($targetName -eq 'Azure-Synapse' -or $targetName -eq 'SqlServer' -or $targetName -eq 'Fabric' -or $targetName -eq 'Teradata' -or $targetName -eq 'Snowflake' -or $targetName -eq 'Oracle' -or $targetName -eq 'Databricks') {
+    if ($isProgressBar -eq $true) {
+      Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Enablement Pack Setup" -CurrentOperation "Setting Default Extended Properties" -PercentComplete 25
+    }
+
+    if ($resetExtendedPropertyCheck) {
+      $x = Execute-RedCliCommands (Set-DefaultExtendedPropertyCmds) $commonRedCliArgs
+    }
+  }
+    if ($isProgressBar -eq $true) {
+      Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Enablement Pack Setup" -CurrentOperation "Setting default templates" -PercentComplete 30
+    }
+
+    #Set Default Templates
+    $installStep = 300
+    if ($redCliVersion -match '10\.1' -or $redCliVersion -match '10\.2' -or $redCliVersion -match '10\.3' -or $redCliVersion -match '10\.4'){
+      if ($targetName -eq 'AzureSqlServer' -or $targetName -eq 'Teradata' -or $targetName -eq 'Oracle' -or $targetName -eq 'SqlServer'){
+        $importObjectTypeCmd =  @"
+        object-type-definition import -f "$buildpath\Options\templateRoutine_proc.objtype" --force
+"@
+      } elseif ($targetName -eq 'Snowflake' -or $targetName -eq 'Fabric' -or $targetName -eq 'PostgreSQL' -or $targetName -eq 'Azure-Synapse' -or $targetName -eq 'Databricks' -and $templateSet -eq 'Python'){
+        $importObjectTypeCmd =  @"
+        object-type-definition import -f "$buildpath\Options\templateRoutine_py.objtype" --force
+"@
+      } elseif ($targetName -eq 'Redshift' -and $templateSet -eq 'Python'){
+        $importObjectTypeCmd =  @"
+        object-type-definition import -f "$buildpath\Options\templateRoutine_py.objtype" --force
+"@
+      } elseif ($targetName -eq 'Snowflake' -or $targetName -eq 'PostgreSQL' -and $templateSet -eq 'Powershell'){
+        $importObjectTypeCmd =  @"
+        object-type-definition import -f "$buildpath\Options\templateRoutine_ps.objtype" --force
+"@
+    }
+      $x = Execute-RedCliCommands $importObjectTypeCmd $commonRedCliArgs
+    } else {
+      $defaultTemplateCmds = Get-LicensedDefaultTemplateCmds (Get-SetDefaultTemplateCmds) $license.'Licensed Model Type(s)'
+      $x = Execute-RedCliCommands $defaultTemplateCmds $commonRedCliArgs
+    }
+
+    if ($optionsCheck) {
+      if ($isProgressBar -eq $true) {
+        Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Enablement Pack Setup" -CurrentOperation "Setting RED options" -PercentComplete 35
+      }
+
+      $installStep = 400
+      $importOptionsCmd = @"
+      options import -f "$buildpath\Options\Options.xml"
+"@
+    $x = Execute-RedCliCommands $importOptionsCmd $commonRedCliArgs
+    }
+
+    # TODO: Imporve the code with swith case statement for each target name
+    # Deployment application based on target dsn
+    $installStep = 500
+    if ($deploymentCheck) {
+      $global:buildDetailsHashtable  = Get-Content "$buildpath\Installer Libs\EnablementPack.properties" | ConvertFrom-StringData
+      $targetName = $global:buildDetailsHashtable.'TargetName'
+
+      if ($targetName -eq "Snowflake") {
+
+        # Get target name list for Snowflake Date Dimension
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget1 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Snowflake Date Dimension deployment application
+        if ($null -ne $userSelectedTarget1) {
+          # Check if $userSelectedTarget1 is present in $targetNames
+          if (($targetNames -notcontains $userSelectedTarget1) -and ($null -ne $userSelectedTarget1)) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget1" --database "$tgtDB" --schema "$userSelectedTarget1" --tree-colour #ff0000
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+
+        # Get target name list for Snowflake File Formats
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget2 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install File Formats:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+      # If user selected Cancel button, skip Snowflake File Formats deployment application
+      if ($null -ne $userSelectedTarget2) {
+        # Check if $userSelectedTarget2 is present in $targetNames
+        if ($targetNames -notcontains $userSelectedTarget2) {
+          $createNewTarget = @"
+          target add --con-name "$tgtDsn" --name "$userSelectedTarget2" --database "$tgtDB" --schema "$userSelectedTarget2" --tree-colour #4e00c0
+"@
+          $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+        }
+      }
+
+        # Get target name list for Snowflake Jobs
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget3 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Jobs:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Snowflake Jobs deployment application
+        if ($null -ne $userSelectedTarget3) {
+          # Check if $userSelectedTarget3 is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget3) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget3" --database "$tgtDB" --schema "$userSelectedTarget3" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+
+    }
+
+      # Condition for deployment application based on target dsn
+      $installStep = 600
+
+      if ($targetName -eq "Snowflake") {
+        # If user selected Cancel button, skip Snowflake Date Dimension deployment application
+        if ($null -ne $userSelectedTarget1) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing SFDATEDIM application on $userSelectedTarget1" -PercentComplete 40
+          }
+
+          $datedimCmd = @"
+                  deployment deploy --app-number SFDATEDIM --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget1"
+"@
+          $x = Execute-RedCliCommands $datedimCmd $commonRedCliArgs
+        }
+
+        # If user selected Cancel button, skip Snowflake File Formats deployment application
+        if ($null -ne $userSelectedTarget2) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing SFFILEFMT application on $userSelectedTarget2" -PercentComplete 45
+          }
+
+          $fileCmd = @"
+                  deployment deploy --app-number SFFILEFMT --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\File Formats" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget2"
+"@
+          $x = Execute-RedCliCommands $fileCmd $commonRedCliArgs
+        }
+
+
+        if ($null -ne $userSelectedTarget3) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing SFJOBS application on $userSelectedTarget3" -PercentComplete 55
+          }
+
+          $jobCmd = @"
+                  deployment deploy --app-number SFJOBS --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\Jobs" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget3"
+"@
+          $x = Execute-RedCliCommands $jobCmd $commonRedCliArgs
+      }
+
+      } elseif ($targetName -eq "PostgreSQL") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip PostgreSQL Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "$tgtDB" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip PostgreSQL Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number dim_date --app-version 20200311 --app-dir "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+
+      } elseif ($targetName -eq "Fabric") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Fabric Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "$tgtDB" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip Fabric Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number FBDATEDIM --app-version 0001 --app-dir "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+
+      } elseif ($targetName -eq "Redshift") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Redshift Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "$tgtDB" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip Redshift Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number RSDATEDIM --app-version 0001 --app-dir "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+
+      } elseif ($targetName -eq "Databricks") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Databricks Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "$tgtDB" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip Databricks Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number DIM_DATE_DB --app-version 0001 --app-dir "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+      } elseif ($targetName -eq "Azure-Synapse") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget1 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Azure-Synapse Date Dimension deployment application
+        if ($null -ne $userSelectedTarget1) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget1) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget1" --database "$tgtDB" --schema "$userSelectedTarget1" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip Azure-Synapse Date Dimension deployment application
+        if ($null -ne $userSelectedTarget1) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget1" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number dim_date --app-version 20190512 --app-dir "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget1"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+
+        # If user selected Cancel button, skip Azure-Synapse File Formats deployment application
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget2 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install File Formats:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Azure-Synapse File Formats deployment application
+        if ($null -ne $userSelectedTarget2) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget2) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget2" --database "$tgtDB" --schema "$userSelectedTarget2" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+
+          }
+        }
+        # If user selected Cancel button, skip Azure-Synapse File Format deployment application
+        if ($null -ne $userSelectedTarget2) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing FILE FORMAT application on $userSelectedTarget2" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number AZFILEFMT --app-version 0001 --app-dir "$buildpath\Deployment Applications\PostgreSQL\File Formats" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget2"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+      } elseif ($targetName -eq "Google-BigQuery") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Google-BigQuery Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "$tgtDB" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip Google-BigQuery Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number GBQDATEDIM --app-version 0001 --app-dir "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-con-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+      } elseif ($targetName -eq "AzureSqlServer" -or $targetName -eq "SqlServer") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip AzureSqlServer/SqlServer Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "$tgtDB" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip AzureSqlServer/SqlServer Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number AZSQLDATEDIM --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+          object generate-routine  --routine-owner-name "dim_date_azsql"  --routine-owner-type object --routine-operation  windows-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+          object generate-routine  --routine-owner-name "dim_date_azsql"  --routine-owner-type object --routine-operation  unix-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+      } elseif ($targetName -eq "Teradata") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip AzureSqlServer Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget" --database "" --schema "$userSelectedTarget" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip AzureSqlServer Date Dimension deployment application
+        if ($null -ne $userSelectedTarget) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number TDDATEDIM --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget"
+          object generate-routine  --routine-owner-name "dim_date_td"  --routine-owner-type object --routine-operation  windows-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+          object generate-routine  --routine-owner-name "dim_date_td"  --routine-owner-type object --routine-operation  unix-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+      } elseif ($targetName -eq "Oracle") {
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget1 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Date Dimension:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip AzureSqlServer Date Dimension deployment application
+        if ($null -ne $userSelectedTarget1) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget1) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget1" --database "$tgtDB" --schema "$userSelectedTarget1" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+          }
+        }
+        # If user selected Cancel button, skip AzureSqlServer Date Dimension deployment application
+        if ($null -ne $userSelectedTarget1) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing DIMDATE application on $userSelectedTarget1" -PercentComplete 55
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number ORDATEDIM --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget1"
+          object generate-routine  --routine-owner-name "dim_date_or"  --routine-owner-type object --routine-operation  windows-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+          object generate-routine  --routine-owner-name "dim_date_or"  --routine-owner-type object --routine-operation  unix-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+
+        # If user selected Cancel button, skip Oracle Parameters deployment application
+        $targetNames = Get-TargetNameArray
+        $userSelectedTarget2 = Show-ComboBoxDialog -Title 'Select Target Name' -Message 'Please select target name to install Parameters:' -Options $targetNames -DefaultOption $targetNames[0] -IconPath "$redInstallDir\Icons\red.ico"
+
+        # If user selected Cancel button, skip Oracle Parameters deployment application
+        if ($null -ne $userSelectedTarget2) {
+          # Check if $userSelectedTarget is present in $targetNames
+          if ($targetNames -notcontains $userSelectedTarget2) {
+            $createNewTarget = @"
+            target add --con-name "$tgtDsn" --name "$userSelectedTarget2" --database "$tgtDB" --schema "$userSelectedTarget2" --tree-colour #4e00c0
+"@
+            $x = Execute-RedCliCommands $createNewTarget $commonRedCliArgs
+
+          }
+        }
+        # If user selected Cancel button, skip Oracle Parameters deployment application
+        if ($null -ne $userSelectedTarget2) {
+          if ($isProgressBar -eq $true) {
+            Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Installing Deployment Applications" -CurrentOperation "Installing Parameters application on $userSelectedTarget2" -PercentComplete 57
+          }
+
+          $dimCmd = @"
+          deployment deploy --app-number ORPARAM --app-version 0001 --app-directory "$buildpath\Deployment Applications\PostgreSQL\Parameters" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "$userSelectedTarget2"
+          object generate-routine  --routine-owner-name "DSS_PARAM"  --routine-owner-type object --routine-operation  windows-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+          object generate-routine  --routine-owner-name "DSS_PARAM"  --routine-owner-type object --routine-operation  unix-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+"@
+          $x = Execute-RedCliCommands $dimCmd $commonRedCliArgs
+        }
+      }
+    }
+
+    if ($isProgressBar -eq $true) {
+      Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Setting Up Target" -CurrentOperation "Executing target specific post-steps" -PercentComplete 60
+    }
+    # Execute Target Specific Post-Steps
+    $installStep = 700
+    $x = Execute-PostSteps
+
+
+    # Show a pop up 'Yes' or 'No' dialog box to install powershell modules
+    # $installPowerShellModules = Show-YesNoDialog -Title 'Install PowerShell Modules' -Message 'Do you want to install PowerShell modules?'
+
+    if ($powershellModuleCheck) {
+      if ($isProgressBar -eq $true) {
+        Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "PowerShell Modules" -CurrentOperation "Installing powershell modules" -PercentComplete 70
+      }
+
+      # Install PowerShell Modules
+      $installStep = 800
+      invoke-expression 'cmd /c start powershell "& ''$buildpath\Powershell Modules\WslPowershellInstall.ps1''"'
+    }
+
+
+    # Show a pop up 'Yes' or 'No' dialog box to install python libraries
+    # $installPythonLibraries = Show-YesNoDialog -Title 'Install Python Libraries' -Message 'Do you want to install Python libraries?'
+    if ($pythonLibCheck) {
+      if ($isProgressBar -eq $true) {
+        Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Python Libraries" -CurrentOperation "Updating PIP package manager for python packages" -PercentComplete 75
+      }
+
+      # Install Python Libraries
+      $installStep = 900
+      # Check for Python
+      if($env:Path -like "*Python*") {
+        $pythonCheck = $true
+      } else {
+        Add-Type -AssemblyName System.Windows.Forms
+        [System.Windows.Forms.MessageBox]::Show("Python is required, it must be both installed and in the system PATH", "Python Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+      }
+
+      Write-Host 1
+      # If python is installed
+      if ($pythonCheck -eq $true) {
+        python -m pip install --upgrade pip
+        python -m pip install -r "$buildpath\requirements.txt"
+        if ($isProgressBar -eq $true) {
+          Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Python Libraries" -CurrentOperation "Python packages successfully installed" -PercentComplete 85
+        }
+      }
+    }
+
+
+  }
+  catch {
+    if ($isProgressBar -eq $true) {
+      Close-ProgressBar $ProgressBar
+    }
+    Write-Host -2
+    Write-Host 'Failure'
+    Write-Host $PSItem.Exception.Message
+    Write-Host $PSItem.Exception.InnerExceptionMessage
+    Print-Results $results
+    Exit
+  }
+  if ($isProgressBar -eq $true) {
+    Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Finishing" -CurrentOperation "Setting the wsl_post_install_enablement_pack script type to PowerShell" -PercentComplete 90
+  }
+
+  $null = Update-PostInstallScriptType
+
+  if ($isProgressBar -eq $true) {
+    Write-ProgressBar -Activity "Post-Installation Steps" -ProgressBar $progressBar -Status "Finishing" -CurrentOperation "Done" -PercentComplete 100
+    Close-ProgressBar $ProgressBar
+  }
+  Add-Type -AssemblyName System.Windows.Forms
+  $null=[System.Windows.Forms.MessageBox]::Show("Installation Completed", "Post-Installation Steps", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+  Write-Host 1
+  Write-Host 'Success'
+  Print-Results $results
+  Write-Host 'Post installation steps are completed. Please restart RED once to continue'
+  Exit
+}
+else {
+  Write-Host 1
+}

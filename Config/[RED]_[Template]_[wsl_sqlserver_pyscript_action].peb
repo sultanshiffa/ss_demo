@@ -1,0 +1,124 @@
+{# -- TemplateVersion:004 MinVersion:8510 MaxVersion:* TargetType:SqlServer ModelType:* TemplateType:Python Script                                            -- #}
+{% extends "wsl_common_pyscript_utility_action" %}
+
+{% block "ExecuteSQLBlock" %}
+def ExecuteSQLBlock(
+    block,
+    uidSF = str(os.environ.get('WSL_TGT_USER','')),
+    pwdSF = str(os.environ.get('WSL_TGT_PWD','')),
+    dsnSF = str(os.environ.get('WSL_TGT_DSN','')),
+    serverSF= str(os.environ.get('WSL_TGT_SERVER',''))
+    ):
+    if block.isspace() or block == "":
+        return True
+    try:
+        if os.environ.get('WSL_TGT_CONSTRING','') != "":
+            SFConnectionString = os.environ.get('WSL_TGT_CONSTRING','')
+        else:
+            uid = uidSF
+            pwd = pwdSF
+            SFConnectionString = "DSN=" + dsnSF
+            if uid and not uid.isspace():
+              SFConnectionString += ";UID="+uid
+            if pwd and not pwd.isspace():
+              SFConnectionString += ";PWD="+pwd
+        SFConnection = pyodbc.connect(SFConnectionString, autocommit=True)
+        SFconn = SFConnection.cursor() {%- br %}
+        try: {%- br %}
+            result = SFconn.execute(block)
+        except pyodbc.ProgrammingError as e: {%- br %}
+            if str(e) == 'No results.  Previous SQL was not a query.':
+                return True
+            else: {%- br %}
+                write_error(f"SQL error: {e}")
+                raise e{%br%}
+        SFconn.close(){%- br %}
+        return True
+    except Exception as exceptionError:
+        write_error(f"SQL error or connection error has occurred: {block}" + repr(exceptionError))
+        raise exceptionError{%br%}
+{% endblock %}
+
+{% block "Ws_Call_Procedure" %}
+def Ws_Call_Procedure(
+    procName
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+    try:
+        if os.environ.get('WSL_TGT_CONSTRING','') != "":
+            ConnectionString = os.environ.get('WSL_TGT_CONSTRING','')
+        else:
+            uid=str(os.environ.get('WSL_TGT_USER',''))
+            pwd=str(os.environ.get('WSL_TGT_PWD',''))
+            ConnectionString = "DSN="+str(os.environ.get('WSL_TGT_DSN',''))
+            if uid and not uid.isspace():
+              ConnectionString += ";UID="+uid
+            if pwd and not pwd.isspace():
+              ConnectionString += ";PWD="+pwd
+        conn = pyodbc.connect(ConnectionString, autocommit=True)
+        sql ="""DECLARE
+                @p_return_msg varchar(1024),
+                @p_status int
+
+              EXEC ?
+              @p_sequence = ?,
+              @p_job_name = ?,
+              @p_task_name = ?,
+              @p_job_id = ?,
+              @p_task_id = ?,
+              @p_return_msg = @p_return_msg OUTPUT,
+              @p_status = @p_status OUTPUT;
+
+              SELECT @p_return_msg as p_return_msg,
+              @p_status as p_status"""
+
+        Parameters=[procName,sequence,jobName,taskName,jobId,taskId]
+        cursor = conn.cursor()
+        try:
+            cursor.execute(sql,Parameters)
+        except pyodbc.Error as sql_error:
+            write_error(f"SQL error has occurred ")
+            raise sql_error
+        returnValues = cursor.fetchall()
+        if returnValues[0][1] == 1:
+            return True, returnValues[0][0]
+        else:
+            cursor.close()
+            return False, returnValues[0][0]
+    except Exception as exceptionError:
+        write_error(f"Procedure error or connection error has occurred: {procName}" + repr(exceptionError))
+        raise exceptionError
+{% endblock %}
+
+{% block "ExecuteProcedure" %}
+def ExecuteProcedure(procName):
+    result = Ws_Call_Procedure(f"{procName}")
+    scriptResultMessage = result[1]
+    if result[0] == True:
+        scriptResultCode = 1
+        write_audit(f"Execution of Table {procName} completed successfully")
+        write_audit(str(scriptResultMessage))
+    else:
+        write_error(f"Execution of Table {procName} Failed")
+        write_error(str(scriptResultMessage))
+        raise Exception(f"Execution of Table {procName} Failed")
+{% endblock %}
+
+{% block "DropProcedure" %}
+def DropProcedure():{%br%}
+  ExecuteSQLBlock(r"""{%br%}
+DROP PROCEDURE {{ FullyQualifyProcedure(table) }}{%br%}
+"""
+)
+{% endblock %}
+
+{% block "FullyQualifyProcedure_Macro" %}
+{%- macro FullyQualifyProcedure(procObject = table) -%}
+{#{{procObject.target.schema}}.{{procObject.name}}#}
+[SCHEMA.{{procObject.name}}].{{procObject.name}}
+{%- endmacro -%}
+{% endblock %}

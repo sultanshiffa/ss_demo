@@ -1,0 +1,3534 @@
+# ScriptVersion:005 MinVersion:8310 MaxVersion:* TargetType:* ModelType:* ScriptType:Python
+# --    (c) WhereScape Inc 2020. WhereScape Inc permits you to copy this module solely for use with the RED software, and to modify this module            -- #
+# --    for the purposes of using that modified module with the RED software, but does not permit copying or modification for any other purpose.           -- #
+# --                                                                                                                                                       -- #
+#=====================================================================================================
+# Module Name      :    WslPythonCommon
+# DBMS Name        :    Generic for all databases
+# Description      :    Generic python functions module used by many
+#                       different templates, scripts and database specific
+#                       modules
+# Author           :    Wherescape Inc
+#======================================================================================================
+# Notes / History
+#  PM:  1.0.0   2020-07-27   First Version
+#  PM:  1.0.1   2022-01-11   Updated RunRedSQL Function to handle sessions of the pyodbc connection
+#======================================================================================================
+
+import datetime
+import re
+import pyodbc
+import os
+import sys
+import fnmatch
+import logging
+import json
+import threading
+import queue
+import traceback
+import oracledb
+import csv
+import time
+
+if sys.platform != 'linux':
+    import win32console
+    import win32gui
+    import pytds
+    from pytds import login
+    import warnings
+    from win32ctypes.pywin32.win32api import *
+    from ctypes import*
+
+import gzip
+import pandas as pd
+import csv
+import numpy as np
+import os
+import shutil
+import logging
+import subprocess
+import datetime
+import glob
+import re
+import time
+import boto3
+import botocore
+import warnings
+import fastavro
+import pyarrow.parquet as pq
+import pyorc
+
+# Suppress the specific warning
+warnings.filterwarnings('ignore', category=UserWarning, message='pandas')
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Connect_Replace API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsConnectReplace("Sales2" ,"Sales")
+#
+def WsConnectReplace(
+        SourceConnection='',
+        TargetConnection=''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+    try:
+
+        if os.environ.get('WSL_META_CONSTRING','') != "":
+            ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+
+        else:
+            uid=str(os.environ.get('WSL_META_USER',''))
+            pwd=str(os.environ.get('WSL_META_PWD',''))
+            ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+            if uid and not uid.isspace():
+                ConnectionString += ";UID="+uid
+            if pwd and not pwd.isspace():
+                ConnectionString += ";PWD="+pwd
+
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsConnectReplace(?,?,?,?,?,?,?,?);"""
+        else:
+            sql = """
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Connect_Replace
+            @p_sequence  =?
+            ,	@p_job_name  = ?
+            , @p_task_name  = ?
+            , @p_job_id = ?
+            , @p_task_id = ?
+            , @p_action = ?
+            , @p_source = ?
+            , @p_target = ?
+            , @p_return_code = @out OUTPUT
+            , @p_return_msg = @out1 OUTPUT
+            , @p_result   = @out2 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,"REPLACE",SourceConnection,TargetConnection  ]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error getting Connections " +SourceConnection+" "+TargetConnection)
+        raise
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Abort API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobAbort("DailyUpdate","Job aborted by WsJobAbort API.")
+#
+def WsJobAbort(
+        JobName = '',
+        Sequence = 0,
+        JobMsg = ''
+    ):
+    try:
+        if os.environ.get('WSL_META_CONSTRING','') != "":
+            ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+
+        else:
+            uid=str(os.environ.get('WSL_META_USER',''))
+            pwd=str(os.environ.get('WSL_META_PWD',''))
+            ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+            if uid and not uid.isspace():
+                ConnectionString += ";UID="+uid
+            if pwd and not pwd.isspace():
+                ConnectionString += ";PWD="+pwd
+
+        conn = pyodbc.connect(ConnectionString)
+        sql = "{call "+os.environ.get('WSL_META_SCHEMA','')+"WsJobAbort (?,?,?)}"
+        Parameters=[JobName,Sequence,JobMsg]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        conn.commit()
+        cursor.close()
+        print("Executed Successfully")
+        sys.exit()
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job Abort " +JobName)
+        raise
+
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Clear_Archive API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobClearArchive -DayCount 10 -Job "DailyUpdate"
+#WsJobClearArchive("TRUNCATE")
+#>
+def WsJobClearArchive(
+        DayCount = '',
+        Job ='',
+        Options = ''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobClearArchive(?,?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_Clear_Archive
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_day_count = ?
+          , @p_job = ?
+          , @p_options = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,DayCount,Job,Options]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +Job)
+        raise
+
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Clear_Logs API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobClearLogs("DailyUpdate", 10)
+#
+def WsJobClearLogs(
+        JobToClean = '',
+        KeepCount = 0
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobClearLogs(?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_Clear_Logs
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_job_to_clean = ?
+          , @p_keep_count = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,JobToClean,KeepCount]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +JobToClean)
+        raise
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Clear_Logs_By_Date API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobClearLogsByDate("DailyUpdate",10)
+#>
+def WsJobClearLogsByDate(
+        JobToClean = '',
+        DayCount = 0
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobClearLogsByDate(?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_Clear_Logs_By_Date
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_job_to_clean = ?
+          , @p_day_count = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,JobToClean,DayCount]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +JobToClean)
+        raise
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Create API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobCreate( "DailyUpdate" ,"DailyUpdate_${env:WSL_SEQUENCE}","ONCE",5)
+#>=
+def WsJobCreate(
+        TemplateJob = '',
+        NewJob = '',
+        Description ='',
+        State = '',
+        Threads = 0,
+        Scheduler = '',
+        Logs = 0,
+        SuccessCmd = '',
+        FailureCmd =''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobCreate(?,?,?,?,?,?,?,?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_Create
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_template_job = ?
+          , @p_new_job = ?
+          , @p_description = ?
+          , @p_state = ?
+          , @p_threads = ?
+          , @p_scheduler = ?
+          , @p_logs = ?
+          , @p_okay = ?
+          , @p_fail = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,TemplateJob,NewJob,Description,State,Threads,Schedule,Logs,SuccessCmd,FailureCmd]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +TemplateJob)
+        raise
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_CreateWait API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+##.EXAMPLE
+#WsJobCreateWait ("DailyUpdate","DailyUpdate_${env:WSL_SEQUENCE}","ONCE" , 5,e (Get-Date "2017-10-3").DateTime)
+#
+def WsJobCreateWait(
+        TemplateJob = '',
+        NewJob = '',
+        Description ='',
+        State = '',
+        ReleaseTime = '',
+        Threads = 0,
+        Scheduler = '',
+        Logs = 0,
+        SuccessCmd = '',
+        FailureCmd =''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobCreateWait(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_CreateWait
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_template_job = ?
+          , @p_new_job = ?
+          , @p_description = ?
+          , @p_state = ?
+          , @p_release_time = ?
+          , @p_threads = ?
+          , @p_scheduler = ?
+          , @p_logs = ?
+          , @p_okay = ?
+          , @p_fail = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+        `   SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,TemplateJob,NewJob,Description,State,ReleaseTime,Threads,Schedule,Logs,SuccessCmd,FailureCmd]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +TemplateJob)
+        raise
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Release API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobRelease ("DailyUpdate")
+#>
+def WsJobRelease(
+        ReleaseJob = ''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobRelease(?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_Release
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_release_job    = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+        SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,statusCode,ReleaseJob,ReleaseTime]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +TemplateJob)
+        raise
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Restart API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobRestart("DailyUpdate")
+#
+def WsJobRestart(
+        RestartJob = ''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobRestart(?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Job_Restart
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_release_job    = ?
+          , @p_release_time = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,statusCode,ReleaseJob]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +TemplateJob)
+        raise
+    #
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Schedule API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobSchedule( "DailyUpdate", (Get-Date "2017-10-3 19:30").DateTime)
+#
+def WsJobSchedule(
+        ReleaseJob = '',
+        ReleaseTime = ''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobSchedule(?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC @rc=Ws_Job_Schedule
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_release_job    = ?
+          , @p_release_time = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT rc as status,@out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,statusCode,ReleaseJob,ReleaseTime]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +ReleaseJob)
+        raise
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Job_Status API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsJobStatus( "DailyUpdate" ,120)
+#Ws_Job_Status -CheckJob "DailyUpdate" -StartedAfterDt (Get-Date).AddHours(-2).DateTime
+#>
+def WsJobStatus(
+        CheckSequence = '',
+        CheckJob = '',
+        StartedInLastMins = '',
+        StartedAfterDt =''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsJobStatus(?,?,?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max),@out3 nvarchar(max),@out4 nvarchar(max),@out5 nvarchar(max);
+            EXEC @rc=Ws_Job_Schedule
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_check_sequence =?
+          , @p_check_job = ?
+          , @p_started_in_last_mi = ?
+          , @p_started_after_dt = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+          , @p_job_status_simple   = @out3 OUTPUT;
+          , @p_job_status_standard   = @out4 OUTPUT;
+          , @p_job_status_enhanced   = @out5 OUTPUT;
+            SELECT @out AS return_code,@out1 AS return_msg,@out2 AS return_result,@out3 AS p_job_status_simple,@out4 AS p_job_status_standard,@out5 AS p_job_status_enhanced;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,CheckSequence,CheckJob,StartedInLastMins,StartedAfterDt]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Job " +ReleaseJob)
+        raise
+
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Load_Change API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsLoadChange( "SCHEMA","load_customers","site2")
+#Ws_Load_Change -Action "CONNECTION" -Table "load_customers" -NewValue "Sales2"
+#>
+def WsLoadChange(
+        Action = '',
+        Table = '',
+        NewValue = ''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsLoadChange(?,?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Load_Change
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_action   = ?
+          , @p_table = ?
+          , @p_new_value = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT rc as status,@out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,Action,Table,NewValue]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in Load table  " +Table)
+        raise
+
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Maintain_Indexes API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsMaintainIndexes("dim_date","BUILD ALL")
+#Ws_Maintain_Indexes -IndexName "dim_date_idx_0" -Option "DROP"
+#
+def WsMaintainIndexes(
+        TableName ='',
+        IndexName ='',
+        Option =''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsMaintainIndexes(?,?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Maintain_Indexes
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_table_name   = ?
+          , @p_index_name = ?
+          , @p_option = ?
+          , @p_return_code = @out OUTPUT;
+            SELECT @out AS return_code;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,TableName,Table,IndexName,Option]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in  table  " +TableName)
+        raise
+
+#
+#.DESCRIPTION
+#Wrapper function for the Ws_Version_Clear API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsVersionClear(60)
+#>
+def WsVersionClear(
+        DayCount = 0,
+        KeepCount = 0
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+            sql = """ SELECT red.WsVersionClear(?,?,?,?,?,?,?); """
+        else:
+            sql="""
+            DECLARE @out nvarchar(max),@out1 nvarchar(max),@out2 nvarchar(max);
+            EXEC Ws_Version_Clear
+            @p_sequence  =?
+          ,	@p_job_name  = ?
+          , @p_task_name  = ?
+          , @p_job_id = ?
+          , @p_task_id = ?
+          , @p_day_count   = ?
+          , @p_keep_count = ?
+          , @p_return_code = @out OUTPUT
+          , @p_return_msg = @out1 OUTPUT
+          , @p_result   = @out2 OUTPUT;
+            SELECT rc as status,@out AS return_code,@out1 AS return_msg,@out2 AS return_result;"""
+        Parameters=[sequence,jobName,taskName,jobId,taskId,DayCount,KeepCount]
+        cursor = conn.cursor()
+        cursor.execute(sql,Parameters)
+        returnValues=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in  Job  " +jobName)
+        raise
+
+#
+#.DESCRIPTION
+#Used to hide the evil black box of death
+#win32console -- Interface to the Windows Console functions for dealing with character-mode applications
+#win32gui -- Python extensions for Microsoft Windows Provides access to much of the Win32 API
+#ShowWindow -- '0' passed to hide console window
+def HideWindow():
+    hwnd=int(win32console.GetConsoleWindow())
+    win32gui.ShowWindow(hwnd,0)
+    return True
+#ShowWindow -- '1' passed to show console window
+def UnhideWindow():
+    hwnd=int(win32console.GetConsoleWindow())
+    win32gui.ShowWindow(hwnd,1)
+    return True
+#
+#.DESCRIPTION
+#Wrapper function for the WsParameterRead API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsParameterRead ("CURRENT_DAY")
+#
+def WsParameterRead(
+        ParameterName = ''
+    ):
+    if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+        sql = """ SELECT p_value, p_comment from red.WsParameterRead(?); """
+    else:
+        sql="""
+        DECLARE @out varchar(max),@out1 varchar(max);
+        EXEC WsParameterRead
+        @p_parameter = ?
+       ,@p_value = @out OUTPUT
+       ,@p_comment=@out1 OUTPUT;
+        SELECT @out AS p_value,@out1 AS p_comment;"""
+    Parameters=[ParameterName]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        cursor=conn.cursor()
+        number_of_rows=cursor.execute(sql,Parameters)
+        rows=cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        return rows
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in  Parameter Read  " +ParameterName)
+        raise
+
+#
+#.DESCRIPTION
+#Wrapper function for the WsParameterWrite API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsParameterWrite("CURRENT_DAY","Monday" ,"The current day of the week")
+#
+def WsParameterWrite(
+        ParameterName    = '',
+        ParameterValue   = '',
+        ParameterComment = ''
+    ):
+    sql = "{call "+os.environ.get('WSL_META_SCHEMA','')+"WsParameterWrite (?,?,?)}"
+    Parameters=[ParameterName,ParameterValue,ParameterComment]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        cursor=conn.cursor()
+        number_of_rows=cursor.execute(sql,Parameters)
+        # rows=cursor.execute("select @@rowcount")
+        rowcount = cursor.fetchall()[0][0]
+        conn.commit()
+        cursor.close()
+        return rowcount
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in  Parameter Write  " +ParameterName)
+        raise
+
+
+
+#.DESCRIPTION
+#Wrapper function for the WsWrkAudit API procedure.
+#For more information about usage or return values, refer to #the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsWrkAudit -Message "This is an audit log INFO message created #by calling WsWrkAudit"
+#WsWrkAudit -StatusCode "E" -Message "This is an audit log ERROR message created by calling WsWrkAudit"
+#
+def WsWrkAudit(
+        StatusCode = 'I',
+        Message='',
+        DBCode='',
+        DBMessage=''):
+    sql = "{call "+os.environ.get('WSL_META_SCHEMA','')+"WsWrkAudit (?,?,?,?,?,?,?,?,?)}"
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    Parameters=[StatusCode,jobName,taskName,sequence,Message,DBCode,DBMessage,taskId,jobId]
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        cursor=conn.cursor()
+        numberOfRows=cursor.execute(sql,Parameters)
+        conn.commit()
+        cursor.close()
+        return numberOfRows
+    except  Exception as exceptionError:
+        print(-2)
+        print("Error in  Parameter Read  " +ParameterName)
+        raise
+
+#.DESCRIPTION
+#Wrapper function for the WsWrkTask API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+##.EXAMPLE
+#WsWrkTask(20, 35)
+#>
+def WsWrkTask(
+        Inserted = 0,
+        Updated = 0,
+        Replaced = 0,
+        Deleted = 0,
+        Discarded = 0,
+        Rejected = 0,
+        Errored = 0
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+        sql = """ SELECT red.WsWrkTask(?,?,?,?,?,?,?,?,?,?); """
+    else:
+        sql="""
+        SET NOCOUNT ON
+        DECLARE @out nvarchar(max);
+        EXEC @out=WsWrkTask
+        @p_job_key = ?
+      , @p_task_key = ?
+      , @p_sequence = ?
+      , @p_inserted = ?
+      , @p_updated   = ?
+      , @p_replaced  = ?
+      , @p_deleted    = ?
+      , @p_discarded  = ?
+      , @p_rejected  = ?
+      , @p_errored   = ?;
+        SELECT @out AS return_value;"""
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    Parameters=[jobId,taskId,sequence,Inserted,Updated,Replaced,Deleted,Discarded,Rejected,Errored]
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        cursor = conn.cursor()
+        cursor.fast_executemany = False
+        cursor.execute(sql,Parameters)
+        return_values=cursor.fetchone()
+        nextNumber = return_values[0]
+        conn.commit()
+        cursor.close()
+        return nextNumber
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in  Jobid   " +jobId)
+        raise
+
+
+#
+#.DESCRIPTION
+#Wrapper function for the WsWrkError API procedure.
+#For more information about usage or return values, refer to the Callable Routines API section of the user guide.
+#.EXAMPLE
+#WsWrkError ( "This is a detail log INFO message created by calling WsWrkAudit")
+#WsWrkError -StatusCode "E" -Message "This is a detail log ERROR message created by calling WsWrkAudit"
+#>
+def WsWrkError(
+        statusCode  = 'I',
+        message     = '',
+        dbCode      = '',
+        dbMessage   = '',
+        messageType = ''
+    ):
+    sequence = os.environ["WSL_SEQUENCE"]
+    jobName = os.environ["WSL_JOB_NAME"]
+    taskName = os.environ["WSL_TASK_NAME"]
+    jobId = os.environ["WSL_JOB_KEY"]
+    taskId = os.environ["WSL_TASK_KEY"]
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    conn = pyodbc.connect(ConnectionString)
+
+    sql = "{call "+os.environ.get('WSL_META_SCHEMA','')+"WsWrkError (?,?,?,?,?,?,?,?,?,?)}"
+    Parameters=[statusCode,jobName,taskName,sequence,message,dbCode,dbMessage,taskId,jobId,messageType]
+    try:
+        cursor = conn.cursor()
+        cnt=cursor.execute(sql,Parameters).rowcount
+        if cnt>0:
+         nextNum = 1
+        else:
+          nextNum=0
+        conn.commit()
+        cursor.close()
+        return nextNum
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error in  Jobid   " +jobId)
+        raise
+
+def GetExtendedProperty(
+        propertyName,
+        tableName
+    ):
+    if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+        sql="""
+              SELECT COALESCE(tab.epv_value, src.epv_value, tgt.epv_value, '')
+              FROM """+os.environ.get("WSL_META_SCHEMA","")+"""ws_ext_prop_def def
+              LEFT OUTER JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_ext_prop_value tab
+              ON tab.epv_obj_key = ( SELECT oo_obj_key
+                                     FROM """+os.environ.get("WSL_META_SCHEMA","")+"""ws_obj_object
+                                     WHERE UPPER(oo_name) = UPPER('"""+tableName+"""')
+                                   )
+              AND tab.epv_def_key = def.epd_key
+              LEFT OUTER JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_ext_prop_value src
+              ON src.epv_obj_key = ( SELECT lt_connect_key
+                                     FROM """+os.environ.get("WSL_META_SCHEMA","")+"""ws_load_tab
+                                     WHERE UPPER(lt_table_name) = UPPER('"""+tableName+"""')
+                                   )
+              AND src.epv_def_key = def.epd_key
+              LEFT OUTER JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_ext_prop_value tgt
+              ON tgt.epv_obj_key = ( SELECT dc_obj_key
+                                     FROM """+os.environ.get("WSL_META_SCHEMA","")+"""ws_dbc_connect
+                                     JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_dbc_target
+                                     ON dt_connect_key = dc_obj_key
+                                     JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_obj_object
+                                     ON oo_target_key = dt_target_key
+                                     WHERE UPPER(oo_name) = UPPER('"""+tableName+"""')
+                                   )
+              AND tgt.epv_def_key = def.epd_key
+              LEFT OUTER JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_ext_prop_value xpt
+              ON xpt.epv_obj_key = ( SELECT dc_obj_key
+                                     FROM """+os.environ.get("WSL_META_SCHEMA","")+"""ws_dbc_connect
+                                     JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_export_tab
+                                     ON et_connect_key = dc_obj_key
+                                     WHERE UPPER(et_table_name) = UPPER('"""+tableName+"""')
+                                   )
+              AND xpt.epv_def_key = def.epd_key
+              WHERE UPPER(def.epd_variable_name) = UPPER('"""+propertyName+"""')
+            """
+    else:
+        sql="""
+          SELECT COALESCE(tab.epv_value, src.epv_value, tgt.epv_value, '')
+          FROM ws_ext_prop_def def
+          LEFT OUTER JOIN ws_ext_prop_value tab
+          ON tab.epv_obj_key = ( SELECT oo_obj_key
+                                 FROM ws_obj_object
+                                 WHERE UPPER(oo_name) = UPPER('"""+tableName+"""')
+                               )
+          AND tab.epv_def_key = def.epd_key
+          LEFT OUTER JOIN ws_ext_prop_value src
+          ON src.epv_obj_key = ( SELECT lt_connect_key
+                                 FROM ws_load_tab
+                                 WHERE UPPER(lt_table_name) = UPPER('"""+tableName+"""')
+                               )
+          AND src.epv_def_key = def.epd_key
+          LEFT OUTER JOIN ws_ext_prop_value tgt
+          ON tgt.epv_obj_key = ( SELECT dc_obj_key
+                                 FROM ws_dbc_connect
+                                 JOIN ws_dbc_target
+                                 ON dt_connect_key = dc_obj_key
+                                 JOIN ws_obj_object
+                                 ON oo_target_key = dt_target_key
+                                 WHERE UPPER(oo_name) = UPPER('"""+tableName+"""')
+                               )
+          AND tgt.epv_def_key = def.epd_key
+          WHERE UPPER(def.epd_variable_name) = UPPER('"""+propertyName+"""')
+          """
+    try:
+        if os.environ.get('WSL_META_CONSTRING','') != "":
+            ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+        else:
+            uid=str(os.environ.get('WSL_META_USER',''))
+            pwd=str(os.environ.get('WSL_META_PWD',''))
+            ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+            if uid and not uid.isspace():
+                ConnectionString += ";UID="+uid
+            if pwd and not pwd.isspace():
+                ConnectionString += ";PWD="+pwd
+
+        conn = pyodbc.connect(ConnectionString)
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        return_values=cursor.fetchone()
+        conn.commit()
+        cursor.close()
+        if return_values is None:
+            return ""
+        return return_values[0]
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error getting Extended Property " +propertyName)
+        raise
+
+
+def GetFileFormatFullName(
+        fileFormat
+    ):
+    if str(os.environ.get('WSL_META_SCHEMA','')) == "red.":
+        sql="""
+           SELECT dt_database,dt_schema
+           FROM """+os.environ.get("WSL_META_SCHEMA","")+"""ws_dbc_target
+           INNER JOIN """+os.environ.get("WSL_META_SCHEMA","")+"""ws_obj_object
+           ON dt_target_key = oo_target_key
+           where oo_name='"""+fileFormat+"'"
+    else:
+        sql="""
+           SELECT dt_database,dt_schema
+           FROM ws_dbc_target
+           INNER JOIN ws_obj_object
+           ON dt_target_key = oo_target_key
+           where oo_name='"""+fileFormat+"'"
+
+    if os.environ.get('WSL_META_CONSTRING','') != "":
+        ConnectionString = os.environ.get('WSL_META_CONSTRING','')
+    else:
+        uid=str(os.environ.get('WSL_META_USER',''))
+        pwd=str(os.environ.get('WSL_META_PWD',''))
+        ConnectionString = "DSN="+str(os.environ.get('WSL_META_DSN',''))
+        if uid and not uid.isspace():
+            ConnectionString += ";UID="+uid
+        if pwd and not pwd.isspace():
+            ConnectionString += ";PWD="+pwd
+
+    try:
+        conn = pyodbc.connect(ConnectionString)
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        returnValues=cursor.fetchone()
+        conn.commit()
+        cursor.close()
+        if returnValues == None:
+           returnValues = ""
+        elif not returnValues[0].strip() or returnValues[0].strip() == None:
+           returnValues = returnValues[1]
+        elif not returnValues[1].strip() or returnValues[1].strip() == None:
+           returnValues = returnValues[0]
+        else:
+           returnValues = returnValues[0]+"."+returnValues[1]
+        return returnValues
+    except  Exception as exceptionError:
+        print(-2)
+        print ("Error getting Extended Property " +propertyName)
+        raise
+
+#.DESCRIPTION
+#Used to run any SQL against any ODBC DSN
+#.EXAMPLE
+#RunRedSQL( "SELECT * FROM stage_customers","dssdemo")
+#options is the extra argument required for connection string for adding more parameters
+def RunRedSQL(
+                sql,
+                dsn,
+                uid,
+                pwd,
+                connection="",
+                options=''
+               ):
+
+    if os.environ.get('WSL_TGT_CONSTRING','') != "":
+        connectionString = os.environ.get('WSL_TGT_CONSTRING','')
+    else:
+        connectionString = 'DSN='+dsn
+        if uid and not uid.isspace():
+            connectionString +=';UID='+uid
+        if pwd and not pwd.isspace():
+            connectionString +=';PWD='+pwd
+
+    connectionString += options
+    numberOfRows=0
+    rows=''
+    infoEvent=''
+    flag=0
+    try:
+        if sql and not sql.isspace():
+         if connection not in (None, ""):
+           cursor=connection.cursor().execute(sql)
+         else:
+           if connection=="":
+             flag=1
+           connection = pyodbc.connect(connectionString, autocommit=True)
+           cursor=connection.cursor().execute(sql)
+
+    except Exception as e:
+           return connection,-2,0,e.args,rows
+    try:
+
+        if sql.lstrip().startswith("SELECT")==True:
+         try:
+          rows = cursor.fetchall()
+          numberOfRows=len(rows)
+         except Exception as inst:
+            infoEvent=inst
+        else:
+           numberOfRows=cursor.rowcount
+        if flag==1:
+         connection.commit()
+         connection.close()
+        return connection,1,numberOfRows,infoEvent,rows
+    except pyodbc.Error as ex:
+        sqlstate = ex.args[0]
+        return connection,-2,numberOfRows,ex.args,rows
+
+
+def SplitThresholdExceeded(query, dsn,uid,pwd, splitThreshold):
+    numberOfRows=RunRedSQL(query, dsn,uid,pwd)
+    split=False
+    if numberOfRows[2] >=splitThreshold :
+         split = True
+    return split
+
+def  GetDataToFile( query,dsn,uid,pwd,dataFile,delimiter,fileCount,splitThreshold,addQuotes,unicode,enclosedBy,escapeChar):
+  try:
+
+    if os.environ.get('WSL_SRC_CONSTRING','') != "":
+        connectionString = os.environ.get('WSL_SRC_CONSTRING','')
+    else:
+        connectionString = 'DSN='+dsn
+        if uid and not uid.isspace():
+            connectionString +=';UID='+uid
+        if pwd and not pwd.isspace():
+            connectionString +=';PWD='+pwd
+    connection = pyodbc.connect(connectionString, autocommit=True)
+    cursor = connection.cursor()
+    cursor.execute(query)
+
+    rowCount = 0
+    cntRecords=0
+    fileNumber=0
+    encoding_type = ''
+    fileObjects=[]
+    shouldSplit = False
+
+    if unicode==True:
+        encoding_type = 'utf-8'
+    else:
+        encoding_type = 'ascii'
+
+    if fileCount > 1 and splitThreshold > 0:
+       shouldSplit = SplitThresholdExceeded(query, dsn,uid,pwd, splitThreshold)
+
+    fileList =[dataFile + ".txt"]
+
+    f = open(fileList[fileNumber],encoding=encoding_type, mode='a+',errors='replace')
+    fileObjects.insert(0,f)
+
+    if shouldSplit==True:
+       i=1
+       while i < fileCount:
+        fileList.append(dataFile + "_" + str(i) + ".txt")
+        f = open(fileList[i],encoding=encoding_type, mode='a+',errors='replace')
+        fileObjects.insert(i,f)
+        i=i+1
+
+    for row in cursor:
+        rowCount=rowCount+1
+        recordList=[]
+        for eachValue in row:
+           dataVal=eachValue
+           if addQuotes == True:
+             if escapeChar and not escapeChar.isspace():
+               dataVal = str(dataVal).replace(escapeChar, escapeChar + escapeChar)
+             dataVal =str(dataVal).replace(enclosedBy,escapeChar + enclosedBy)
+
+             if dataVal=='None':
+               dataVal=""
+             # enclose the value with enclosedBy chars
+             dataVal = enclosedBy + dataVal + enclosedBy
+             recordList.append(dataVal)
+           else:
+             #if not enclosedBy set, strip out delimiter char
+              recordList.append(str(dataVal).replace(delimiter,""))
+           rowNew = recordList
+        formattedRecord = delimiter.join(rowNew).replace("\r","").replace("\n","")
+
+        try:
+           if fileNumber == fileCount and shouldSplit==True:
+                fileNumber = 0
+           fileObjects[fileNumber].write(formattedRecord+"\n")
+           if fileNumber < fileCount and shouldSplit==True:
+              fileNumber=fileNumber+1
+        except Exception as inst:
+            print("Error  at line "+formattedRecord)
+            print(inst.args)
+
+    for file in fileObjects:
+      file.close()
+
+    cursor.close
+    connection.close()
+    return 1,rowCount
+
+  except Exception as inst:
+       print(-2)
+       print(inst)
+       return -2
+
+def GetDataToFileV2(query, dsn, uid, pwd, dataFile, delimiter, splitThreshold, addQuotes, unicode, enclosedBy, escapeChar, header, fileType, compression, dbType=""):
+    try:
+        fileType = fileType.lower()
+        fileSplit = dataFile.split('.')
+
+        if len(fileSplit) > 1:
+            fileExt = fileSplit[-1]
+            filePath = ''.join(fileSplit[0:-1])
+
+        if os.environ.get('WSL_SRC_CONSTRING','') != "":
+            connectionString = os.environ.get('WSL_SRC_CONSTRING','')
+        else:
+            connectionString = 'DSN=' + dsn
+
+            if uid and not uid.isspace():
+                connectionString += ';UID=' + uid
+
+            if pwd and not pwd.isspace():
+                connectionString += ';PWD=' + pwd
+
+
+        with pyodbc.connect(connectionString, autocommit=True) as firstConnection:
+            cursor_temp = firstConnection.cursor()
+
+            # Get total row count
+            if dbType.lower() == 'oracle':
+                row_count_query = 'SELECT COUNT(*) FROM (' + query + ')'
+            else:
+                row_count_query = 'SELECT COUNT(*) FROM (' + query + ') AS T'
+            rowCount = cursor_temp.execute(row_count_query).fetchone()[0]
+
+            # calculate file count from row count and split threshold
+            fileCount = int(rowCount / splitThreshold) + 1
+
+
+        with pyodbc.connect(connectionString, autocommit=True) as connection:
+            cursor = connection.cursor()
+            cursor.execute(query)
+            if fileCount == 1 and fileType == 'csv':
+
+                rowCount = 0
+                with open(dataFile, 'a', newline='', encoding=unicode) as databasefile:
+                    # Get column names
+                    columns = [column[0] for column in cursor.description]
+
+                    while True:
+                        rows = cursor.fetchmany(splitThreshold)
+                        if not rows:
+                            break
+
+                        df = pd.DataFrame((tuple(t) for t in rows), columns=columns, dtype=object)
+                        if enclosedBy == "":
+                            quote = csv.QUOTE_NONE
+                            enclosedBy = None
+                        else:
+                            quote = csv.QUOTE_NONNUMERIC
+                        df.to_csv(databasefile, index=False, sep=delimiter, quotechar=enclosedBy, quoting=quote, escapechar=escapeChar, header=header, encoding=unicode)
+                        rowCount += len(df)
+
+            else:
+                columns = [column[0] for column in cursor.description]
+                if fileType == 'parquet':
+                    rowCount = 0
+                    if compression not in ['snappy', 'gzip', 'brotli', None]:
+                        compression = 'snappy'
+
+                    while True:
+                        rows = cursor.fetchmany(splitThreshold)
+                        if not rows:
+                            break
+
+                        df = pd.DataFrame((tuple(t) for t in rows), columns=columns)
+                        df.to_parquet(dataFile, compression=compression)
+                        rowCount += len(df)
+
+                else:
+                    dataFile = filePath + '{id}.' + fileExt
+                    rowCount = 0
+                    if compression not in ['infer', None, 'bz2', 'gzip', 'xz', 'zip', 'zstd']:
+                        compression = None
+
+                    for id in range(fileCount):
+                        rows = cursor.fetchmany(splitThreshold)
+
+                        if not rows:
+                            break
+
+                        if enclosedBy == "":
+                            quote = csv.QUOTE_NONE
+                            enclosedBy = None
+                        else:
+                            quote = csv.QUOTE_NONNUMERIC
+
+                        # Write tuple to csv file using csv writer
+                        with open(dataFile.format(id=id), 'a', newline='', encoding=unicode) as databasefile:
+                            writer = csv.writer(databasefile, delimiter=delimiter, quotechar=enclosedBy, quoting=quote, escapechar=escapeChar)
+                            writer.writerow(columns)
+                            writer.writerows(rows)
+                            rowCount += len(rows)
+
+                        # Free rows from memory
+                        del rows
+
+            return 1, rowCount
+
+    except Exception as inst:
+        return -2, inst
+
+def GetDataToFileV3(query, dsn, uid, pwd, dataFile, delimiter, splitThreshold, addQuotes, unicode, enclosedBy, escapeChar, header, fileType, compression, dbType=""):
+    try:
+        fileType = fileType.lower()
+        fileSplit = dataFile.split('.')
+
+        if len(fileSplit) > 1:
+            fileExt = fileSplit[-1]
+            filePath = ''.join(fileSplit[0:-1])
+
+        if os.environ.get('WSL_SRC_CONSTRING','') != "":
+            connectionString = os.environ.get('WSL_SRC_CONSTRING','')
+        else:
+            connectionString = 'DSN=' + dsn
+
+            if uid and not uid.isspace():
+                connectionString += ';UID=' + uid
+
+            if pwd and not pwd.isspace():
+                connectionString += ';PWD=' + pwd
+
+
+        with pyodbc.connect(connectionString, autocommit=True) as firstConnection:
+            cursor_temp = firstConnection.cursor()
+
+            # Get total row count
+            if dbType.lower() == 'oracle':
+                row_count_query = 'SELECT COUNT(*) FROM (' + query + ')'
+            else:
+                row_count_query = 'SELECT COUNT(*) FROM (' + query + ') AS T'
+            rowCount = cursor_temp.execute(row_count_query).fetchone()[0]
+
+            # calculate file count from row count and split threshold
+            fileCount = int(rowCount / splitThreshold) + 1
+
+
+        with pyodbc.connect(connectionString, autocommit=True) as connection:
+            cursor = connection.cursor()
+            cursor.execute(query)
+            if fileCount == 1 and fileType == 'csv':
+
+                rowCount = 0
+                with open(dataFile, 'a', newline='', encoding=unicode) as databasefile:
+                    # Get column names
+                    columns = [column[0] for column in cursor.description]
+
+                    while True:
+                        rows = cursor.fetchmany(splitThreshold)
+                        if not rows:
+                            break
+
+                        df = pd.DataFrame((tuple(t) for t in rows), columns=columns, dtype=object)
+                        df = df.map(lambda x: x.replace('\r', ' ').replace('\n', ' ') if isinstance(x, str) else x)
+                        if enclosedBy == "":
+                            quote = csv.QUOTE_NONE
+                            enclosedBy = None
+                        else:
+                            quote = csv.QUOTE_NONNUMERIC
+                        df_processed = df.copy()
+                        for col in df_processed.select_dtypes(include=['float']).columns:
+                            if df_processed[col].dropna().apply(float.is_integer).all():
+                                df_processed[col] = df_processed[col].astype('Int64')  # Keep it numeric
+
+                        df_processed.to_csv(databasefile, index=False, sep=delimiter, quotechar=enclosedBy, quoting=quote, escapechar=escapeChar, header=header, encoding=unicode)
+                        rowCount += len(df)
+
+            else:
+                columns = [column[0] for column in cursor.description]
+                if fileType == 'parquet':
+                    rowCount = 0
+                    if compression not in ['snappy', 'gzip', 'brotli', None]:
+                        compression = 'snappy'
+
+                    while True:
+                        rows = cursor.fetchmany(splitThreshold)
+                        if not rows:
+                            break
+
+                        df = pd.DataFrame((tuple(t) for t in rows), columns=columns)
+                        df.to_parquet(dataFile, compression=compression)
+                        rowCount += len(df)
+
+                else:
+                    dataFile = filePath + '{id}.' + fileExt
+                    rowCount = 0
+                    if compression not in ['infer', None, 'bz2', 'gzip', 'xz', 'zip', 'zstd']:
+                        compression = None
+
+                    for id in range(fileCount):
+                        rows = cursor.fetchmany(splitThreshold)
+
+                        if not rows:
+                            break
+
+                        if enclosedBy == "":
+                            quote = csv.QUOTE_NONE
+                            enclosedBy = None
+                        else:
+                            quote = csv.QUOTE_NONNUMERIC
+
+                        # Write tuple to csv file using csv writer
+                        with open(dataFile.format(id=id), 'a', newline='', encoding=unicode) as databasefile:
+                            writer = csv.writer(databasefile, delimiter=delimiter, quotechar=enclosedBy, quoting=quote, escapechar=escapeChar)
+                            writer.writerow(columns)
+                            writer.writerows(rows)
+                            rowCount += len(rows)
+
+                        # Free rows from memory
+                        del rows
+
+            return 1, rowCount
+
+    except Exception as inst:
+        return -2, inst
+
+def GetDataToFileFromOracle(query, server, uid, pwd, dataFile, delimiter, splitThreshold, addQuotes, unicode, enclosedBy, escapeChar, header, fileType, compression, dbType=""):
+    """
+    Oracle data fetch and split-to-CSV with GetDataToFileV2-compatible return values.
+    Returns:
+        (1, row_count) on success
+        (-2, Exception instance) on failure
+    """
+    start_time = time.time()
+    row_count_total = 0
+
+    try:
+        connection_string = f"{uid}/{pwd}@{server}"
+
+        folder = os.path.dirname(dataFile)
+        base_name = os.path.basename(dataFile)
+        file_prefix, file_ext = os.path.splitext(base_name)
+        file_ext = file_ext.lstrip('.') or 'csv'
+        os.makedirs(folder or '.', exist_ok=True)
+
+        with oracledb.connect(connection_string) as connection:
+            cursor = connection.cursor()
+            cursor.execute(query)
+            columns = [desc[0] for desc in cursor.description]
+
+            file_index = 0
+            while True:
+                rows = cursor.fetchmany(splitThreshold)
+                if not rows:
+                    break
+
+                file_path = os.path.join(folder, f"{file_prefix}{file_index}.{file_ext}")
+                with open(file_path, mode='w', newline='', encoding='utf-8-sig' if unicode else 'utf-8', errors='replace') as file:
+                    if fileType.lower() == 'csv':
+                        if addQuotes:
+                            writer = csv.writer(file, delimiter=delimiter, quoting=csv.QUOTE_ALL, quotechar=enclosedBy, escapechar=escapeChar)
+                        else:
+                            writer = csv.writer(file, delimiter=delimiter, quotechar=enclosedBy, escapechar=escapeChar)
+
+                        if header:
+                            writer.writerow(columns)
+                        writer.writerows(rows)
+                    else:
+                        raise ValueError("Unsupported fileType. Only 'csv' is supported.")
+
+                row_count_total += len(rows)
+                file_index += 1
+
+        return 1, row_count_total
+
+    except Exception as inst:
+        return -2, inst
+
+#.DESCRIPTION
+#Used to to create log file and print load result in RED
+
+def PrintLog(fileAud):
+    with open(fileAud, 'r') as write_to_console:
+     print(write_to_console.read())
+
+#.DESCRIPTION
+#Used to to replace wsl tags present in string
+
+def ReplaceWslTags(stuff):
+    if '$SEQUENCE$' in stuff:
+        stuff = stuff.replace('$SEQUENCE$',str(os.environ.get('WSL_SEQUENCE','')))
+    if re.findall(r'\$(.+?)\$',stuff)!=[]:
+        suppliedFormat = re.findall(r'\$(.+?)\$',stuff)[0]
+        dateFormat = suppliedFormat.replace('YYYY', '%Y').replace('MMM', '%b').replace('MM', '%m').replace('DD', '%d').replace('HH', '%H').replace('MI', '%M').replace('SS', '%S')
+        now = datetime.datetime.now()
+        year, month, day, hour, minute, second = now.year, now.month, now.day, now.hour, now.minute, now.second
+        if 'YYYY' in suppliedFormat:
+            dateFormat = dateFormat.replace('%Y', str(year))
+        if 'MMM' in suppliedFormat:
+            dateFormat = dateFormat.replace('%b', now.strftime('%b'))
+        if 'MM' in suppliedFormat:
+            dateFormat = dateFormat.replace('%m', str(month).zfill(2))
+        if 'DD' in suppliedFormat:
+            dateFormat = dateFormat.replace('%d', str(day).zfill(2))
+        if 'HH' in suppliedFormat:
+            dateFormat = dateFormat.replace('%H', str(hour).zfill(2))
+        if 'MI' in suppliedFormat:
+            dateFormat = dateFormat.replace('%M', str(minute).zfill(2))
+        if 'SS' in suppliedFormat:
+            dateFormat = dateFormat.replace('%S', str(second).zfill(2))
+        stuff = stuff.replace('$' + suppliedFormat + '$', dateFormat)
+    if stuff.find('$') != -1:
+        os.environ["warn"] = True
+        print("Unclosed '$' tag in " +stuff)
+        print("Unclosed '$' will be removed")
+        stuff = stuff.replace(r'\$','')
+    return stuff.strip()
+
+
+def gzip_file(input_file_path, output_file_path, remove_original=True, file_type=""):
+    """
+    Compresses the given file based on the file type and whether to remove the original file.
+
+    Parameters:
+    - input_file_path (str): Path to the input file to be compressed.
+    - output_file_path (str): Path where the compressed file will be saved.
+    - remove_original (bool): If True, the original file will be deleted after compression.
+    - file_type (str): The type of the file to compress. Supports 'avro' and 'parquet'.
+
+    Returns:
+    - str: Path to the compressed file.
+    """
+    compressed_file_path = output_file_path if output_file_path.endswith(".gz") else output_file_path + ".gz"
+
+    try:
+        if file_type == "avro":
+            import zipfile
+            with zipfile.ZipFile(compressed_file_path, 'w') as zip_avro:
+                zip_avro.write(input_file_path)
+        elif file_type == "parquet":
+            df = pd.read_parquet(input_file_path, engine='auto')
+            df.to_parquet(compressed_file_path, compression='gzip')
+        else:
+            # Default behavior: compress using gzip
+            with open(input_file_path, 'rb') as file_in:
+                with gzip.open(compressed_file_path, 'wb') as file_out:
+                    shutil.copyfileobj(file_in, file_out)
+
+        if remove_original:
+            os.remove(input_file_path)
+
+        return compressed_file_path
+
+    except Exception as e:
+        raise IOError(f"An error occurred while compressing the file: {e}")
+
+
+
+#.DESCRIPTION
+#Used to to compress a given file
+def GzipFile(
+        inFile="No input file specified",
+        outFile=".gz",
+        removeOriginal=True,
+        fileType=""
+    ):
+    if fileType =="avro":
+        import zipfile
+        with zipfile.ZipFile(outFile, 'w') as zipavro:
+            zipavro.write(inFile)
+    if fileType =="parquet":
+      import pyarrow as pa
+      import pyarrow.parquet as pq
+      import pandas as pd
+      df = pd.read_parquet(inFile,engine='auto')
+      df.to_parquet(outFile+".gz",compression='gzip')
+      outNewFile=outFile+".gz"
+    else:
+      if outFile!=".gz":
+        with open(inFile, 'rb') as f_in:
+          with gzip.open(outFile+".gz", 'wb') as f_out:
+              shutil.copyfileobj(f_in, f_out)
+        outNewFile=outFile+".gz"
+      else:
+         with open(inFile, 'rb') as f_in:
+          with gzip.open(os.path.splitext(inFile)[0]+outFile, 'wb') as f_out:
+              shutil.copyfileobj(f_in, f_out)
+         outNewFile=(inFile+outFile)
+      if removeOriginal==True:
+          os.remove(inFile)
+    return (outNewFile)
+
+
+# Function to download files from Amazon S3
+def downloadFileFromAmazonS3(accessKey,secretKey,regionName,bucketName,sourcePath,fileName,downloadPath):
+    import boto3
+    from boto3 import client
+    import botocore
+# Clients provide a low-level interface to AWS whose methods map close to 1:1 with service APIs.
+
+    try:
+        client = boto3.client(
+        's3',
+        aws_access_key_id = accessKey.strip(),
+        aws_secret_access_key = secretKey.strip(),
+        region_name =regionName
+        )
+        client.download_file(bucketName,os.path.join(sourcePath,fileName).replace("s3://","").replace(bucketName + '/',"").replace("\\","/").strip(),os.path.join( downloadPath,fileName))
+    except Exception as e:
+        raise e
+
+# Function to upload files to Amazon S3
+def uploadFileToAmazonS3 (accessKey,secretKey,regionName,bucketName,sourcePath,fileName,uploadPath):
+    import os
+    from boto3 import client
+    from botocore.exceptions import ClientError
+    from boto3.s3.transfer import TransferConfig
+
+    s3_client = client('s3', region_name = regionName, aws_access_key_id = accessKey,
+                             aws_secret_access_key = secretKey)
+
+    config = TransferConfig(multipart_threshold=1024*25, max_concurrency=10,
+                            multipart_chunksize=1024*25, use_threads=True)
+
+    bucketFile = uploadPath +"/" + fileName
+    localFile  = os.path.join(sourcePath,fileName)
+    try:
+        response = s3_client.upload_file(localFile, bucketName, bucketFile)
+    except ClientError as e:
+        print(e)
+        return False
+    except FileNotFoundError as e:
+        print(e)
+        return False
+    return True
+
+# Function to download files from Google Cloud
+def downloadFileFromGoogleCloud(sourceFilePath,fileName,downloadPath):
+        import subprocess
+        try:
+            downloadCmd = "gsutil cp "+str(os.path.join(sourceFilePath,fileName)).replace("\\","/").strip()+" "+os.path.join(downloadPath,fileName)
+            returned_output = subprocess.check_output('cmd /c "'+downloadCmd+'"', shell=True,stderr=subprocess.STDOUT)
+            returned_output=returned_output.decode('utf-8')
+            return returned_output
+        except subprocess.CalledProcessError as e:
+            raise e
+
+# Function to download files from Google Cloud
+def downloadFileFromGoogleCloudV2(sourceFilePath,fileName,downloadPath):
+    import subprocess
+    try:
+        downloadCmd = "gsutil cp "+str(os.path.join(sourceFilePath,fileName)).replace("\\","/").strip()+" "+os.path.join(downloadPath,fileName)
+        if sys.platform == 'linux':
+            returned_output = subprocess.check_output(downloadCmd, shell=True,stderr=subprocess.STDOUT)
+            returned_output=returned_output.decode('utf-8')
+        else:
+            returned_output = subprocess.check_output('cmd /c "'+downloadCmd+'"', shell=True,stderr=subprocess.STDOUT)
+            returned_output=returned_output.decode('utf-8')
+        return returned_output
+    except subprocess.CalledProcessError as e:
+        raise e
+
+# Function to download files from Azure Data Lake Gen 2
+def downloadFileFromAzureDataLake(storage_account_name,storage_account_key,fileSystem,directory,fileName,downloadPath):
+    from azure.storage.filedatalake import DataLakeServiceClient
+    from azure.core.exceptions import ResourceExistsError
+    import sys, csv
+    from azure.storage.blob import BlobServiceClient, ContainerClient, BlobClient, DelimitedTextDialect,DelimitedJsonDialect, BlobQueryError
+    try:
+        global service_client
+
+        service_client = DataLakeServiceClient(account_url="{}://{}.dfs.core.windows.net".format(
+            "https", storage_account_name), credential=storage_account_key)
+
+    except Exception as e:
+        raise e
+
+    try:
+        file_system_client = service_client.get_file_system_client(file_system=fileSystem)
+
+        if directory !='':
+          directory_client = file_system_client.get_directory_client(directory)
+          file_client = directory_client.get_file_client(fileName)
+        else:
+          file_client=file_system_client.get_file_client(fileName)
+        local_file = open(os.path.join(downloadPath,fileName),'wb')
+        download = file_client.download_file()
+
+        downloaded_bytes = download.readall()
+
+        local_file.write(downloaded_bytes)
+
+        local_file.close()
+
+    except Exception as e:
+        raise e
+
+
+class ThreadRunner:
+    """
+    A class for running a target function across multiple threads, with each thread processing a batch of input data.
+
+    Args:
+        max_threads (int): The maximum number of threads to use.
+        target_function (function): The function to run on each batch of input data.
+        log_file_prefix (str, optional): The prefix to use for log file names. Defaults to "generic_thread".
+    """
+    def __init__(self, max_threads, target_function, log_file_prefix="wsl_log_file"):
+        self.max_threads = max_threads
+        self.target_function = target_function
+        self.log_file_prefix = log_file_prefix
+        self.print_lock = threading.Lock()
+        self.file_lock = threading.Lock()
+
+
+    def run_thread(self, thread_id, input_queue):
+        while True:
+            try:
+                batch_index, batch_value = input_queue.get_nowait()
+                index = batch_value[0]
+
+                # Set up logger for the specific batch
+                log_file_name = f"{self.log_file_prefix}_batch_{index}_{thread_id}.log"
+
+                # Create a folder to store the log files
+                log_folder_name = f"{self.log_file_prefix}_BATCH_LOGS"
+                try:
+                    os.mkdir(os.path.join(os.environ.get('WSL_WORKDIR',''), log_folder_name))
+                except FileExistsError:
+                    pass
+                log_file_path = os.path.join(os.environ.get('WSL_WORKDIR',''), log_folder_name, log_file_name)
+                thread_logger = WslLogger(
+                    debugMode=True,
+                    logFile=log_file_path
+                )
+                self.target_function(batch_value, thread_id, thread_logger)
+
+                input_queue.task_done()
+            except queue.Empty:
+                break
+            except Exception as e:
+                input_queue.task_done()
+
+    def run_threads(self, input_queue):
+        threads = []
+        for i in range(self.max_threads):
+            thread = threading.Thread(target=self.run_thread, args=(i + 1, input_queue))
+            thread.start()
+            threads.append(thread)
+
+        input_queue.join()
+
+        for thread in threads:
+            thread.join()
+
+class ThreadRunnerV2:
+    """
+    A class for running a target function across multiple threads, with each thread processing a batch of input data.
+
+    Args:
+        max_threads (int): The maximum number of threads to use.
+        target_function (function): The function to run on each batch of input data.
+        log_file_prefix (str, optional): The prefix to use for log file names. Defaults to "generic_thread".
+    """
+    def __init__(self, max_threads, target_function):
+        self.max_threads = max_threads
+        self.target_function = target_function
+        self.print_lock = threading.Lock()
+        self.file_lock = threading.Lock()
+
+
+    def run_thread(self, thread_id, input_queue):
+        while True:
+            try:
+                batch_index, batch_value = input_queue.get_nowait()
+                index = batch_value[0]
+
+                self.target_function(batch_value, thread_id)
+
+                input_queue.task_done()
+            except queue.Empty:
+                break
+            except Exception as e:
+                input_queue.task_done()
+
+    def run_threads(self, input_queue):
+        threads = []
+        for i in range(self.max_threads):
+            thread = threading.Thread(target=self.run_thread, args=(i + 1, input_queue))
+            thread.start()
+            threads.append(thread)
+
+        input_queue.join()
+
+        for thread in threads:
+            thread.join()
+
+# Common logger for templates
+class WslLogger:
+    def __init__(
+            self,
+            executionMode="",
+            debugMode=False,
+            logFile=os.path.join(
+                os.environ.get('WSL_WORKDIR',''),
+                str(os.environ.get('WSL_LOAD_TABLE',''))+"_"+str(os.environ.get('WSL_SEQUENCE',''))+".txt")
+            ):
+        if os.environ.get('WSL_JOB_NAME','') == "Develop":
+            self.executionMode = 'Interactive'
+        else:
+            self.executionMode = 'Scheduler'
+
+        self.debugMode = debugMode
+        self.filePath = logFile
+        self.logger = self._configure_logger()
+
+    def _configure_logger(self):
+        logger = logging.getLogger(self.filePath)
+        logger.setLevel(logging.DEBUG)
+
+        formatter = logging.Formatter('%(message)s')
+
+        file_handler = logging.FileHandler(self.filePath, mode='w')
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
+        self.print_lock = threading.Lock()
+
+        # Filter out log messages from boto3 and botocore
+        logging.getLogger('boto3').setLevel(logging.CRITICAL)
+        logging.getLogger('botocore').setLevel(logging.CRITICAL)
+        logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
+        logging.getLogger('urllib3').setLevel(logging.CRITICAL)
+        logging.getLogger('azure').setLevel(logging.CRITICAL)
+        logging.getLogger('databricks').setLevel(logging.CRITICAL)
+
+        return logger
+
+    def _schedulerLog(self, message, logType, status):
+        if str(status) == "-2":
+            status = "E"
+        elif str(status) == "-1":
+            status = "W"
+        elif str(status) == "1":
+            status = "S"
+
+        outputJson = json.dumps({"type": logType, "message": message, "statusCode": status})
+        with self.print_lock:
+            print(outputJson)
+
+
+    def _exitScript(self, status='S'):
+        self._printLog(status)
+        if self.executionMode == 'Scheduler':
+            if status == 'E':
+                sys.exit(-2)
+            elif status == 'W':
+                sys.exit(-1)
+            elif status == 'S':
+                sys.exit(1)
+        else:
+            if status == 'E':
+                sys.exit()
+            elif status == 'W':
+                sys.exit()
+            elif status == 'S':
+                sys.exit()
+
+
+    def _printLog(self, status='S'):
+        if self.executionMode == 'Interactive':
+            if status == 'E':
+                print(-2)
+            elif status == 'W':
+                print(-1)
+            elif status == 'S':
+                print(1)
+            with open(self.filePath, 'r') as write_to_console:
+                print(write_to_console.read())
+
+
+    def debugLog(self, message, status='S'):
+        if self.executionMode == 'Scheduler' and self.debugMode == True:
+            self._schedulerLog(message, 'detail', status)
+            self.logger.debug(message)
+        elif self.executionMode == 'Interactive' and self.debugMode == True:
+            self.logger.debug(message)
+        pass
+
+
+    def infoLog(self, message, status='S', logType='detail'):
+        if self.executionMode == 'Scheduler':
+            self._schedulerLog(message, logType, status)
+            self.logger.info(message)
+        elif self.executionMode == 'Interactive':
+            if str(status) == "-2" or str(status) == 'E':
+                self.logger.info(message)
+                self._exitScript('E')
+            elif str(status) == "-1" or str(status) == 'W':
+                self.logger.info(message)
+                self._exitScript('W')
+            elif str(status) == "1" or str(status) == 'S':
+                self.logger.info(message)
+
+
+    def errorLog(self, message, status='E', exception=None):
+        if self.executionMode == 'Scheduler':
+            self._schedulerLog(message, 'audit',  status)
+            self._schedulerLog(message, 'detail', status)
+            self.logger.error(message, exc_info=exception)
+        elif self.executionMode == 'Interactive':
+            self.logger.error(message, exc_info=exception)
+        self._exitScript(status)
+
+
+    def resultLog(self, sourcedRows, loadedRows, sourceName, targetName, duration='N/A'):
+        if self.executionMode == 'Scheduler':
+            self._schedulerLog('Source: ' + sourceName + ' Target: ' + targetName + ' Duration: ' + str(duration) + ' seconds', 'audit', 'S')
+            self._schedulerLog('Source: ' + sourceName + ' Target: ' + targetName + ' Duration: ' + str(duration) + ' seconds', 'detail', 'S')
+        elif self.executionMode == 'Interactive':
+            self.logger.info('Source: ' + sourceName + ' Target: ' + targetName + ' Duration: ' + str(duration) + ' seconds')
+        pass
+
+
+# New TemplateProperties class to store all properties at central location
+class TemplateProperties:
+    def __init__(self):
+        pass
+
+    # A method to store a property in a specified group
+    def set_property_in_group(self, group_name, property_name, property_value):
+        if group_name not in self.__dict__:
+            self.__dict__[group_name] = {}
+        if group_name == 'EXTENDED':
+            self.__dict__[group_name][property_name] = GetExtendedProperty(property_name,property_value)
+        else:
+            self.__dict__[group_name][property_name] = property_value
+
+    # A method to get property from a specified group
+    def get_property_from_group(self, group_name, property_name):
+        return self.__dict__[group_name][property_name]
+
+    # A method to get entire group
+    def get_group(self, group_name):
+        return self.__dict__[group_name]
+
+    # A method to get entire dictionary
+    def get_all_properties(self):
+        return self.__dict__
+
+# New ArchiveUtils class to handle all archive related operations
+class ArchiveUtils:
+    def __init__(self,
+                wslLogger,
+                source_directory=None,
+                source_file_name=None,
+                source_destination_directory=None,
+                source_destination_file_name=None,
+                trigger_directory=None,
+                trigger_file_name=None,
+                trigger_destination_directory=None,
+                trigger_destination_file_name=None,
+                timeout=None,
+        ):
+
+        # Source Details
+        self.source_directory = source_directory
+        self.source_file_name = source_file_name
+        self.source_destination_directory = source_destination_directory
+        self.source_destination_file_name = source_destination_file_name
+
+        # Trigger Details
+        self.trigger_directory = trigger_directory
+        self.trigger_file_name = trigger_file_name
+        self.trigger_destination_directory = trigger_destination_directory
+        self.trigger_destination_file_name = trigger_destination_file_name
+
+        self.timeout = timeout
+        self.wslLogger = wslLogger
+
+
+    # Replace WSL Tag Method
+    def replace_wsl_tags(self, stuff):
+        if '$SEQUENCE$' in stuff:
+            stuff = stuff.replace('$SEQUENCE$', str(os.environ.get('WSL_SEQUENCE','')))
+        if re.findall(r'\$(.+?)\$',stuff) != []:
+            suppliedFormat = re.findall(r'\$(.+?)\$',stuff)[0]
+            dateFormat = suppliedFormat.replace('YYYY', '%Y').replace('MMM', '%b').replace('MM', '%m').replace('DD', '%d').replace('HH', '%H').replace('MI', '%M').replace('SS', '%S')
+            now = datetime.datetime.now()
+            year, month, day, hour, minute, second = now.year, now.month, now.day, now.hour, now.minute, now.second
+            if 'YYYY' in suppliedFormat:
+                dateFormat = dateFormat.replace('%Y', str(year))
+            if 'MMM' in suppliedFormat:
+                dateFormat = dateFormat.replace('%b', now.strftime('%b'))
+            if 'MM' in suppliedFormat:
+                dateFormat = dateFormat.replace('%m', str(month).zfill(2))
+            if 'DD' in suppliedFormat:
+                dateFormat = dateFormat.replace('%d', str(day).zfill(2))
+            if 'HH' in suppliedFormat:
+                dateFormat = dateFormat.replace('%H', str(hour).zfill(2))
+            if 'MI' in suppliedFormat:
+                dateFormat = dateFormat.replace('%M', str(minute).zfill(2))
+            if 'SS' in suppliedFormat:
+                dateFormat = dateFormat.replace('%S', str(second).zfill(2))
+            stuff = stuff.replace('$' + suppliedFormat + '$', dateFormat)
+        if stuff.find('$') != -1:
+            os.environ["warn"] = True
+            self.wslLogger.infoLog("Unclosed '$' tag in " + stuff)
+            self.wslLogger.infoLog("Unclosed '$' will be removed")
+            stuff = stuff.replace(r'\$','')
+        return stuff.strip()
+
+
+    # Windows Archive Method
+    def windows_archive(self, check_for="SOURCE", multiple_files=True):
+
+        # If the check_for parameter is SOURCE, then archive the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+            destination_directory = self.replace_wsl_tags(self.source_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.source_destination_file_name)
+            if destination_file_name == '':
+                destination_file_name = source_file_name
+
+        # If the check_for parameter is TRIGGER, then archive the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+            destination_directory = self.replace_wsl_tags(self.trigger_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.trigger_destination_file_name)
+            if destination_file_name == '':
+                destination_file_name = source_file_name
+
+        else:
+            self.wslLogger.errorLog("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        # Find files that match the source file pattern
+        matching_files = glob.glob(os.path.join(source_directory, source_file_name))
+        if len(matching_files) > 1:
+            multiple_files=True
+        else:
+            multiple_files=False
+
+        # Check if any matching files are found
+        if not matching_files:
+            self.wslLogger.infoLog("No files found that match the source file pattern")
+            return
+
+        # Create the destination directory if it doesn't exist
+        os.makedirs(destination_directory, exist_ok=True)
+
+        if multiple_files:
+            for file_path in matching_files:
+                # Get the filename from the source file path
+                file_name = os.path.basename(file_path)
+
+                # Construct the destination file path
+                destination_file_path = os.path.join(destination_directory, file_name)
+
+                # Move the file to the destination path
+                try:
+                    shutil.move(file_path, destination_file_path)
+                except Exception as e:
+                    self.wslLogger.errorLog(f"Error occurred while archiving the file '{file_path}': {str(e)}")
+                    continue
+        else:
+            if len(matching_files) > 0:
+                # Move the first matching file to the destination path
+                try:
+                    shutil.move(matching_files[0], os.path.join(destination_directory, destination_file_name))
+                except Exception as e:
+                    self.wslLogger.errorLog(f"Error occurred while archiving the file '{matching_files[0]}': {str(e)}")
+                    return
+            else:
+                self.wslLogger.infoLog("No file found that matches the source file name")
+
+        if check_for.upper() == "SOURCE":
+            self.wslLogger.infoLog("Files archived successfully")
+        else:
+            self.wslLogger.infoLog("Trigger Files archived successfully")
+
+    # Method to wait for a file to be available
+    def wait_for_windows_file(self, check_for="SOURCE", interval=1):
+
+        # If the check_for parameter is SOURCE, then wait for the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+
+        # If the check_for parameter is TRIGGER, then wait for the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+
+        else:
+            self.wslLogger.errorLog("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        try:
+            timeout = int(self.timeout)
+        except ValueError:
+            self.wslLogger.errorLog("The 'Wait Limit' must be an integer (number of seconds))")
+            return False
+
+        # Construct the source file path
+        source_file_path = os.path.join(source_directory, source_file_name)
+
+        # Check if the file exists
+        matching_files = glob.glob(source_file_path)
+        if matching_files:
+            # Check if more than one file exists
+            if len(matching_files) > 1:
+                self.wslLogger.infoLog(f"More than one file exists that matches the source file pattern: {source_file_path}")
+            return True
+
+        # Wait for the file to be available
+        while timeout > 0:
+            # self.wslLogger.debugLog(f"Waiting for the file '{source_file_path}' to be available for '{timeout}' seconds")
+            time.sleep(interval)
+            timeout -= interval
+
+            # Check if the file exists
+            matching_files = glob.glob(source_file_path)
+            if matching_files:
+                self.wslLogger.infoLog(f"The file '{source_file_path}' is available")
+                return True
+
+        # The file is not available
+        self.wslLogger.infoLog(f"The file '{source_file_path}' is not available or the timeout period has elapsed")
+        return False
+
+    # Amazon S3 - Init Method
+    def s3_init(self,
+                aws_access_key,
+                aws_secret_access_key,
+                region_name
+                ):
+        # Create the Amazon S3 client
+        try:
+            self.client = boto3.client(
+                's3',
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=region_name
+            )
+        except botocore.exceptions.NoCredentialsError:
+            self.wslLogger.errorLog("Failed to initialize Amazon S3 client. The AWS credentials are invalid or missing")
+            return
+
+        # Create the Amazon S3 resource
+        try:
+            self.resource = boto3.resource(
+                's3',
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=region_name
+            )
+        except botocore.exceptions.NoCredentialsError:
+            self.wslLogger.errorLog("Failed to initialize Amazon S3 resource. The AWS credentials are invalid or missing")
+            return
+
+
+    # Amazon S3 - Check if file exists
+    def s3_file_exists(self, check_for="SOURCE"):
+
+        # If the check_for parameter is SOURCE, then check for the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+
+        # If the check_for parameter is TRIGGER, then check for the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+
+        else:
+            self.wslLogger.errorLog("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+
+        # Construct the source file path
+        # Remove the trailing slash from the source directory
+        if source_directory.endswith('/'):
+            source_directory = source_directory[:-1]
+
+        source_file_path = source_directory + '/' + source_file_name
+
+        try:
+            # Check if the object exists on S3
+            self.client.head_object(
+                Bucket=source_file_path.split('/')[2],
+                Key=source_file_path.split('/', 3)[-1]
+                )
+            return True
+        except botocore.exceptions.ClientError as e:
+            # If the object does not exist, return False
+            if e.response['Error']['Code'] == "404":
+                self.wslLogger.infoLog(f"The file '{source_file_path}' does not exist")
+                return False
+            else:
+                # Otherwise, print the error and return False
+                error_code = e.response['Error']['Code']
+                error_message = e.response['Error']['Message']
+                self.wslLogger.infoLog(f"Error occurred while checking if the file '{source_file_path}' exists: {error_code} - {error_message}")
+                return False
+
+
+    # Amazon S3 - Archive Method
+    def s3_archive(self, check_for="SOURCE", multiple_files=True):
+
+        # If the check_for parameter is SOURCE, then archive the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+            destination_directory = self.replace_wsl_tags(self.source_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.source_destination_file_name)
+
+        # If the check_for parameter is TRIGGER, then archive the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+            destination_directory = self.replace_wsl_tags(self.trigger_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.trigger_destination_file_name)
+
+        else:
+            self.wslLogger.errorLog("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        # Construct the source file path
+        # Remove the trailing slash from the source directory
+        if source_directory.endswith('/'):
+            source_directory = source_directory[:-1]
+
+        source_file_path = source_directory + '/' + source_file_name
+
+        # Construct the destination file path
+        # Remove the trailing slash from the destination directory
+        if destination_directory.endswith('/'):
+            destination_directory = destination_directory[:-1]
+
+        destination_file_path = destination_directory + '/' + destination_file_name
+
+        # Check if the file exists on S3
+        if not self.s3_file_exists(check_for):
+            self.wslLogger.infoLog(f"The file '{source_file_path}' does not exist")
+            return
+
+        if multiple_files:
+            try:
+                # Copy objects to the destination path
+                objects = self.resource.meta.client.list_objects_v2(Bucket=source_file_path.split('/')[2], Prefix=source_file_path.split('/', 3)[-1])
+                if 'Contents' in objects:
+                    for obj in objects['Contents']:
+                        file_name = obj['Key'].split('/')[-1]
+                        destination_file_key = destination_file_path + '/' + file_name
+                        self.resource.meta.client.copy({'Bucket': source_file_path.split('/')[2], 'Key': obj['Key']}, destination_file_path.split('/')[2],destination_file_path.split('/', 3)[-1])
+            except botocore.exceptions.ClientError as e:
+                # Otherwise, print the error and return False
+                error_code = e.response['Error']['Code']
+                error_message = e.response['Error']['Message']
+                self.wslLogger.errorLog(f"Error occurred while archiving files from '{source_file_path}': {error_code} - {error_message}")
+                return
+        else:
+            try:
+                # Copy the object to the destination path
+                self.resource.meta.client.copy({'Bucket': source_file_path.split('/')[2], 'Key': source_file_path.split('/', 3)[-1]},destination_file_path.split('/')[2],destination_file_path.split('/', 3)[-1])
+            except botocore.exceptions.ClientError as e:
+                # Otherwise, print the error and return False
+                error_code = e.response['Error']['Code']
+                error_message = e.response['Error']['Message']
+                self.wslLogger.errorLog(f"Error occurred while archiving the file '{source_file_path}': {error_code} - {error_message}")
+                return
+
+        try:
+            self.resource.Object(source_file_path.split('/')[2], source_file_path.split('/', 3)[-1]).delete()
+        except Exception as e:
+            self.wslLogger.errorLog(f"Error deleting file '{source_file_path}' from source bucket: {e}")
+
+        if check_for.upper() == "SOURCE":
+            self.wslLogger.infoLog("Files archived successfully")
+        else:
+            self.wslLogger.infoLog("Trigger Files archived successfully")
+
+
+    # Amazon S3 - Method to wait for a file to be available
+    def s3_wait_for_file(self, check_for="SOURCE", interval=1):
+
+        # If the check_for parameter is SOURCE, then wait for the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+
+        # If the check_for parameter is TRIGGER, then wait for the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+
+        else:
+            self.wslLogger.errorLog("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        try:
+            timeout = int(self.timeout)
+        except ValueError:
+            self.wslLogger.errorLog("The 'Wait Limit' must be an integer (number of seconds))")
+            return False
+
+        # Construct the source file path
+        # Remove the trailing slash from the source directory
+        if source_directory.endswith('/'):
+            source_directory = source_directory[:-1]
+
+        source_file_path = source_directory + '/' + source_file_name
+
+        # Check if the file exists on S3
+        if self.s3_file_exists(check_for):
+            return True
+
+        # Wait for the file to be available
+        while timeout > 0:
+            # self.wslLogger.debugLog(f"Waiting for the file '{source_file_path}' to be available for '{timeout}' seconds")
+            time.sleep(interval)
+            timeout -= interval
+
+            # Check if the file exists on S3
+            if self.s3_file_exists(check_for):
+                self.wslLogger.infoLog(f"The file '{source_file_path}' is available")
+                return True
+
+        # The file is not available
+        self.wslLogger.infoLog(f"The file '{source_file_path}' is not available or the timeout period has elapsed")
+        return False
+
+class ArchiveUtilsV2:
+    def __init__(self,
+                write_audit,
+                write_detail,
+                write_error,
+                source_directory=None,
+                source_file_name=None,
+                source_destination_directory=None,
+                source_destination_file_name=None,
+                trigger_directory=None,
+                trigger_file_name=None,
+                trigger_destination_directory=None,
+                trigger_destination_file_name=None,
+                timeout=None,
+        ):
+
+        # Source Details
+        self.source_directory = source_directory
+        self.source_file_name = source_file_name
+        self.source_destination_directory = source_destination_directory
+        self.source_destination_file_name = source_destination_file_name
+
+        # Trigger Details
+        self.trigger_directory = trigger_directory
+        self.trigger_file_name = trigger_file_name
+        self.trigger_destination_directory = trigger_destination_directory
+        self.trigger_destination_file_name = trigger_destination_file_name
+
+        self.timeout = timeout
+        self.write_audit = write_audit
+        self.write_detail = write_detail
+        self.write_error = write_error
+
+
+    # Replace WSL Tag Method
+    def replace_wsl_tags(self, stuff):
+        if '$SEQUENCE$' in stuff:
+            stuff = stuff.replace('$SEQUENCE$', str(os.environ.get('WSL_SEQUENCE','')))
+        if re.findall(r'\$(.+?)\$',stuff) != []:
+            suppliedFormat = re.findall(r'\$(.+?)\$',stuff)[0]
+            dateFormat = suppliedFormat.replace('YYYY', '%Y').replace('MMM', '%b').replace('MM', '%m').replace('DD', '%d').replace('HH', '%H').replace('MI', '%M').replace('SS', '%S')
+            now = datetime.datetime.now()
+            year, month, day, hour, minute, second = now.year, now.month, now.day, now.hour, now.minute, now.second
+            if 'YYYY' in suppliedFormat:
+                dateFormat = dateFormat.replace('%Y', str(year))
+            if 'MMM' in suppliedFormat:
+                dateFormat = dateFormat.replace('%b', now.strftime('%b'))
+            if 'MM' in suppliedFormat:
+                dateFormat = dateFormat.replace('%m', str(month).zfill(2))
+            if 'DD' in suppliedFormat:
+                dateFormat = dateFormat.replace('%d', str(day).zfill(2))
+            if 'HH' in suppliedFormat:
+                dateFormat = dateFormat.replace('%H', str(hour).zfill(2))
+            if 'MI' in suppliedFormat:
+                dateFormat = dateFormat.replace('%M', str(minute).zfill(2))
+            if 'SS' in suppliedFormat:
+                dateFormat = dateFormat.replace('%S', str(second).zfill(2))
+            stuff = stuff.replace('$' + suppliedFormat + '$', dateFormat)
+        if stuff.find('$') != -1:
+            # os.environ["warn"] = True
+            self.write_audit("Unclosed '$' tag in " + stuff)
+            self.write_audit("Unclosed '$' will be removed")
+            stuff = stuff.replace(r'\$','')
+        return stuff.strip()
+
+
+    # Windows Archive Method
+    def windows_archive(self, check_for="SOURCE", multiple_files=True):
+
+        # If the check_for parameter is SOURCE, then archive the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+            destination_directory = self.replace_wsl_tags(self.source_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.source_destination_file_name)
+            if destination_file_name == '':
+                destination_file_name = source_file_name
+
+        # If the check_for parameter is TRIGGER, then archive the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+            destination_directory = self.replace_wsl_tags(self.trigger_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.trigger_destination_file_name)
+            if destination_file_name == '':
+                destination_file_name = source_file_name
+
+        else:
+            raise ValueError("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+
+        # Find files that match the source file pattern
+        matching_files = glob.glob(os.path.join(source_directory, source_file_name))
+        if len(matching_files) > 1:
+            multiple_files=True
+        else:
+            multiple_files=False
+
+        # Check if any matching files are found
+        if not matching_files:
+            self.write_audit("No files found that match the source file pattern")
+            return
+
+        # Create the destination directory if it doesn't exist
+        os.makedirs(destination_directory, exist_ok=True)
+
+        if multiple_files:
+            for file_path in matching_files:
+                # Get the filename from the source file path
+                file_name = os.path.basename(file_path)
+
+                # Construct the destination file path
+                destination_file_path = os.path.join(destination_directory, file_name)
+
+                # Move the file to the destination path
+                try:
+                    shutil.move(file_path, destination_file_path)
+                except Exception as e:
+                    self.write_error(f"Error occurred while archiving the file '{file_path}': {str(e)}")
+                    continue
+        else:
+            if len(matching_files) > 0:
+                # Move the first matching file to the destination path
+                try:
+                    shutil.move(matching_files[0], os.path.join(destination_directory, destination_file_name))
+                except Exception as e:
+                    self.write_error(f"Error occurred while archiving the file '{matching_files[0]}': {str(e)}")
+                    raise e
+            else:
+                self.write_audit("No file found that matches the source file name")
+
+        if check_for.upper() == "SOURCE":
+            self.write_audit("Files archived successfully")
+        else:
+            self.write_audit("Trigger Files archived successfully")
+
+    # Method to wait for a file to be available
+    def wait_for_windows_file(self, check_for="SOURCE", interval=1):
+
+        # If the check_for parameter is SOURCE, then wait for the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+
+        # If the check_for parameter is TRIGGER, then wait for the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+
+        else:
+            self.write_error("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        try:
+            timeout = int(self.timeout)
+        except ValueError:
+            self.write_error("The 'Wait Limit' must be an integer (number of seconds))")
+            return False
+
+        # Construct the source file path
+        source_file_path = os.path.join(source_directory, source_file_name)
+
+        # Check if the file exists
+        matching_files = glob.glob(source_file_path)
+        if matching_files:
+            # Check if more than one file exists
+            if len(matching_files) > 1:
+                self.write_audit(f"More than one file exists that matches the source file pattern: {source_file_path}")
+            return True
+
+        # Wait for the file to be available
+        while timeout > 0:
+            # self.wslLogger.debugLog(f"Waiting for the file '{source_file_path}' to be available for '{timeout}' seconds")
+            time.sleep(interval)
+            timeout -= interval
+
+            # Check if the file exists
+            matching_files = glob.glob(source_file_path)
+            if matching_files:
+                self.write_audit(f"The file '{source_file_path}' is available")
+                return True
+
+        # The file is not available
+        self.write_audit(f"The file '{source_file_path}' is not available or the timeout period has elapsed")
+        return False
+
+    def wait_for_windows_file_v2(self, check_for="SOURCE", wait_time=None, action="Error", interval=1):
+        """
+        Enhanced version of wait_for_windows_file that includes:
+        - Custom wait time
+        - Action-based logging if file is not found
+        - Returns immediately if file is found
+        """
+
+        # Determine which file to check for
+        if check_for.upper() == "SOURCE":
+            file_type = "Source file"
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+        elif check_for.upper() == "TRIGGER":
+            file_type = "Trigger file"
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+        else:
+            self.write_error("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        # Validate and set the wait time
+        try:
+            timeout = int(wait_time) if wait_time is not None else int(self.timeout)
+        except ValueError:
+            self.write_error("The 'Wait Limit' must be an integer (number of seconds)")
+            return False
+
+        # Construct the source file path
+        source_file_path = os.path.join(source_directory, source_file_name)
+
+        # Check if the file exists immediately
+        matching_files = glob.glob(source_file_path)
+        if matching_files:
+            if len(matching_files) > 1:
+                self.write_audit(f"More than one file exists that matches the pattern: {source_file_path}")
+            return True  # File found, return immediately
+
+        # Print action output only if file is not available
+        action_map = {
+            "Warning": "-1",
+            "Error": "-2",
+            "Fatal Error": "-3",
+            "Success": "1"
+        }
+
+        # Log waiting message
+        self.write_audit(f"Waiting for {file_type} '{source_file_path}' for up to {timeout} seconds...")
+
+        # Wait for the file to be available
+        while timeout > 0:
+            time.sleep(interval)
+            timeout -= interval
+
+            matching_files = glob.glob(source_file_path)
+            if matching_files:
+                self.write_audit(f"The {file_type} '{source_file_path}' is available")
+                return True  # File found, return immediately
+
+        if action in action_map:
+            print(action_map[action])
+        # If file is NOT found, log error and print action output
+        self.write_audit(f"The {file_type} '{source_file_path}' is not available or the timeout period has elapsed")
+
+        return False
+
+    # Amazon S3 - Init Method
+    def s3_init(self,
+                aws_access_key,
+                aws_secret_access_key,
+                region_name
+                ):
+        # Create the Amazon S3 client
+        try:
+            self.client = boto3.client(
+                's3',
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=region_name
+            )
+        except botocore.exceptions.NoCredentialsError as e:
+            self.write_error("Failed to initialize Amazon S3 client. The AWS credentials are invalid or missing")
+            raise e
+
+        # Create the Amazon S3 resource
+        try:
+            self.resource = boto3.resource(
+                's3',
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_access_key,
+                region_name=region_name
+            )
+        except botocore.exceptions.NoCredentialsError:
+            self.write_error("Failed to initialize Amazon S3 resource. The AWS credentials are invalid or missing")
+            raise e
+
+
+    # Amazon S3 - Check if file exists
+    def s3_file_exists(self, check_for="SOURCE"):
+
+        # If the check_for parameter is SOURCE, then check for the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+
+        # If the check_for parameter is TRIGGER, then check for the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+
+        else:
+            self.write_error("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+
+
+        # Construct the source file path
+        # Remove the trailing slash from the source directory
+        if source_directory.endswith('/'):
+            source_directory = source_directory[:-1]
+
+        source_file_path = source_directory + '/' + source_file_name
+
+        try:
+            # Check if the object exists on S3
+            self.client.head_object(
+                Bucket=source_file_path.split('/')[2],
+                Key=source_file_path.split('/', 3)[-1]
+                )
+            return True
+        except botocore.exceptions.ClientError as e:
+            # If the object does not exist, return False
+            if e.response['Error']['Code'] == "404":
+                self.write_error(f"The file '{source_file_path}' does not exist")
+                return False
+            else:
+                # Otherwise, print the error and return False
+                error_code = e.response['Error']['Code']
+                error_message = e.response['Error']['Message']
+                self.write_error(f"Error occurred while checking if the file '{source_file_path}' exists: {error_code} - {error_message}")
+                return False
+
+
+    # Amazon S3 - Archive Method
+    def s3_archive(self, check_for="SOURCE", multiple_files=True):
+
+        # If the check_for parameter is SOURCE, then archive the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+            destination_directory = self.replace_wsl_tags(self.source_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.source_destination_file_name)
+
+        # If the check_for parameter is TRIGGER, then archive the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+            destination_directory = self.replace_wsl_tags(self.trigger_destination_directory)
+            destination_file_name = self.replace_wsl_tags(self.trigger_destination_file_name)
+
+        else:
+            self.write_error("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        # Construct the source file path
+        # Remove the trailing slash from the source directory
+        if source_directory.endswith('/'):
+            source_directory = source_directory[:-1]
+
+        source_file_path = source_directory + '/' + source_file_name
+
+        # Construct the destination file path
+        # Remove the trailing slash from the destination directory
+        if destination_directory.endswith('/'):
+            destination_directory = destination_directory[:-1]
+
+        destination_file_path = destination_directory + '/' + destination_file_name
+
+        # Check if the file exists on S3
+        if not self.s3_file_exists(check_for):
+            self.write_audit(f"The file '{source_file_path}' does not exist")
+            return
+
+        if multiple_files:
+            try:
+                # Copy objects to the destination path
+                objects = self.resource.meta.client.list_objects_v2(Bucket=source_file_path.split('/')[2], Prefix=source_file_path.split('/', 3)[-1])
+                if 'Contents' in objects:
+                    for obj in objects['Contents']:
+                        file_name = obj['Key'].split('/')[-1]
+                        destination_file_key = destination_file_path + '/' + file_name
+                        self.resource.meta.client.copy({'Bucket': source_file_path.split('/')[2], 'Key': obj['Key']}, destination_file_path.split('/')[2],destination_file_path.split('/', 3)[-1])
+            except botocore.exceptions.ClientError as e:
+                # Otherwise, print the error and return False
+                error_code = e.response['Error']['Code']
+                error_message = e.response['Error']['Message']
+                self.write_error(f"Error occurred while archiving files from '{source_file_path}': {error_code} - {error_message}")
+                raise e
+        else:
+            try:
+                # Copy the object to the destination path
+                self.resource.meta.client.copy({'Bucket': source_file_path.split('/')[2], 'Key': source_file_path.split('/', 3)[-1]},destination_file_path.split('/')[2],destination_file_path.split('/', 3)[-1])
+            except botocore.exceptions.ClientError as e:
+                # Otherwise, print the error and return False
+                error_code = e.response['Error']['Code']
+                error_message = e.response['Error']['Message']
+                self.write_error(f"Error occurred while archiving the file '{source_file_path}': {error_code} - {error_message}")
+                raise e
+
+        try:
+            self.resource.Object(source_file_path.split('/')[2], source_file_path.split('/', 3)[-1]).delete()
+        except Exception as e:
+            self.write_error(f"Error deleting file '{source_file_path}' from source bucket: {e}")
+            raise e
+
+        if check_for.upper() == "SOURCE":
+            self.write_audit("Files archived successfully")
+        else:
+            self.write_audit("Trigger Files archived successfully")
+
+
+    # Amazon S3 - Method to wait for a file to be available
+    def s3_wait_for_file(self, check_for="SOURCE", interval=1):
+
+        # If the check_for parameter is SOURCE, then wait for the source file
+        if check_for.upper() == "SOURCE":
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+
+        # If the check_for parameter is TRIGGER, then wait for the trigger file
+        elif check_for.upper() == "TRIGGER":
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+
+        else:
+            self.write_error("The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        try:
+            timeout = int(self.timeout)
+        except ValueError:
+            self.write_error("The 'Wait Limit' must be an integer (number of seconds))")
+            return False
+
+        # Construct the source file path
+        # Remove the trailing slash from the source directory
+        if source_directory.endswith('/'):
+            source_directory = source_directory[:-1]
+
+        source_file_path = source_directory + '/' + source_file_name
+
+        # Check if the file exists on S3
+        if self.s3_file_exists(check_for):
+            return True
+
+        # Wait for the file to be available
+        while timeout > 0:
+            time.sleep(interval)
+            timeout -= interval
+
+            # Check if the file exists on S3
+            if self.s3_file_exists(check_for):
+                self.write_audit(f"The file '{source_file_path}' is available")
+                return True
+
+        # The file is not available
+        self.write_audit(f"The file '{source_file_path}' is not available or the timeout period has elapsed")
+        return False
+
+    def s3_wait_for_file_v2(self, check_for="SOURCE", wait_time=None, action="Error", interval=1):
+        """
+        Enhanced version of s3_wait_for_file that includes:
+        - Custom wait time
+        - Action-based logging if file is not found
+        - Returns immediately if file is found
+        """
+
+        # Determine which file to check for
+        if check_for.upper() == "SOURCE":
+            file_type = "Source file"
+            source_directory = self.replace_wsl_tags(self.source_directory)
+            source_file_name = self.replace_wsl_tags(self.source_file_name)
+        elif check_for.upper() == "TRIGGER":
+            file_type = "Trigger file"
+            source_directory = self.replace_wsl_tags(self.trigger_directory)
+            source_file_name = self.replace_wsl_tags(self.trigger_file_name)
+        else:
+            self.write_error(f"The 'Check For' parameter must be either 'SOURCE' or 'TRIGGER'")
+            return False
+
+        # Validate and set the wait time
+        try:
+            timeout = int(wait_time) if wait_time is not None else int(self.timeout)
+        except ValueError:
+            self.write_error(f"The 'Wait Limit' must be an integer (number of seconds)")
+            return False
+
+        # Construct the source file path
+        source_directory = source_directory.rstrip('/')  # Remove trailing slash if present
+        source_file_path = f"{source_directory}/{source_file_name}"
+
+        # Check if the file exists immediately
+        if self.s3_file_exists(check_for):
+            return True  # File found, return immediately
+
+        # Print action output only if file is not available
+        action_map = {
+            "Warning": "-1",
+            "Error": "-2",
+            "Fatal Error": "-3",
+            "Success": "1"
+        }
+
+        # Log waiting message
+        self.write_audit(f"Waiting for {file_type} '{source_file_path}' for up to {timeout} seconds...")
+
+        # Wait for the file to be available
+        while timeout > 0:
+            time.sleep(interval)
+            timeout -= interval
+
+            if self.s3_file_exists(check_for):
+                self.write_audit(f"The {file_type} '{source_file_path}' is available")
+                return True  # File found, return immediately
+
+        if action in action_map:
+            print(action_map[action])
+
+        # If file is NOT found, log error and print action output
+        self.write_audit(f"The {file_type} '{source_file_path}' is not available or the timeout period has elapsed")
+
+        return False
+
+
+# --------------------------------------------
+# Utility Functions To Convert Files To CSV
+# --------------------------------------------
+
+# Function to convert Excel files to CSV
+
+def convert_excel_to_csv(xlsx_file_path, sheet_name, csv_file_path, columns=[], *args):
+
+    try:
+        extraColumns = []
+        read_file = pd.read_excel (xlsx_file_path, sheet_name=sheet_name,header=0,skiprows=0)
+        csv_data= read_file.iloc[:, 0:len(columns)]
+        if len(read_file.columns) < len(columns):
+            for i in range(len(columns)-len(read_file.columns)):
+                extraColumns.append('dss_col_'+str(i))
+            csv_data = csv_data.reindex(columns = csv_data.columns.tolist() + extraColumns)
+        csv_data.to_csv (csv_file_path, index = None, header=columns,sep='|')
+
+    except Exception as e:
+        raise Exception(f"Error occurred while converting the Excel file '{xlsx_file_path}' to CSV: {str(e)}")
+
+def convert_excel_to_csv_synapse(xlsx_file_path, csv_file_path, columns, delimiter, enclosedBy, escapechar, addQuotes, sheet_name):
+
+    try:
+        file_base_name = os.path.splitext(os.path.basename(xlsx_file_path))[0]
+        file_base_name = file_base_name.replace('*', '')
+
+        if not os.path.exists(csv_file_path):
+            os.makedirs(csv_file_path)
+
+        list_of_files = glob.glob(xlsx_file_path)
+
+        for f in list_of_files:
+
+            xl = pd.ExcelFile(f)
+            extraColumns = []
+            read_file = pd.read_excel(f, sheet_name=sheet_name,header=0,skiprows=0)
+            csv_data= read_file.iloc[:, 0:len(columns)]
+            quote = csv.QUOTE_ALL if addQuotes else csv.QUOTE_NONE
+            if len(read_file.columns) < len(columns):
+                for i in range(len(columns)-len(read_file.columns)):
+                    extraColumns.append('dss_col_'+str(i))
+                csv_data = csv_data.reindex(columns = csv_data.columns.tolist() + extraColumns)
+            csv_data.to_csv (os.path.join(csv_file_path, os.path.basename(f).replace(".xlsx",".csv")), index = None, header=columns, sep=delimiter, quotechar=enclosedBy, escapechar=escapechar, quoting=quote)
+
+
+    except Exception as e:
+        raise Exception(f"Error occurred while converting the Excel file '{xlsx_file_path}' to CSV: {str(e)}")
+
+def avro_to_csv(avro_file_path, csv_dir_path, delimiter, enclosedBy, escapechar, addQuotes ):
+    try:
+        avro_base_name = os.path.splitext(os.path.basename(avro_file_path))[0]
+        avro_base_name = avro_base_name.replace('*', '')
+
+        if not os.path.exists(csv_dir_path):
+            os.makedirs(csv_dir_path)
+
+        list_of_files = glob.glob(avro_file_path)
+
+        for i,f in enumerate(list_of_files):
+            with open(f, 'rb') as fp:
+                reader = fastavro.reader(fp)
+                records = [r for r in reader]
+                df = pd.DataFrame.from_records(records)
+                quote = csv.QUOTE_ALL if addQuotes else csv.QUOTE_NONE
+                df.to_csv(os.path.join(csv_dir_path, os.path.basename(f).replace(".avro",".csv")), index=False, sep=delimiter, quotechar=enclosedBy, escapechar=escapechar, quoting=quote )
+    except Exception as e:
+        raise Exception(f"Error occurred while converting the Avro file '{avro_file_path}' to CSV: {str(e)}")
+
+
+class FileConversion:
+    def __init__(self, sourceFilePath, sourceFileName, destinationDirectory, chunk_size):
+        self.sourceFilePath = sourceFilePath
+        self.sourceFileName = sourceFileName
+        self.output_directory = destinationDirectory
+        self.chunk_size = chunk_size
+        self.runMode = ""
+
+        if self.sourceFileName.split(".")[1] != "txt":
+            if self.output_directory[-1] == "\\" or self.output_directory[-1] == "/":
+                self.output_directory = self.output_directory[0:-1]
+            os.makedirs(self.output_directory, exist_ok=True)
+
+        if "s3://" in self.sourceFilePath or "gs://" in self.sourceFilePath or "https:" in self.sourceFilePath:
+
+            if "s3://" in self.sourceFilePath:
+                self.runMode = "S3"
+            elif "gs://" in self.sourceFilePath:
+                self.runMode = "GCS"
+            elif "https:" in self.sourceFilePath:
+                self.runMode = "AZ"
+                self.sourceFilePath = ""
+
+            self.temp_file = self.output_directory.replace("_csv","_downloaded_files")
+            os.makedirs(self.temp_file, exist_ok=True)
+
+    def s3_init(self, accessKey, secretKey, regionName):
+        try:
+            self.client = boto3.client(
+            's3',
+            aws_access_key_id = accessKey.strip(),
+            aws_secret_access_key = secretKey.strip(),
+            region_name =regionName
+            )
+
+        except Exception as e:
+            raise e
+
+    def az_init(self, storage_account_name, storage_account_key, fileSystem):
+        from azure.storage.filedatalake import DataLakeServiceClient
+        from azure.core.exceptions import ResourceExistsError
+        import sys, csv
+        from azure.storage.blob import BlobServiceClient, ContainerClient, BlobClient, DelimitedTextDialect,DelimitedJsonDialect, BlobQueryError
+
+        try:
+            global service_client
+
+            self.service_client = DataLakeServiceClient(account_url="{}://{}.dfs.core.windows.net".format(
+                "https", storage_account_name), credential=storage_account_key)
+            self.file_system_client = self.service_client.get_file_system_client(file_system=fileSystem)
+
+        except Exception as e:
+            raise e
+
+
+    def _get_file_list(self, sourceFilePath, sourceFileName):
+        file_path = os.path.join(sourceFilePath,sourceFileName)
+        files = glob.glob(file_path)
+        return files
+
+    def _get_csv_file_path(self, file_path, output_directory):
+        base_name = os.path.basename(file_path)
+        csv_file_name = os.path.splitext(base_name)[0] + '.csv'
+        csv_file_path = os.path.join(output_directory, csv_file_name)
+        return csv_file_path
+
+    def download_file_from_S3(self):
+        try:
+            bucketName = self.sourceFilePath.split('/')[2]
+            self.client.download_file(bucketName,os.path.join(self.sourceFilePath,self.sourceFileName).replace("s3://","").replace(bucketName + '/',"").replace("\\","/").strip(),os.path.join(self.temp_file,self.sourceFileName))
+        except Exception as e:
+            raise e
+
+    def download_file_from_AZ(self):
+        try:
+            if self.sourceFilePath !='':
+                directory_client = self.file_system_client.get_directory_client(self.sourceFilePath)
+                file_client = directory_client.get_file_client(self.sourceFileName)
+            else:
+                file_client=self.file_system_client.get_file_client(self.sourceFileName)
+                with open(os.path.join(self.temp_file,self.sourceFileName),'wb') as local_file:
+                    download = file_client.download_file()
+                    downloaded_bytes = download.readall()
+                    local_file.write(downloaded_bytes)
+
+            file_client.close()
+
+        except Exception as e:
+            raise e
+
+    def download_file_from_GCS(self):
+        import subprocess
+        try:
+            downloadCmd = "gsutil cp "+str(os.path.join(self.sourceFilePath,self.sourceFileName)).replace("\\","/").strip()+" "+os.path.join(self.temp_file,self.sourceFileName)
+            if sys.platform == 'linux':
+                returned_output = subprocess.check_output(downloadCmd, shell=True,stderr=subprocess.STDOUT)
+                returned_output=returned_output.decode('utf-8')
+            else:
+                returned_output = subprocess.check_output('cmd /c "'+downloadCmd+'"', shell=True,stderr=subprocess.STDOUT)
+                returned_output=returned_output.decode('utf-8')
+            return returned_output
+        except subprocess.CalledProcessError as e:
+            raise e
+
+    def convert_avro_to_csv(self, delimiter, field_enclosure, escape_char):
+
+        if self.runMode == "S3":
+            self.download_file_from_S3()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "AZ":
+            self.download_file_from_AZ()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "GCS":
+            self.download_file_from_GCS()
+            self.sourceFilePath = self.temp_file
+
+        try:
+            file_list = self._get_file_list(self.sourceFilePath, self.sourceFileName)
+
+        except Exception as e:
+            raise e
+
+        try:
+            for avro_file in file_list:
+                csv_file_path = self._get_csv_file_path(avro_file, self.output_directory)
+
+                if os.path.exists(csv_file_path):
+                    os.remove(csv_file_path)
+
+                with open(avro_file, 'rb') as fp:
+                    reader = fastavro.reader(fp)
+                    records = []
+
+                    quotechar = field_enclosure if field_enclosure else None
+                    quote = csv.QUOTE_ALL if field_enclosure else csv.QUOTE_NONE
+                    escape_char = escape_char if escape_char else None
+
+                    for i, record in enumerate(reader):
+                        records.append(record)
+
+                        if (i + 1) % self.chunk_size == 0:
+                            df = pd.DataFrame.from_records(records)
+
+                            df.to_csv(csv_file_path, mode='a', index=False, sep=delimiter, header=False, quoting=quote, quotechar=quotechar, escapechar=escape_char)
+
+                            records = []
+
+                    if records:
+                        df = pd.DataFrame.from_records(records)
+                        df.to_csv(csv_file_path, mode='a', index=False, sep=delimiter, header=False, quoting=quote, quotechar=quotechar, escapechar=escape_char)
+
+        except Exception as e:
+            raise e
+
+    def convert_orc_to_csv(self, delimiter, field_enclosure, escape_char):
+
+        if self.runMode == "S3":
+            self.download_file_from_S3()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "AZ":
+            self.download_file_from_AZ()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "GCS":
+            self.download_file_from_GCS()
+            self.sourceFilePath = self.temp_file
+
+        try:
+            file_list = self._get_file_list(self.sourceFilePath, self.sourceFileName)
+
+        except Exception as e:
+            raise e
+
+        try:
+            for orc_file_path in file_list:
+                csv_file_path = self._get_csv_file_path(orc_file_path, self.output_directory)
+
+                if os.path.exists(csv_file_path):
+                    os.remove(csv_file_path)
+
+                with open(orc_file_path, 'rb') as fp:
+                    reader = pyorc.Reader(fp)
+                    records = []
+
+                    quotechar = field_enclosure if field_enclosure else None
+                    quote = csv.QUOTE_ALL if field_enclosure else csv.QUOTE_NONE
+
+                    for i, record in enumerate(reader):
+                        records.append(record)
+
+                        if (i + 1) % self.chunk_size == 0:
+                            df = pd.DataFrame.from_records(records)
+
+                            df.to_csv(csv_file_path, mode='a', index=False, sep=delimiter, header=False, quoting=quote, quotechar=quotechar, escapechar=escape_char)
+
+                            records = []
+
+                    if records:
+                        df = pd.DataFrame.from_records(records)
+                        df.to_csv(csv_file_path, mode='a', index=False, sep=delimiter, header=False, quoting=quote, quotechar=quotechar, escapechar=escape_char)
+
+        except Exception as e:
+            raise e
+
+    def convert_parquet_to_csv(self, delimiter, field_enclosure, escape_char):
+
+        if self.runMode == "S3":
+            self.download_file_from_S3()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "AZ":
+            self.download_file_from_AZ()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "GCS":
+            self.download_file_from_GCS()
+            self.sourceFilePath = self.temp_file
+
+        try:
+            file_list = self._get_file_list(self.sourceFilePath, self.sourceFileName)
+
+        except Exception as e:
+            raise e
+
+        try:
+            for parquet_file in file_list:
+
+                csv_file_path = self._get_csv_file_path(parquet_file, self.output_directory)
+
+                if os.path.exists(csv_file_path):
+                    os.remove(csv_file_path)
+
+                reader = pq.ParquetFile(parquet_file)
+
+                quotechar = field_enclosure if field_enclosure else None
+                quote = csv.QUOTE_ALL if field_enclosure else csv.QUOTE_NONE
+                escape_char = escape_char if escape_char else None
+
+                for chunk_number, batch in enumerate(reader.iter_batches(batch_size=self.chunk_size)):
+                    with open(csv_file_path, mode='a', newline='', encoding='utf-8') as csv_file:
+                        csv_writer = csv.writer(csv_file, quotechar=quotechar, delimiter=delimiter, quoting=quote, escapechar=escape_char)
+
+                        for row in batch.to_pandas().itertuples(index=False):
+                            csv_writer.writerow(row)
+
+        except Exception as e:
+            raise e
+
+    def convert_excel_to_csv(self, delimiter, field_enclosure, escape_char, sheetname=None):
+
+        if self.runMode == "S3":
+            self.download_file_from_S3()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "AZ":
+            self.download_file_from_AZ()
+            self.sourceFilePath = self.temp_file
+        elif self.runMode == "GCS":
+            self.download_file_from_GCS()
+            self.sourceFilePath = self.temp_file
+
+        try:
+            file_list = self._get_file_list(self.sourceFilePath, self.sourceFileName)
+        except Exception as e:
+            raise e
+
+        try:
+            for excel_file in file_list:
+                csv_file_path = self._get_csv_file_path(excel_file, self.output_directory)
+
+                if os.path.exists(csv_file_path):
+                    os.remove(csv_file_path)
+
+
+                with pd.ExcelFile(excel_file) as xls:
+                    sheet_name = xls.sheet_names[0] if sheetname is None else sheetname
+                    read_file = pd.read_excel (xls, sheet_name=sheet_name,header=0,skiprows=0)
+                    columns = read_file.columns.tolist()
+                    csv_data= read_file.iloc[:, 0:len(columns)]
+
+                    quote_char = field_enclosure if field_enclosure else None
+                    quote = csv.QUOTE_ALL if field_enclosure else csv.QUOTE_NONE
+                    escape_char = escape_char if escape_char else None
+
+                    csv_data.to_csv(csv_file_path, index = None, header=columns, sep=delimiter, quotechar=quote_char, escapechar=escape_char, quoting=quote)
+
+        except Exception as e:
+            raise e
+
+    def clear_temporary_directory(self):
+        try:
+            if self.runMode in ["S3","AZ","GCS"]:
+                shutil.rmtree(self.temp_file)
+
+            if self.sourceFileName.split(".")[1].lower() not in {"csv", "txt"}:
+                shutil.rmtree(self.output_directory)
+
+        except Exception as e:
+            raise e
+
+def convert_orc_to_csv(orc_file_path, csv_dir_path, delimiter, enclosedBy, escapechar, addQuotes, chunk_size):
+    try:
+        if not os.path.exists(csv_dir_path):
+            os.makedirs(csv_dir_path)
+
+        csv_file_path = os.path.join(csv_dir_path, os.path.basename(orc_file_path).replace('.orc', '.csv'))
+
+        if os.path.exists(csv_file_path):
+            os.remove(csv_file_path)
+
+        with open(orc_file_path, 'rb') as fp:
+            reader = pyorc.Reader(fp)
+            records = []
+
+            quotechar = enclosedBy if enclosedBy else None
+            quote = csv.QUOTE_ALL if addQuotes else csv.QUOTE_MINIMAL
+
+            for i, record in enumerate(reader):
+                records.append(record)
+
+                if (i + 1) % chunk_size == 0:
+                    df = pd.DataFrame.from_records(records)
+                    df.to_csv(csv_file_path, mode='a', index=False, sep=delimiter, header=False, quoting=quote, quotechar=quotechar, escapechar=escapechar)
+                    records = []
+
+            if records:
+                df = pd.DataFrame.from_records(records)
+                df.to_csv(csv_file_path, mode='a', index=False, sep=delimiter, header=False, quoting=quote, quotechar=quotechar, escapechar=escapechar)
+
+    except Exception as e:
+        print(f"Error converting the file to csv: {e}")
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<data_type_mapping_set name="Azure SQL Server from DB2" xsi:schemaLocation="http://www.wherescape.com/xml/red ./Data%20Type%20Mapping.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wherescape.com/xml/red">
+	<mapping_set_description></mapping_set_description>
+	<mapping_set_null_policy>AllowNulls</mapping_set_null_policy>
+	<data_type_mapping match_data_type="xml" output_data_type="varchar(8000)" active_flag="true">
+		<transform_code>CAST(%column_name AS VARCHAR(8000))</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="timestamp" output_data_type="datetime" active_flag="true">
+		<transform_code>TO_CHAR(%column_name,'YYYY-MM-DD HH24:MI:SS')</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="date" output_data_type="date" active_flag="true">
+		<transform_code>TO_CHAR(%column_name,'YYYY-MM-DD')</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="time" output_data_type="time" active_flag="true"></data_type_mapping>
+	<data_type_mapping match_data_type="char" output_data_type="varchar(%precision)" active_flag="true">
+		<match_parameters>
+			<match_precision>1-8000</match_precision>
+		</match_parameters>
+		<transform_code>TRIM(%column_name)</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="char" output_data_type="varchar(8000)" active_flag="true">
+		<match_parameters>
+			<match_precision>8001-*</match_precision>
+		</match_parameters>
+		<transform_code>SUBSTR(TRIM(%column_name),1,8000)</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="varchar" output_data_type="varchar(%precision)" active_flag="true">
+		<match_parameters>
+			<match_precision>1-8000</match_precision>
+		</match_parameters>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="varchar" output_data_type="varchar(8000)" active_flag="true">
+		<match_parameters>
+			<match_precision>8001-*</match_precision>
+		</match_parameters>
+		<transform_code>SUBSTR(%column_name,1,8000)</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="real" output_data_type="real" active_flag="true"></data_type_mapping>
+	<data_type_mapping match_data_type="double" output_data_type="float" active_flag="true"></data_type_mapping>
+	<data_type_mapping match_data_type="decfloat" output_data_type="decimal(38,2)" active_flag="true">
+		<transform_code>CAST(%column_name AS DECIMAL(38,2))</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="smallint" output_data_type="smallint" active_flag="true"></data_type_mapping>
+	<data_type_mapping match_data_type="integer" output_data_type="integer" active_flag="true"></data_type_mapping>
+	<data_type_mapping match_data_type="bigint" output_data_type="bigint" active_flag="true"></data_type_mapping>
+	<data_type_mapping match_data_type="clob" output_data_type="varchar(8000)" active_flag="true">
+		<transform_code>CAST(SUBSTR(%column_name,1,8000) AS VARCHAR(8000))</transform_code>
+	</data_type_mapping>
+	<data_type_mapping match_data_type="boolean" output_data_type="varchar(20)" active_flag="true"></data_type_mapping>
+</data_type_mapping_set>
