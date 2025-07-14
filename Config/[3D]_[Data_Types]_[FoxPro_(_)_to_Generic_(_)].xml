@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_type_mapping_set xmlns="http://www.wherescape.com/xml/red" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="FoxPro (*) to Generic (*)" xsi:schemaLocation="http://www.wherescape.com/xml/red Data%20Type%20Mapping.xsd">
+  <xml_version>2</xml_version>
+  <mapping_set_from version="*">FoxPro</mapping_set_from>
+  <mapping_set_to version="*">Generic</mapping_set_to>
+  <mapping_set_description>-</mapping_set_description>
+  <mapping_set_null_policy>AllowNulls</mapping_set_null_policy>
+  <data_type_mapping match_data_type="c" output_data_type="varchar(%length)">
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="g" output_data_type="varchar(%precision)">
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="t" output_data_type="date">
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="d" output_data_type="date">
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="b" output_data_type="real">
+    <output_parameters>
+      <output_basic_data_type>real</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="y" output_data_type="numeric(%precision)">
+    <match_parameters>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="y" output_data_type="numeric(%precision,%scale)">
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="n" output_data_type="numeric(%precision)">
+    <match_parameters>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="n" output_data_type="numeric(%precision,%scale)">
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="f" output_data_type="numeric(%precision)">
+    <match_parameters>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="f" output_data_type="numeric(%precision,%scale)">
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="m" output_data_type="clob">
+    <output_parameters>
+      <output_basic_data_type>clob</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="i" output_data_type="integer">
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="l" output_data_type="integer">
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+</data_type_mapping_set>

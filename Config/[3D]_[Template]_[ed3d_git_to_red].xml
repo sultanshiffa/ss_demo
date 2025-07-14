@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://www.wherescape.com/xml/Template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wherescape.com/xml/Template template_2.xsd">
+  <xml_version>2</xml_version>
+  <name>ed3d_git_to_red</name>
+  <type>Workflow script</type>
+  <script_language>python</script_language>
+  <metatags>
+    <metatag name="Version">1.0</metatag>
+  </metatags>
+  <content><![CDATA[import os
+import subprocess
+from pathlib import Path
+
+file_path: str = os.path.join(os.environ["ProgramFiles"], "WhereScape", "GIT", "Python", Path(__file__).stem + ".py")
+
+command = [
+    "python",
+    file_path,
+    "--ws3d_repository",
+    "$WSL_WRKFL_Repo$",
+    "--ws3d_catagory",
+    "$WSL_WRKFL_Category$",
+    "--ws3d_model",
+    "$WSL_WRKFL_Model$",
+    "--ws3d_model_version",
+    "$WSL_WRKFL_Version$"
+]
+
+subprocess.Popen(command)]]></content>
+</template>
