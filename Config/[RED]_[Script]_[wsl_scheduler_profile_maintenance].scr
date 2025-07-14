@@ -1,0 +1,391 @@
+# ScriptVersion:002 MinVersion:10400 MaxVersion:* TargetType:Common ModelType:* ScriptType:PowerShell (64-bit)
+# --    (c) Wherescape Inc 2025. WhereScape Inc permits you to copy this Module solely for use with the RED software, and to modify this Module            -- #
+# --    for the purposes of using that modified Module with the RED software, but does not permit copying or modification for any other purpose.           -- #
+#==============================================================================
+# Script Name      :    wsl_scheduler_profile_maintenance.ps1
+# Description      :    Scheduler Profile Maintenance - maintains the profile records in redadmin.ws_scheduler_profile.
+# Author           :    WhereScape Inc
+#==============================================================================
+# Notes / History
+# 001 : Initial release.
+# 002 : Added special row for WSL_SCHEDULER_API entry, improved ordering
+#==============================================================================
+
+function Get-SchedulerProfileForm {
+    param (
+        $ht = [ordered]@{}
+    )
+
+    if ($ht.Count -eq 0) { throw "No connections found in the hash table" }
+
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+
+
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = 'Scheduler Profile Maintenance'
+    $form.Size = New-Object System.Drawing.Size(400,600)
+    $form.AutoScroll = $true
+    $form.StartPosition = 'CenterScreen'
+    
+    $IconPath = "${ENV:WSL_RED_DIR}\Icons\red.ico"
+    if (Test-Path $IconPath) {
+      $icon = New-Object System.Drawing.Icon($IconPath)
+      $form.Icon = $icon
+    }
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Location = New-Object System.Drawing.Point(280,(95 + $ht.Count * 100))
+    $okButton.Size = New-Object System.Drawing.Size(75,23)
+    $okButton.Text = 'OK'
+    $okButton.Enabled = $false
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.AcceptButton = $okButton
+    $form.Controls.Add($okButton)
+
+    $cancelButton = New-Object System.Windows.Forms.Button
+    $cancelButton.Location = New-Object System.Drawing.Point(10,(95 + $ht.Count * 100))
+    $cancelButton.Size = New-Object System.Drawing.Size(75,23)
+    $cancelButton.Text = 'Cancel'
+    $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $form.CancelButton = $cancelButton
+    $form.Controls.Add($cancelButton)
+
+    # spacer only
+    $labelOkCancel = New-Object System.Windows.Forms.Label
+    $labelOkCancel.Location = New-Object System.Drawing.Point(75,(115 + $ht.Count * 100))
+    $labelOkCancel.Size = New-Object System.Drawing.Size(280,40)
+    $form.Controls.Add($labelOkCancel)
+
+    $inputItems=@{}
+    $xPos=10
+    $yPos=80
+    $yOffSet=20
+    $labelLen=100
+    $boxLen=250
+
+    # spacer only
+    $labelProfileReq = New-Object System.Windows.Forms.Label
+    $labelProfileReq.Location = New-Object System.Drawing.Point(10,10)
+    $labelProfileReq.Size = New-Object System.Drawing.Size(280,10)
+    $labelProfileReq.Text = ""
+    $form.Controls.Add($labelProfileReq)
+
+    $labelProfile = New-Object System.Windows.Forms.Label
+    $labelProfile.Location = New-Object System.Drawing.Point(10,20)
+    $labelProfile.Size = New-Object System.Drawing.Size(350,20)
+    $labelProfile.Text = "Enter the Profile Encryption Secret to be used for encryption:"
+    $form.Controls.Add($labelProfile)
+
+    $profilePwd = New-Object System.Windows.Forms.TextBox
+    $profilePwd.Location = New-Object System.Drawing.Point(10,40)
+    $profilePwd.Size = New-Object System.Drawing.Size($boxLen,20)
+    $profilePwd.PasswordChar = '*'
+    $profilePwd.Add_TextChanged({$okButton.Enabled = $true})
+    $form.Controls.Add($profilePwd)
+
+    $labelRequired = New-Object System.Windows.Forms.Label
+    $labelRequired.Location = New-Object System.Drawing.Point(($boxLen + 20),40)
+    $labelRequired.Size = New-Object System.Drawing.Size(90,20)
+    $labelRequired.Text = "[REQUIRED]"
+    $labelRequired.ForeColor = 'red'
+    $form.Controls.Add($labelRequired)
+
+    foreach($key in $ht.keys) {
+
+        $inputItems["label$ht[$key]"] = New-Object System.Windows.Forms.Label
+        $inputItems["label$ht[$key]"].Location = New-Object System.Drawing.Point($xPos,$yPos)
+        $inputItems["label$ht[$key]"].Size = New-Object System.Drawing.Size(400,20)
+        if ($key -eq 'WSL_SCHEDULER_API') {
+            $inputItems["label$ht[$key]"].Text = "Scheduler REST API:"
+        }
+        else {
+            $inputItems["label$ht[$key]"].Text = "Connection [ ${key} ]:"
+        }
+        $form.Controls.Add($inputItems["label$ht[$key]"])
+
+        $inputItems["labelUser$ht[$key]"] = New-Object System.Windows.Forms.Label
+        $inputItems["labelUser$ht[$key]"].Location = New-Object System.Drawing.Point($xPos,($yPos+$yOffSet))
+        $inputItems["labelUser$ht[$key]"].Size = New-Object System.Drawing.Size($labelLen,20)
+        $inputItems["labelUser$ht[$key]"].Text = "User Name:"
+        $form.Controls.Add($inputItems["labelUser$ht[$key]"])
+
+        $inputItems["userBox$ht[$key]"] = New-Object System.Windows.Forms.TextBox
+        $inputItems["userBox$ht[$key]"].Location = New-Object System.Drawing.Point(($xPos+$labelLen),($yPos+$yOffSet))
+        $inputItems["userBox$ht[$key]"].Size = New-Object System.Drawing.Size($boxLen,20)
+        $inputItems["userBox$ht[$key]"].Text = $ht[$key][0]
+        $form.Controls.Add($inputItems["userBox$ht[$key]"])
+
+        $inputItems["labelPwd$ht[$key]"] = New-Object System.Windows.Forms.Label
+        $inputItems["labelPwd$ht[$key]"].Location = New-Object System.Drawing.Point($xPos,($yPos+$yOffSet*2))
+        $inputItems["labelPwd$ht[$key]"].Size = New-Object System.Drawing.Size($labelLen,20)
+        $inputItems["labelPwd$ht[$key]"].Text = 'Password:'
+        $form.Controls.Add($inputItems["labelPwd$ht[$key]"])
+
+        $inputItems["pwdBox$ht[$key]"] = New-Object System.Windows.Forms.TextBox
+        $inputItems["pwdBox$ht[$key]"].Location = New-Object System.Drawing.Point(($xPos+$labelLen),($yPos+$yOffSet*2))
+        $inputItems["pwdBox$ht[$key]"].Size = New-Object System.Drawing.Size($boxLen,20)
+        if ($ht[$key][3] -ne '') {
+            $inputItems["pwdBox$ht[$key]"].Text = 'WSL_ENC_PWD'
+        }        
+        $inputItems["pwdBox$ht[$key]"].PasswordChar = '*'
+        $form.Controls.Add($inputItems["pwdBox$ht[$key]"])
+
+        $inputItems["labelCon$ht[$key]"] = New-Object System.Windows.Forms.Label
+        $inputItems["labelCon$ht[$key]"].Location = New-Object System.Drawing.Point($xPos,($yPos+$yOffSet*3))
+        $inputItems["labelCon$ht[$key]"].Size = New-Object System.Drawing.Size($labelLen,20)
+        if ($key -eq 'WSL_SCHEDULER_API') {
+            $inputItems["labelCon$ht[$key]"].Text = "URL:"
+        }
+        else {
+            $inputItems["labelCon$ht[$key]"].Text = 'Connection String:'
+        }
+        
+        $form.Controls.Add($inputItems["labelCon$ht[$key]"])
+
+        $inputItems["conStr$ht[$key]"] = New-Object System.Windows.Forms.TextBox
+        $inputItems["conStr$ht[$key]"].Location = New-Object System.Drawing.Point(($xPos+$labelLen),($yPos+$yOffSet*3))
+        $inputItems["conStr$ht[$key]"].Size = New-Object System.Drawing.Size($boxLen,20)
+        $inputItems["conStr$ht[$key]"].Text = $ht[$key][2]
+        $form.Controls.Add($inputItems["conStr$ht[$key]"])
+
+        $yPos+=$yOffSet*5
+    }
+    
+    $form.Topmost = $true
+    $form.Add_Shown({$labelProfileReq.Select()})
+    $result = $form.ShowDialog()
+    
+    $rHt=[ordered]@{}
+    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+        foreach($key in $ht.keys) {
+            $rHt[$key]= @(
+                $inputItems["userBox$ht[$key]"].Text,
+                $inputItems["pwdBox$ht[$key]"].Text,
+                $inputItems["conStr$ht[$key]"].Text,
+                $ht[$key][3]
+            )
+        }
+    }
+    
+    $result, ($profilePwd.Text, 'unknown' -ne '')[0], $rHt
+}
+
+Function run-data-query($dsn, $user='', $pw='', $conString = '', $sqlQeury = 'SELECT 1'){
+  if ($conString -eq '') {
+    $conString = "DSN=$dsn"
+    if (![string]::IsNullOrEmpty($user)) {
+        $conString += ";UID=$user"
+        if (![string]::IsNullOrEmpty($pw)) {
+            $conString += ";PWD={$pw}"
+        }
+    }
+  }
+  try {
+
+    $conn = New-Object System.Data.Odbc.OdbcConnection
+    $conn.ConnectionString="$conString"
+    $conn.Open()
+    $command = New-Object System.Data.Odbc.OdbcDataAdapter($sqlQeury,$conn)
+    $tableDataset = New-Object System.Data.DataSet
+    $command.Fill($tableDataset) | out-null
+    $datarows = $tableDataset.Tables[0]
+    $conn.Close()
+
+    if ($datarows -ne $null) {
+      $retMsg = "Success"
+      $retValue = 0
+      return $retValue, $retMsg, $datarows
+    }
+    else {
+      $retMsg = "No objects found using query:`n"
+      $retMsg += $datarowsSql
+      $retValue = 2
+      return $retValue, $retMsg, $null
+    }
+  }
+  catch {
+    try {$conn.Close()}
+    catch{}
+    $retMsg = $_.Exception
+    $retValue = 3
+    throw $_.Exception
+  }
+
+}
+
+Function Execute-Command ($commandTitle, $commandPath, $commandArguments)
+{
+  Try {
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName = $commandPath
+    $pinfo.RedirectStandardError = $true
+    $pinfo.RedirectStandardOutput = $true
+    $pinfo.UseShellExecute = $false
+    $pinfo.WindowStyle = 'Hidden'
+    $pinfo.CreateNoWindow = $True
+    $pinfo.Arguments = $commandArguments
+    $p = New-Object System.Diagnostics.Process
+    $p.StartInfo = $pinfo
+    $p.Start() | Out-Null
+    $stdout = $p.StandardOutput.ReadToEnd()
+    $stderr = $p.StandardError.ReadToEnd()
+    $p.WaitForExit()
+    $p | Add-Member "commandTitle" $commandTitle
+    $p | Add-Member "stdout" $stdout
+    $p | Add-Member "stderr" $stderr
+  }
+  Catch {
+    Write-Error "Failed to run: $commandPath $commandArguments"  
+  } 
+  $p
+}
+
+Function Get-EncryptedPwd($conName='', $conPwd='', $secret=$ENV:WSL_SECRET){
+    $ENV:WSL_SALT=$conName
+    $ENV:WSL_CON_PWD=$conPwd
+    $ENV:WSL_SECRET=$secret
+    $encrypt_args=@"
+-jar "${ENV:WSL_RED_DIR}\Standalone\encryption-util.jar" encrypt --encryption-type wsenc --salt WSENV~WSL_SALT~ --secret WSENV~WSL_SECRET~ --string-to-be-encrypted WSENV~WSL_CON_PWD~
+"@
+    $enc_res = Execute-Command 'ENC' "${ENV:WSL_RED_DIR}\jre\bin\java" $encrypt_args
+    # Write-Warning $enc_res.stderr
+    return $enc_res.stdout.replace("`n","").replace("`r","")    
+}
+
+Function run-insert-query($dsn, $user='', $pw='', $conString = '', $sqlQeury = 'SELECT 1'){
+  if ($conString -eq '') {
+    $conString = "DSN=$dsn"
+    if (![string]::IsNullOrEmpty($user)) {
+        $conString += ";UID=$user"
+        if (![string]::IsNullOrEmpty($pw)) {
+            $conString += ";PWD={$pw}"
+        }
+    }
+  }
+  try {
+
+      $conn = New-Object System.Data.Odbc.OdbcConnection
+      $conn.ConnectionString="$conString"
+      $conn.Open()
+      $command = New-Object System.Data.Odbc.OdbcCommand($sqlQeury,$conn)
+      $rowsAffected = $command.ExecuteNonQuery()
+      $conn.Close()
+      $retMsg = "Success"
+      $retValue = 0
+      return $retValue, $rowsAffected
+  }
+  catch {
+    try {$conn.Close()}
+    catch{}
+    throw $_.Exception
+  }
+}
+
+
+
+try {
+
+  # SETUP
+  $scrResCode = 0
+  $scrResMsg = ''
+  $auditLog = ''
+  $errorLog = ''
+  # SET RED LOCATION
+  $ENV:WSL_RED_DIR=$ENV:WSL_BINDIR.TrimEnd('\')
+
+  # SET META REPO CREDENTIALS
+  $dsn = $ENV:WSL_META_DSN 
+  $user = $ENV:WSL_META_USER 
+  $pw = $ENV:WSL_META_PWD 
+  $connectionString = $ENV:WSL_META_CONSTRING  
+
+  # MAIN
+
+  # Metadata connection query
+  $sqlQeury = @'
+SELECT connection_name, connection_string, con_user, enc_pwd, profile_status
+FROM (
+  SELECT UPPER(sp_con_name) AS connection_name, sp_con_string AS connection_string, sp_user_name AS con_user, sp_encrypted_pwd AS enc_pwd, 'existing' AS profile_status
+  FROM redadmin.ws_scheduler_profile
+  UNION ALL
+  SELECT UPPER(dc_name) AS connection_name,
+    SUBSTRING(dc_connect_string 
+      FROM POSITION('ODBCCON=' IN dc_connect_string) + LENGTH(SUBSTRING(dc_connect_string FROM 'ODBCCON=(\d+)')) +9
+      FOR CAST(SUBSTRING(dc_connect_string FROM 'ODBCCON=(\d+)') AS INT)
+    ) AS connection_string, 
+    '' AS con_user, 
+    '' AS enc_pwd,
+    'new' AS profile_status
+  FROM red.ws_dbc_connect
+  WHERE NOT EXISTS (SELECT 1 FROM redadmin.ws_scheduler_profile WHERE UPPER(dc_name) = UPPER(sp_con_name))
+    AND dc_type IN ('D','O','Z')
+    AND UPPER(dc_name) <>  'WSL_SCHEDULER_API' 
+  UNION ALL
+  SELECT 'WSL_SCHEDULER_API' AS connection_name, wes_restapi_url AS connection_string, '' AS con_user, '' AS enc_pwd, 'new' AS profile_status
+  FROM red.ws_wrk_external_scheduler
+  WHERE NOT EXISTS (SELECT 1 FROM redadmin.ws_scheduler_profile WHERE 'WSL_SCHEDULER_API' = UPPER(sp_con_name))
+) AS profile
+ORDER BY connection_name ASC
+'@
+
+  $res = run-data-query $dsn $user $pw $connectionString $sqlQeury
+  $rows = $res[2]
+
+  $ht = [ordered]@{}
+  $res[2].Rows | %{ $ht[$_.connection_name] = @($_.con_user,'',$_.connection_string,$_.enc_pwd) }
+
+  $profileResult = Get-SchedulerProfileForm $ht
+
+  if ($profileResult[0] -ne [System.Windows.Forms.DialogResult]::OK ) {
+      throw 'User cancelled at input dialog.'
+  }
+
+  $ENV:WSL_SECRET=$profileResult[1]
+  $ht = $profileResult[2]
+
+  foreach($key in $ht.keys) {
+    if ($ht[$key][1] -eq 'WSL_ENC_PWD') {
+      $ht[$key][1] = $ht[$key][3]
+    }
+    elseif (![string]::IsNullOrEmpty($ht[$key][1])) {
+      $ht[$key][1] = (Get-EncryptedPwd $key.ToLower() $ht[$key][1])
+    }      
+  }
+
+  # Output INSERT query
+
+  $insertValueRows = ($ht.Keys | %{ "('$($_.ToLower())','$($ht[$_][2])','$($ht[$_][0])','$($ht[$_][1])')" }) -join  ",`r`n"
+
+  $insertQuery = @"
+INSERT INTO redadmin.ws_scheduler_profile (sp_con_name,sp_con_string,sp_user_name,sp_encrypted_pwd)
+VALUES
+$insertValueRows
+ON CONFLICT (sp_con_name) DO UPDATE 
+SET sp_con_string = excluded.sp_con_string,
+  sp_user_name = excluded.sp_user_name,
+  sp_encrypted_pwd = excluded.sp_encrypted_pwd
+;
+"@
+
+  $auditLog += $insertQuery
+
+  $insertRes = run-insert-query $dsn $user $pw $connectionString $insertQuery
+  $rowsAffected = $insertRes[1]
+
+  $scrResCode = 1
+  $scrResMsg = "Ran the below insert into the Scheduler Profile, rows affected: $rowsAffected"
+
+}
+catch {
+  $scrResCode = -2
+  $scrResMsg = 'Scheduler Profile maintencnace halted.'
+  $errorLog += $PSItem.Exception.Message
+  $errorLog += $PSItem.Exception.InnerExceptionMessage 
+}
+finally {
+  Write-Output $scrResCode
+  Write-Output $scrResMsg
+  Write-Output $auditLog
+  Write-Output $errorLog
+}
