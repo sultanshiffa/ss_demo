@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+name: deployment
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches:
+      - main
+      - quality
+      - development
+    paths: "RED.zip" #Only operates with this file changes
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  REPOSITORY_NAME: "${{ github.repository }}"
+  BRANCH_NAME: "${{ github.ref_name }}"
+  WST_DEPLOYMENT_CONTROL_FILE: ApplicationDeploymentOptions.xml
+  PYTHON_SCRIPT: C:\Program Files\WhereScape\GIT\Python\edred_git_wst_deployment.py
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on [ self-hosted, Windows, X64, CICD, WhereScape ]
+    runs-on: [self-hosted, WhereScape, ${{ github.ref_name }}]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Runs the GIT script
+      - name: Debug
+        run: echo ${{ env.REPOSITORY_NAME }} >> ${{ env.BRANCH_NAME }}
+      # - name: Excutes edred_git_wst_deployment.py
+      #  run: |
+      #    python "${{ env.PYTHON_SCRIPT }}" --git_repo "${{ env.REPOSITORY_NAME }}" --git_branch "${{ env.BRANCH_NAME }}" --deployment_config_file_name "${{ env.WST_DEPLOYMENT_CONTROL_FILE }}"
