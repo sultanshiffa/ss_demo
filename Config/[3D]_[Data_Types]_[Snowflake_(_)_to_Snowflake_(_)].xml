@@ -1,0 +1,609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_type_mapping_set xmlns="http://www.wherescape.com/xml/red" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Snowflake (*) to Snowflake (*)" xsi:schemaLocation="http://www.wherescape.com/xml/red Data%20Type%20Mapping.xsd">
+  <xml_version>2</xml_version>
+  <mapping_set_from version="*">Snowflake</mapping_set_from>
+  <mapping_set_to version="*">Snowflake</mapping_set_to>
+  <mapping_set_description>-</mapping_set_description>
+  <mapping_set_null_policy>AllowNulls</mapping_set_null_policy>
+  <data_type_mapping match_data_type="tgt_integer" output_data_type="number(38)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_char" output_data_type="char(16777216)">
+    <match_parameters>
+      <match_length>16777217-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_char" output_data_type="char(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_varchar" output_data_type="varchar(16777216)">
+    <match_parameters>
+      <match_length>16777217-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_varchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_date" output_data_type="date">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_datetime" output_data_type="timestamp">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="BYTEINT" output_data_type="BYTEINT">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>BYTEINT</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TINYINT" output_data_type="TINYINT">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TINYINT</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="SMALLINT" output_data_type="SMALLINT">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>SMALLINT</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="INT" output_data_type="INT">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>INT</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="INTEGER" output_data_type="INTEGER">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>INTEGER</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="BIGINT" output_data_type="BIGINT">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>BIGINT</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="FLOAT" output_data_type="FLOAT">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>FLOAT</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="FLOAT4" output_data_type="FLOAT4">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>FLOAT4</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="FLOAT8" output_data_type="FLOAT8">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>FLOAT8</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="DOUBLE" output_data_type="DOUBLE">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>DOUBLE</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="DOUBLE PRECISION" output_data_type="DOUBLE PRECISION">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>DOUBLE PRECISION</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="REAL" output_data_type="REAL">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>REAL</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="NUMBER" output_data_type="NUMBER(%precision, %scale)">
+    <match_parameters>
+      <match_precision>*-38</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>NUMBER</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="NUMBER" output_data_type="NUMBER(38,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>NUMBER</output_basic_data_type>
+      <output_precision>38</output_precision>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="NUMERIC" output_data_type="NUMERIC(%precision, %scale)">
+    <match_parameters>
+      <match_precision>*-38</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>NUMERIC</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="NUMERIC" output_data_type="NUMERIC(38,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>NUMERIC</output_basic_data_type>
+      <output_precision>38</output_precision>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="DECIMAL" output_data_type="DECIMAL(%precision, %scale)">
+    <match_parameters>
+      <match_precision>*-38</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>DECIMAL</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="DECIMAL" output_data_type="DECIMAL(38,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>DECIMAL</output_basic_data_type>
+      <output_precision>38</output_precision>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="CHAR" output_data_type="CHAR(%length)">
+    <match_parameters>
+      <match_length>*-16777216</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>CHAR</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="CHAR" output_data_type="CHAR(16777216)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>CHAR</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="CHARACTER" output_data_type="CHARACTER(%length)">
+    <match_parameters>
+      <match_length>*-16777216</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>CHARACTER</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="CHARACTER" output_data_type="CHARACTER(16777216)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>CHARACTER</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="VARCHAR" output_data_type="VARCHAR(%length)">
+    <match_parameters>
+      <match_length>*-16777216</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>VARCHAR</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="VARCHAR" output_data_type="VARCHAR(16777216)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>VARCHAR</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="STRING" output_data_type="STRING(%length)">
+    <match_parameters>
+      <match_length>*-16777216</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>STRING</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="STRING" output_data_type="STRING(16777216)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>STRING</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TEXT" output_data_type="TEXT(%length)">
+    <match_parameters>
+      <match_length>*-16777216</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TEXT</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TEXT" output_data_type="TEXT(16777216)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TEXT</output_basic_data_type>
+      <output_length>16777216</output_length>
+      <output_scale>*</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="BINARY" output_data_type="BINARY(%length)">
+    <match_parameters>
+      <match_length>*-8388608</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>BINARY</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="BINARY" output_data_type="BINARY(8388608)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>BINARY</output_basic_data_type>
+      <output_length>8388608</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="VARBINARY" output_data_type="VARBINARY(%length)">
+    <match_parameters>
+      <match_length>*-8388608</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>VARBINARY</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="VARBINARY" output_data_type="VARBINARY(8388608)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>VARBINARY</output_basic_data_type>
+      <output_length>8388608</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="BOOLEAN" output_data_type="BOOLEAN">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>BOOLEAN</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="DATE" output_data_type="DATE">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>DATE</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIME" output_data_type="TIME(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIME</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIME" output_data_type="TIME(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIME</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP" output_data_type="TIMESTAMP(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP" output_data_type="TIMESTAMP(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP_LTZ" output_data_type="TIMESTAMP_LTZ(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_LTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP_LTZ" output_data_type="TIMESTAMP_LTZ(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_LTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMPLTZ" output_data_type="TIMESTAMP_LTZ(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_LTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMPLTZ" output_data_type="TIMESTAMP_LTZ(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_LTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP_NTZ" output_data_type="TIMESTAMP_NTZ(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_NTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP_NTZ" output_data_type="TIMESTAMP_NTZ(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_NTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMPNTZ" output_data_type="TIMESTAMP_NTZ(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_NTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMPNTZ" output_data_type="TIMESTAMP_NTZ(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_NTZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP_TZ" output_data_type="TIMESTAMP_TZ(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_TZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMP_TZ" output_data_type="TIMESTAMP_TZ(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_TZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMPTZ" output_data_type="TIMESTAMP_TZ(%scale)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*-9</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_TZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="TIMESTAMPTZ" output_data_type="TIMESTAMP_TZ(9)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>TIMESTAMP_TZ</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>9</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+</data_type_mapping_set>
