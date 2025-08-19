@@ -1,0 +1,89 @@
+# ScriptVersion:005 MinVersion:8310 MaxVersion:* TargetType:* ModelType:* ScriptType:Python
+import json
+from urllib import response
+import requests
+import os
+import sys
+from requests.auth import HTTPBasicAuth
+sys.path.append(os.environ.get('WSL_WORKDIR',''))
+
+
+
+# Create a common authentication object
+class Auth:
+    def __init__(self):
+        self.session = requests.Session()
+
+
+    def basicAuthSession(self,userId, password):
+        # Create a basic authentication object
+        auth = HTTPBasicAuth(userId, password)
+        # Add the authentication information to the session
+        self.session.auth = auth
+        return self.session
+
+
+    def openRequest(self, requestType, apiUrl, resultType, headers={}):
+        if headers != {}:
+            response = requests.request(str(requestType).upper(), apiUrl, headers=headers)
+        else:
+            response = requests.request(str(requestType).upper(), apiUrl)
+
+        if response.status_code != 200:
+            return f"API_ERROR: {str(response.text)}"
+
+        if str(resultType).upper() == 'JSON':
+            fileName = "api.json"
+            with open(os.path.join(os.environ.get('WSL_WORKDIR',''), fileName),'w',encoding='utf-8') as f:
+                json.dump(response.json(), f, indent=4)
+        else:
+            fileName = "api.xml"
+            with open(os.path.join(os.environ.get('WSL_WORKDIR',''), fileName),'w',encoding='utf-8') as f:
+                f.write(response.text)
+
+        return (os.path.join(os.environ.get('WSL_WORKDIR',''), fileName))
+
+
+    def basicAuthRequest(self, session, requestType, apiUrl, resultType, headers={}, payload=None):
+        if headers != {} and payload != None:
+            response = session.request(str(requestType).upper(), apiUrl, headers=headers, data = json.dumps(payload))
+        elif headers != {}:
+            response = session.request(str(requestType).upper(), apiUrl, headers=headers)
+        else:
+            response = session.request(str(requestType).upper(), apiUrl)
+
+        if str(response.status_code)[0] != "2":
+            return f"API_ERROR: {str(response.text)}"
+
+        if str(resultType).upper() == 'JSON':
+            fileName = "api.json"
+            with open(os.path.join(os.environ.get('WSL_WORKDIR',''), fileName),'w',encoding='utf-8') as f:
+                json.dump(response.json(), f, indent=4)
+        else:
+            fileName = "api.xml"
+            with open(os.path.join(os.environ.get('WSL_WORKDIR',''), fileName),'w',encoding='utf-8') as f:
+                f.write(response.text)
+
+        return (os.path.join(os.environ.get('WSL_WORKDIR',''), fileName))
+
+
+    def userSessionCommonRequest(self, session, requestType, apiUrl, headers, payload, resultType):
+
+        if resultType == "XML":
+            response = session.request(str(requestType).upper(), apiUrl, headers=headers, data=payload )
+        else:
+            response = session.request(str(requestType).upper(), apiUrl, headers=headers, data=json.dumps(payload))
+
+        if str(response.status_code)[0] != "2":
+            return f"API_ERROR: {str(response.text)}"
+
+        if str(resultType).upper() == 'JSON':
+            fileName = "api.json"
+            with open(os.path.join(os.environ.get('WSL_WORKDIR',''), fileName),'w',encoding='utf-8') as f:
+                json.dump(response.json(), f, indent=4)
+        else:
+            fileName = "api.xml"
+            with open(os.path.join(os.environ.get('WSL_WORKDIR',''), fileName),'w',encoding='utf-8') as f:
+                f.write(response.text)
+
+        return (os.path.join(os.environ.get('WSL_WORKDIR',''), fileName))

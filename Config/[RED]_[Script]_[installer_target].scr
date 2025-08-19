@@ -1,0 +1,300 @@
+# ScriptVersion:005 MinVersion:8310 MaxVersion:* TargetType:AzureSQL ModelType:* ScriptType:PowerShell (64-bit)
+# --    (c) Wherescape Inc 2024. WhereScape Inc permits you to copy this Module solely for use with the RED software, and to modify this Module            -- #
+# --    for the purposes of using that modified Module with the RED software, but does not permit copying or modification for any other purpose.           -- #
+#==============================================================================
+# Module Name      :    installer_target.psm1
+# DBMS Name        :    Modules specific to Azure SQL Server
+# Description      :    Generic powershell functions module used for Azure installation,
+#                       different templates, scripts and database specific
+#                       modules
+# Author           :    WhereScape Inc
+#==============================================================================
+# Notes / History
+
+Function Set-GlobalVars {
+  # TODO add function call that return the label from the License
+  $global:tgtLicenseLabel='Azure SQL Server' # Used in interactive prompts and help msgs
+  $global:tgtTypeString='sqlserver' # Used in file name replcements such as "--tem-name "wsl_${tgtTypeSting}_${scriptType}_stage" "
+  # TODO parameterise these for Enterprise
+  $global:tgtServer = "localhost"
+  $global:tgtPort = 5432
+  $global:metaServer = "localhost"
+  $global:metaPort = 5432
+}
+
+Function Get-GeneralSetupCmds {
+  $cmds=@"
+parameter add --name TIMEZONE --comments "Used to specify the timezone in DAILY_DATE_ROLL_AZ.  Value is either empty, or an alter statment.  Eg:  ALTER SESSION SET TIMEZONE = 'Europe/Zurich';"
+"@
+  return $cmds
+}
+
+Function Get-ConnectionSetupCmds() {
+
+  $cmds=@"
+  connection rename --force --new-name "$runtimeConnName" --old-name "windows"
+  connection modify --name "$runtimeConnName" --con-type "Windows" --odbc-source-arch 32 --work-dir $dstDir --default-load-type "Script based load" --default-load-script-template "wsl_${tgtTypeString}_${scriptType}_load"
+"@
+
+# IMP: 3 Types of $metaType - PGSQL, PostgreSQL, SQL are being used in this function
+# PGSQL = Means the installation is on RED 10 using Setup Wizard Method
+# PostgreSQL = Means the installation is on RED 10 using Scripted Method
+# SQL = Means the installation is on RED 80 using Scripted Method
+
+# If $metaType is 'PostgreSQL' then we have to create a new connection for target
+  if ($metaType -eq 'PostgreSQL') {
+    $cmds += "`r`n" + @"
+connection add --name "$tgtDsn" --con-type "ODBC" --odbc-source "$tgtDsn" --dtm-set-name "${tgtLicenseLabel} from ${tgtLicenseLabel}" --function-set "Azure SQL FS" --odbc-source-arch $metaDsnArch --work-dir $dstDir  --db-type "$dbType" --def-update-script-con "$runtimeConnName" --def-pre-load-action "Truncate" --display-data-sql "SELECT * FROM `$OBJECT`$" --row-count-sql "SELECT COUNT(*) FROM `$OBJECT`$" --drop-table-sql "DROP TABLE `$OBJECT`$" --drop-procedure-sql "DROP `$PROC_TYPE`$ `$SCHEMA`$.`$PROC_NAME`$" --drop-view-sql "DROP VIEW `$SCHEMA`$.`$TABLE`$" --truncate-sql "TRUNCATE TABLE `$OBJECT`$" --def-browser-schema "$($(@($tgtLoadSchema,$tgtStageSchema,$tgtEdwSchema,$tgtDvSchema) | Sort-Object | Get-Unique) -join ',')" --def-odbc-user Extract --def-table-alter-ddl-tem "wsl_${tgtTypeString}_alter_ddl" --def-table-create-ddl-tem "wsl_${tgtTypeString}_create_table" --def-view-create-ddl-tem "wsl_${tgtTypeString}_create_view" --def-index-create-ddl-tem "wsl_${tgtTypeString}_create_index" --def-index-drop-ddl-tem "wsl_${tgtTypeString}_drop_index" --def-win-action-tem "wsl_${tgtTypeString}_${scriptType}_action" --def-unix-action-tem "wsl_${tgtTypeString}_${scriptType}_action" --con-info-proc "wsl_${tgtTypeString}_table_information"  --con-string "$tgtConnString" --default-load-script-connection "$runtimeConnName" --default-load-script-template "wsl_${tgtTypeString}_${scriptType}_load" --default-load-type "Script based load"
+"@
+  # If $metaType is 'PGSQL' then we have to update/modifiy the existing connection for target (Connection is created by Setup Wizard)
+  } elseif ($metaType -eq 'PGSQL') {
+    $cmds += "`r`n" + @"
+connection modify --name "$tgtDsn" --dtm-set-name "${tgtLicenseLabel} from ${tgtLicenseLabel}" --function-set "Azure SQL FS" --odbc-source-arch $metaDsnArch --work-dir $dstDir  --db-type "$dbtype" --def-update-script-con "$runtimeConnName" --def-pre-load-action "Truncate" --display-data-sql "SELECT * FROM `$OBJECT`$" --row-count-sql "SELECT COUNT(*) FROM `$OBJECT`$" --drop-table-sql "DROP TABLE `$OBJECT`$" --drop-procedure-sql "DROP `$PROC_TYPE`$ `$SCHEMA`$.`$PROC_NAME`$" --drop-view-sql "DROP VIEW `$SCHEMA`$.`$TABLE`$" --truncate-sql "TRUNCATE TABLE `$OBJECT`$" --def-browser-schema "$($(@($tgtLoadSchema,$tgtStageSchema,$tgtEdwSchema,$tgtDvSchema) | Sort-Object | Get-Unique) -join ',')" --def-odbc-user Extract --def-table-alter-ddl-tem "wsl_${tgtTypeString}_alter_ddl" --def-table-create-ddl-tem "wsl_${tgtTypeString}_create_table" --def-view-create-ddl-tem "wsl_${tgtTypeString}_create_view" --def-index-create-ddl-tem "wsl_${tgtTypeString}_create_index" --def-index-drop-ddl-tem "wsl_${tgtTypeString}_drop_index" --def-win-action-tem "wsl_${tgtTypeString}_${scriptType}_action" --def-unix-action-tem "wsl_${tgtTypeString}_${scriptType}_action" --con-info-proc "wsl_${tgtTypeString}_table_information" --default-load-script-template "wsl_${tgtTypeString}_${scriptType}_load"
+"@
+  # If $metaType is 'SQL' then we have to create a new connection for target
+  } else {
+    $cmds += "`r`n" + @"
+connection add --name "$tgtDsn" --con-type "Database" --db-id "$tgtDB" --odbc-source "$tgtDsn" --odbc-source-arch $metaDsnArch --dtm-set-name "${tgtLicenseLabel} from ${tgtLicenseLabel}" --db-type Custom --def-update-script-con "$runtimeConnName" --def-pre-load-action "Truncate" --display-data-sql "SELECT * FROM `$OBJECT`$" --row-count-sql "SELECT COUNT(*) FROM `$OBJECT`$" --drop-table-sql "DROP TABLE `$OBJECT`$" --drop-view-sql "DROP VIEW `$OBJECT`$" --truncate-sql "TRUNCATE TABLE `$OBJECT`$" --def-browser-schema "$($(@($tgtLoadSchema,$tgtStageSchema,$tgtEdwSchema,$tgtDvSchema) | Sort-Object | Get-Unique) -join ',')" --def-odbc-user Extract --def-table-alter-ddl-tem "wsl_${tgtTypeString}_alter_ddl" --def-table-create-ddl-tem "wsl_${tgtTypeString}_create_table" --def-view-create-ddl-tem "wsl_${tgtTypeString}_create_view" --con-info-proc "wsl_${tgtTypeString}_table_information" --extract-user-id "$tgtUser" --extract-pwd "$tgtPwd" --default-load-script-connection "$runtimeConnName" --default-load-script-template "wsl_${tgtTypeString}_${scriptType}_load" --default-load-type "Script based load"
+"@
+}
+
+
+  if ($metaType -eq 'SQL') {
+    $cmds += "`r`n" + @"
+target add --con-name "$tgtDsn" --name load --database "$tgtDB" --schema "$tgtLoadSchema" --tree-colour #ff0000
+target add --con-name "$tgtDsn" --name stage --database "$tgtDB" --schema "$tgtStageSchema" --tree-colour #4e00c0
+target add --con-name "$tgtDsn" --name edw --database "$tgtDB" --schema "$tgtEdwSchema" --tree-colour #008054
+target add --con-name "$tgtDsn" --name data_vault --database "$tgtDB" --schema "$tgtDvSchema" --tree-colour #c08000
+"@
+  }
+
+  $cmds += "`r`n" + @"
+connection add --name "Database Source System" --con-type ODBC --odbc-source "SET THIS VALUE" --odbc-source-arch $metaDsnArch --work-dir $dstDir --db-type "SQL Server" --dtm-set-name "${tgtLicenseLabel} from SQL Server" --def-pre-load-action "Truncate" --def-browser-schema "SET THIS VALUE" --def-odbc-user Extract --default-load-script-connection "$runtimeConnName" --default-load-script-template "wsl_${tgtTypeString}_${scriptType}_load" --default-load-type "Script based load"
+connection add --name "Windows" --con-type Windows --work-dir $dstDir --dtm-set-name "${tgtLicenseLabel} from File" --default-load-type "Script based load" --default-load-script-template "wsl_${tgtTypeString}_${scriptType}_load"
+"@
+
+  if ($metaType -eq 'SQL') {
+    $cmds += "`r`n" + @"
+connection rename --force --new-name Repository --old-name "DataWarehouse"
+connection modify --name "Repository" --con-type Database --db-id "$metaBase" --odbc-source "$metaDsn" --odbc-source-arch $metaDsnArch --work-dir $dstDir --db-type "SQL Server" --meta-repo true --function-set "$tgtLicenseLabel" --def-browser-schema "dbo" --def-odbc-user Extract --extract-user-id "$metaUser" --extract-pwd "$metaPwd"
+"@
+  }
+  else {
+    $cmds += "`r`n" + @"
+connection modify --name "Repository" --con-type Database --db-id "$metaBase" --odbc-source "$metaDsn" --odbc-source-arch $metaDsnArch --work-dir $dstDir --db-type "PostgreSQL" --meta-repo true --function-set "$tgtLicenseLabel" --def-browser-schema "red" --def-odbc-user Extract --extract-user-id "$metaUser" --extract-pwd "$metaPwd" --db-server "$metaServer" --db-port "$metaPort" --default-load-script-connection "$runtimeConnName"
+"@
+  }
+  return $cmds
+}
+
+Function Set-DefaultExtendedPropertyCmds {
+  $cmds=@"
+ext-prop-value modify --object-name "$tgtDsn" --value-data TRUE --value-name "AZ_DEBUG_MODE"
+ext-prop-value modify --object-name "$tgtDsn" --value-data | --value-name "AZ_UNLOAD_DELIMITER"
+ext-prop-value modify --object-name "$tgtDsn" --value-data \n --value-name "AZ_UNLOAD_RECORD_CHAR"
+ext-prop-value modify --object-name "$tgtDsn" --value-data # --value-name "AZ_UNLOAD_ESCAPE_CHAR"
+ext-prop-value modify --object-name "$tgtDsn" --value-data \" --value-name "AZ_UNLOAD_ENCLOSED_BY"
+ext-prop-value modify --object-name "$tgtDsn" --value-data TRUE --value-name "AZ_UNICODE_SUPPORT"
+ext-prop-value modify --object-name "$tgtDsn" --value-data 100000 --value-name "AZ_SPLIT_THRESHOLD"
+"@
+  return $cmds
+}
+
+Function Get-SetDefaultTemplateCmds {
+  $cmds=@"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Stage" --obj-sub-type "Stage" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_stage"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Stage" --obj-sub-type "WorkTable" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_stage"
+connection set-default-template --con-name "$tgtDsn" --obj-type "ods" --obj-sub-type "DataStore" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "ods" --obj-sub-type "History" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_hist"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Normal" --obj-sub-type "Normalized" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Normal" --obj-sub-type "History" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_hist"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "ChangingDimension" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_hist"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "Dimension" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "PreviousDimension" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "RangedDimension" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Normal" --obj-sub-type "History" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_hist"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "TimeDimension" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "MappingTable" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Dim" --obj-sub-type "WorkTable" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Fact" --obj-sub-type "Detail" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Agg" --obj-sub-type "Aggregate" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Agg" --obj-sub-type "Summary" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Agg" --obj-sub-type "WorkTable" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Custom2" --obj-sub-type "Detail" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Stage" --obj-sub-type "DataVaultStage" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_dv_stage"
+connection set-default-template --con-name "$tgtDsn" --obj-type "HUB" --obj-sub-type "Detail" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_dv_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Link" --obj-sub-type "Detail" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_dv_perm"
+connection set-default-template --con-name "$tgtDsn" --obj-type "Satellite" --obj-sub-type "History" --op-type "UpdateRoutine" --tem-name "wsl_${tgtTypeString}_proc_dv_perm"
+"@
+  return $cmds
+}
+
+Function Get-ApplicationDeploymentCmds ($applicationBaseDir){
+  # RED Application deployments
+  if ($metaType -eq 'SQL') {
+    $cmds = @"
+deployment deploy --app-number AZDATEDIM --app-version 0001 --app-directory "$applicationBaseDir\$metaType\Date Dimension" --continue-ver-mismatch --default-load-script-connection "Runtime Connection for Scripts" --dest-connection-name "$tgtDsn" --dest-target-name "load"
+"@
+  }
+  else {
+    $cmds = @"
+deployment deploy --app-number AZSQLDATEDIM --app-version 0001 --app-directory "$applicationBaseDir\$metaType\Date Dimension" --continue-ver-mismatch --default-load-script-connection "$runtimeConnName" --dest-connection-name "$tgtDsn" --dest-target-name "load"
+"@
+  }
+  return $cmds
+}
+
+Function Get-ObjectGenerateRoutineTemplateCmds {
+    $cmds=@"
+object generate-routine  --routine-owner-name "dim_date_azsql"  --routine-owner-type object --routine-operation  windows-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+object generate-routine  --routine-owner-name "dim_date_azsql"  --routine-owner-type object --routine-operation  unix-action --routine-type script  -t "wsl_${tgtTypeString}_${scriptType}_action" -m
+"@
+  return $cmds
+}
+# Print script help msg
+Function Print-Help {
+  $helpMsg = @"
+
+This WhereScape Enablement Pack install script must be run as administrator.
+
+Prerequisites before running this script:
+  1. Valid install of WhereScape RED with License key entered and accepted
+  2. An empty SQL Server Database with a DSN to connect to it
+  3. An empty ${tgtLicenseLabel} Database with a DSN to connect to it
+   - Your ${tgtLicenseLabel} DB should have at least one dedicated schema available for use in creating RED Data Warehouse Targets
+   - ${tgtLicenseLabel} ODBC Driver installed
+
+Any required parameters will be prompted for at run-time, otherwise enter each named paramter as arguments:
+
+Example:. .\install_New_RED_Repository.ps1 -metaDsn "REDMetaRepoDSN" -metaUser "REDMetaRepoUser" -metaPwd "REDMetaRepoPwd" -metaBase "REDMetaRepoDB" -tgtDB "${tgtTypeString}DB" -tgtLoadSchema "dev_load" -tgtStageSchema "dev_stage" -tgtEdwSchema "dev_edw" -tgtDvSchema "dev_dv" -tgtDsn "${tgtTypeString}Dsn" -tgtUser "${tgtTypeString}User" -tgtPwd "${tgtTypeString}Pwd" -templateSet "powershell" -tgtServerName "${tgtTypeString}ServerName"
+
+Available Parameters:
+  -help                   "Displays this help message"
+  -metaDsn                "RED MetaRepo DSN"                         [REQUIRED]
+  -metaDsnArch            "64 or 32"                                 [DEFAULT = 64]
+  -metaUser               "RED MetaRepo User"                        [OMITTED FOR WINDOWS AUTH]
+  -metaPwd                "RED MetaRepo PW"                          [OMITTED FOR WINDOWS AUTH]
+  -metaBase               "RED MetaRepo DB"                          [REQUIRED]
+  -tgtDB                  "${tgtLicenseLabel} DB"                    [REQUIRED]
+  -tgtLoadSchema          "${tgtLicenseLabel} Load Target Schema"    [REQUIRED]
+  -tgtStageSchema         "${tgtLicenseLabel} Stage Target Schema"   [REQUIRED]
+  -tgtEdwSchema           "${tgtLicenseLabel} Load Target Schema"    [REQUIRED]
+  -tgtDvSchema            "${tgtLicenseLabel} Load Target Schema"    [REQUIRED]
+  -tgtDsn                 "${tgtLicenseLabel} DSN"                   [REQUIRED]
+  -tgtUser                "${tgtLicenseLabel} User"                  [OMITTED FOR WINDOWS AUTH]
+  -tgtPwd                 "${tgtLicenseLabel} Password"              [OMITTED FOR WINDOWS AUTH]
+  -templateSet            "Python"                               [DEFAULT=Python]
+  -tgtServerName          "${tgtLicenseLabel} Server Name"           [DEFAULT="<Enter ${tgtLicenseLabel} Server Name>"]
+  -startAtStep            "Defaults to first step, used to resume script from a certain step" [DEFAULT = 1]
+"@
+  Write-Host $helpMsg
+}
+
+Function Get-ScriptParamters ( $boundParameters = $PSBoundParameters, $cmdArgs = $Args ) {
+  # Validate Script Parameters
+  if ( $help -or $unmatchedParams ) {
+    Print-Help
+    Exit
+  }
+  else {
+    # Prompt for any required paramaters
+    if([string]::IsNullOrEmpty($tgtDsn))            {$global:tgtDsn = Read-Host -Prompt "Enter ${tgtLicenseLabel}  DSN"}
+    if($boundParameters.count -eq 0 -or ($boundParameters.ContainsKey('startAtStep') -and $boundParameters.count -eq 1)) {
+      $global:tgtUser = Read-Host -Prompt "Enter ${tgtLicenseLabel} User or 'enter' for none"
+    }
+    if(![string]::IsNullOrEmpty($tgtUser) -and [string]::IsNullOrEmpty($tgtPwd) ) {
+      $tgtPwdSecureString = Read-Host -Prompt "Enter ${tgtLicenseLabel}  Pwd" -AsSecureString
+      $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($tgtPwdSecureString)
+      $global:tgtPwd = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
+    }
+    if([string]::IsNullOrEmpty($tgtDB))                   {$global:tgtDB = Read-Host -Prompt "Enter ${tgtLicenseLabel}  DB"}
+    if([string]::IsNullOrEmpty($tgtLoadSchema))           {$global:tgtLoadSchema = Read-Host -Prompt "Enter ${tgtLicenseLabel} Target 'Load' Schema (the vaule entered will be the default for following schemas)" | %{if([string]::IsNullOrEmpty($_)){'DEV_LOAD'}else{$_}} }
+    if([string]::IsNullOrEmpty($tgtStageSchema))          {$global:tgtStageSchema = Read-Host -Prompt "Enter ${tgtLicenseLabel} Target 'Stage' Schema, default: '$tgtLoadSchema'" | %{if([string]::IsNullOrEmpty($_)){$tgtLoadSchema}else{$_}} }
+    if([string]::IsNullOrEmpty($tgtEdwSchema))            {$global:tgtEdwSchema = Read-Host -Prompt "Enter ${tgtLicenseLabel} Target 'EDW' Schema, default: '$tgtLoadSchema'" | %{if([string]::IsNullOrEmpty($_)){$tgtLoadSchema}else{$_}} }
+    if([string]::IsNullOrEmpty($tgtDvSchema))             {$global:tgtDvSchema = Read-Host -Prompt "Enter ${tgtLicenseLabel} Target 'Data Vault' Schema, default: '$tgtLoadSchema'" | %{if([string]::IsNullOrEmpty($_)){$tgtLoadSchema}else{$_}} }
+
+    # Target specific paramters are defaulted
+    if ($templateSet -notin 'Python')            {$global:templateSet = 'Python'}
+	  $global:targetCmdLineArgs += " -templateSet `"$templateSet`""
+	  if([string]::IsNullOrEmpty($tgtServerName))         {$global:tgtServerName = "<Enter ${tgtLicenseLabel} Server Name>"}
+	  $global:targetCmdLineArgs += " -tgtServerName `"$tgtServerName`""
+  }
+}
+
+Function Execute-PreSteps {
+  # specific pre steps for this target type
+  if ($installStep -ge $startAtStep) {
+  }
+}
+
+Function Execute-PostSteps {
+  # specific post steps for this target type
+  if ($installStep -ge $startAtStep) {
+	  	if ($metaType -eq 'SQL') {
+		$sql = @"
+-- set default Export template
+MERGE INTO ws_dbc_default_template AS dt
+USING (select oo_obj_key from dbo.ws_obj_object where oo_name = '$tgtDsn') AS new_dt
+      ON dt.ddt_connect_key = new_dt.oo_obj_key AND dt.ddt_table_type_key = 13
+WHEN MATCHED THEN
+UPDATE SET dt.ddt_connect_key = (select oo_obj_key from dbo.ws_obj_object where oo_name = '$tgtDsn'),
+           dt.ddt_table_type_key = 13,
+           dt.ddt_template_key = (select oo_obj_key from dbo.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_${scriptType}_export' and oo_type_key = 4),
+           ddt_operation_type = 5
+WHEN NOT MATCHED THEN
+INSERT (ddt_connect_key, ddt_table_type_key,ddt_template_key,ddt_operation_type)
+VALUES ((select oo_obj_key from dbo.ws_obj_object where oo_name = '$tgtDsn'),13,(select oo_obj_key from dbo.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_${scriptType}_export' and oo_type_key = 4),5)
+;
+"@
+   Execute-SQL-Block $sql
+  }
+	elseif ($metaType -eq 'PGSQL') {
+			$sql = @"
+-- set DefLoad & DefLoadScriptCon on $tgtDsn
+UPDATE red.ws_dbc_connect
+SET dc_attributes = 'DefLoad~=0017;Script based load;DefLoadScriptCon~=0023;$runtimeConnName;DefUpdateScriptCon~=0023;$runtimeConnName;DefPreLoadAct~=0008;Truncate;DisplayDataSQL~=0022;SELECT * FROM `$OBJECT`$;RowCountSQL~=0029;SELECT COUNT(*) FROM `$OBJECT`$;DropTableSQL~=0019;DROP TABLE `$OBJECT`$;DropViewSQL~=0026;DROP VIEW `$SCHEMA`$.`$TABLE`$;TruncateSQL~=0023;TRUNCATE TABLE `$OBJECT`$;FuncSet~=0012;Azure SQL FS;ProcDropSQL~=0037;DROP `$PROC_TYPE`$ `$SCHEMA`$.`$PROC_NAME`$;DefSch~=000;OdbcDsnArch~=2;64;TptLoadScriptArch~=2;32;DoNotCreateIndexes;'
+WHERE  dc_name = '$tgtDsn'
+;
+"@
+}
+
+	else {
+			$sql = @"
+-- set template defaults
+UPDATE red.ws_table_attributes
+SET ta_ind_1 = 3,
+    ta_ind_2 = 4,
+	ta_ind_3 = 6,
+	ta_ind_4 = 7,	
+	ta_ind_5 = 8,  
+  ta_ind_6 = 9,
+	ta_ind_7 = 'b',
+	ta_ind_8 = 'c',
+	ta_val_1 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_create_table' and oo_type_key = 4),
+	ta_val_2 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_${scriptType}_load' and oo_type_key = 4),
+  ta_val_3 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_create_view' and oo_type_key = 4),
+  ta_val_4 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_create_index' and oo_type_key = 4),
+  ta_val_5 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_drop_index' and oo_type_key = 4),
+	ta_val_6 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_alter_ddl' and oo_type_key = 4),
+	ta_val_7 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_${scriptType}_action' and oo_type_key = 4),
+	ta_val_8 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_${scriptType}_action' and oo_type_key = 4)
+WHERE ta_obj_key = (select oo_obj_key from red.ws_obj_object where oo_name = '$tgtDsn')
+AND ta_type = 'L'
+;
+-- set DefLoad & DefLoadScriptCon on $tgtDsn
+UPDATE red.ws_dbc_connect
+SET dc_attributes = 'DefLoad~=0017;Script based load;DefLoadScriptCon~=0023;$runtimeConnName;DefUpdateScriptCon~=0023;$runtimeConnName;DefPreLoadAct~=0008;Truncate;DisplayDataSQL~=0022;SELECT * FROM `$OBJECT`$;RowCountSQL~=0029;SELECT COUNT(*) FROM `$OBJECT`$;DropTableSQL~=0019;DROP TABLE `$OBJECT`$;DropViewSQL~=0026;DROP VIEW `$SCHEMA`$.`$TABLE`$;TruncateSQL~=0023;TRUNCATE TABLE `$OBJECT`$;FuncSet~=0012;Azure SQL FS;ProcDropSQL~=0037;DROP `$PROC_TYPE`$ `$SCHEMA`$.`$PROC_NAME`$;DefSch~=000;OdbcDsnArch~=2;64;TptLoadScriptArch~=2;32;DoNotCreateIndexes;'
+WHERE  dc_name = '$tgtDsn'
+;
+-- set Table/Column Information SQL Block on $tgtDsn
+UPDATE red.ws_table_attributes
+SET ta_val_1 = (select oo_obj_key from red.ws_obj_object where oo_name = 'wsl_${tgtTypeString}_table_information' and oo_type_key = 1)
+WHERE ta_obj_key = (select oo_obj_key from red.ws_obj_object where oo_name = '$tgtDsn')
+AND ta_type = 'E'
+;
+"@
+
+}
+   Execute-SQL-Block $sql
+}
+}

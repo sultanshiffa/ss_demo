@@ -1,0 +1,29 @@
+{
+  "objectsByName": {
+    "unix_action_dim_date_azsql": {
+      "code": {
+        "_REF": "/objectsByName/unix_action_dim_date_azsql/code"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "unix_action_dim_date_azsql",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Script"
+      },
+      "purpose": "unix_action_dim_date_azsql",
+      "scriptType": {
+        "_REF": "/Types/ScriptType/UserDefined"
+      },
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      }
+    }
+  }
+}

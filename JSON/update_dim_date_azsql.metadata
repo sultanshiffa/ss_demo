@@ -1,0 +1,42 @@
+{
+  "objectsByName": {
+    "update_dim_date_azsql": {
+      "code": {
+        "_REF": "/objectsByName/update_dim_date_azsql/code"
+      },
+      "codeGenSettings": {
+        "1": {},
+        "2": {},
+        "3": {},
+        "4": {},
+        "5": {},
+        "7": {},
+        "8": {},
+        "9": {},
+        "a": {},
+        "b": {},
+        "c": {}
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "update_dim_date_azsql",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Procedure"
+      },
+      "procedureType": {
+        "_REF": "/Types/ProcedureType/Procedure"
+      },
+      "purpose": "",
+      "target": {
+        "color": "#000000",
+        "connection": "Data Warehouse",
+        "database": "",
+        "name": "Mart",
+        "schema": "Mart"
+      }
+    }
+  }
+}

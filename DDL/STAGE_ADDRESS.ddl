@@ -1,0 +1,7 @@
+CREATE TABLE $OBJECT$ (
+ADDRESS_ID integer
+, ADDRESS_TYPE_CODE varchar(20)
+)
+
+
+;

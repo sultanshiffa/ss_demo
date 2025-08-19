@@ -1,0 +1,29 @@
+{
+  "objectsByName": {
+    "windows_action_STAGE_ADDRESS": {
+      "code": {
+        "_REF": "/objectsByName/windows_action_STAGE_ADDRESS/code"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "windows_action_STAGE_ADDRESS",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Script"
+      },
+      "purpose": "windows_action_STAGE_ADDRESS",
+      "scriptType": {
+        "_REF": "/Types/ScriptType/UserDefined"
+      },
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      }
+    }
+  }
+}

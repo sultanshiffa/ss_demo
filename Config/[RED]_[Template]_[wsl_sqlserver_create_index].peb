@@ -1,0 +1,24 @@
+{# -- TemplateVersion:001 MinVersion:8510 MaxVersion:* TargetType:SqlServer ModelType:* TemplateType:DDL                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# --    © WhereScape Inc 2024. Wherescape Inc permits you to copy this Template solely for use with the RED software, and to modify this Template          -- #}
+{# --    for the purposes of using that modified Template with the RED software, but does not permit copying or modification for any other purpose.         -- #}
+{# --                                                                                                                                                       -- #}
+{# -- =============================================================================                                                                         -- #}
+{# --                                                                                                                                                       -- #}
+{# -- DBMS Name          : Azure SQL Server                                                                                                                 -- #}
+{# -- Template Name      : wsl_sqlserver_create_index                                                                                                           -- #}
+{# -- Template Version   : 8.5.1.0                                                                                                                          -- #}
+{# -- Description        : This template creates index on Azure SQL/SQL Sevrer database table                                                               -- #}
+{# --                                                                                                                                                       -- #}
+{# -- =============================================================================                                                                         -- #}
+{# --                                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# -- Notes / History                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{%- import "wsl_sqlserver_utility" -%}
+CREATE {% if index.unique -%}UNIQUE {% endif -%}  {{ getExtendedProperty( propertyName ="AZ_INDEX_TYPE_NAME" )  }} INDEX {{index.name}} ON {{index.table.schema}}.{{index.table.name}} (
+{%- for col in index.columns -%}
+    {%- if not loop.first -%},{%- endif -%}{{col.name}}
+{%- endfor %})
+WITH (SORT_IN_TEMPDB = OFF);

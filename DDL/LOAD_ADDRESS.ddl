@@ -1,0 +1,28 @@
+CREATE TABLE $OBJECT$ (
+ADDRESS_ID integer
+, ADDRESS_TYPE_CODE varchar(20)
+, ADDRESS_LINE_1 varchar(255)
+, ADDRESS_LINE_2 varchar(255)
+, ADDRESS_LINE_3 varchar(255)
+, ADDRESS_LINE_4 varchar(255)
+, CUSTOMER_CODE varchar(10)
+, CITY_CODE varchar(3)
+, CITY_NAME varchar(80)
+, STATE_CODE varchar(5)
+, ZIP_CODE varchar(20)
+, COUNTY_NAME varchar(80)
+, COUNTRY_CODE varchar(3)
+, AREA_CODE varchar(10)
+, PHONE_NUMBER varchar(20)
+, PRIMARY_CONTACT_PERSON varchar(255)
+, SECONDARY_CONTACT_PERSON varchar(255)
+, CREATING_EMPLOYEE_ID integer
+, CREATED_DATETIME datetime
+, LAST_CHANGE_EMPLOYEE_ID integer
+, LAST_CHANGE_DATETIME datetime
+, DSS_RECORD_SOURCE varchar(255)
+, DSS_LOAD_DATE datetime
+)
+
+
+;

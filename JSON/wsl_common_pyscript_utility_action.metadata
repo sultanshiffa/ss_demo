@@ -1,0 +1,32 @@
+{
+  "objectsByName": {
+    "wsl_common_pyscript_utility_action": {
+      "code": {
+        "_REF": "/objectsByName/wsl_common_pyscript_utility_action/code"
+      },
+      "databaseType": {
+        "_REF": "/Types/DatabaseType/Custom"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "wsl_common_pyscript_utility_action",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Template"
+      },
+      "purpose": "This template was inserted by WhereScape RED CLI",
+      "readOnly": false,
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      },
+      "templateType": {
+        "_REF": "/Types/TemplateType/Utility"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "objectsByName": {
+    "WslApiFileBrowser": {
+      "code": {
+        "_REF": "/objectsByName/WslApiFileBrowser/code"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "WslApiFileBrowser",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Script"
+      },
+      "purpose": "This script was inserted by WhereScape RED CLI",
+      "scriptType": {
+        "_REF": "/Types/ScriptType/UserDefined"
+      },
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      }
+    }
+  }
+}

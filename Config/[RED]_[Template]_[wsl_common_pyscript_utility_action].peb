@@ -1,0 +1,672 @@
+{# -- TemplateVersion:001 MinVersion:8510 MaxVersion:* TargetType:* ModelType:* TemplateType:Utility       -- #}
+
+{# ############################ #}
+{# UTILITY MACROS AND FUNCTIONS #}
+{# ############################ #}
+
+{%- macro FetchLinkedTemplate(operationType, table = table, index = index, objectsByName = objectsByName) %}
+  {%- if table.codeGenSettings[operationType.code].template is defined -%}
+    {%- fetch table.codeGenSettings[operationType.code].template %}
+		{%- include table.codeGenSettings[operationType.code].template.name %}
+  {%- else -%}
+    No template associated for {{ operationType.name }}
+  {%- endif %}
+{%- endmacro -%}
+
+{%- macro RoutineExecuteCode(routineObject, routineNumber = 1) %}
+  {%- if routineObject.objectType == Types.ObjectType.Procedure %}
+    {%- if routineObject.procedureType == Types.ProcedureType.Procedure or routineObject.procedureType == Types.ProcedureType.Function %}
+{#  ExecuteProcedure 'dbo.{{routineObject.name}}'{%br%}#}
+{#	ExecuteProcedure '[SCHEMA.{{routineObject.name}}].{{routineObject.name}}'{%br%}#}
+  ExecuteProcedure("{{ FullyQualifyProcedure(routineObject) }}"){%br%}
+    {%- else %}
+  sql_block_path = os.environ.get("WSL_SCRIPT_{{routineNumber}}_COMMAND")
+  ExecuteSQLBlock(sql_block_path){%br%}
+    {%- endif %}
+  {%- elseif routineObject.objectType == Types.ObjectType.Script %}
+  ExecuteScript('{{routineNumber}}')
+  {%- endif %}
+{%- endmacro -%}
+
+{% block "FullyQualifyProcedure_Macro" %}
+{%- macro FullyQualifyProcedure(procObject) -%}
+{#  {{procObject.target.schema}}.{{procObject.name}}#}
+[SCHEMA.{{procObject.name}}].{{procObject.name}}
+{%- endmacro -%}
+{% endblock %}
+
+{%- import "wsl_sqlserver_utility_dml" -%}
+{%- set isDSS = false %}{%br%}
+
+import json
+import os
+import subprocess
+import sys
+import traceback
+import pyodbc
+{%br%}
+debugModeExt = "FALSE"
+
+{%br%}
+{% if table.objectType == Types.ObjectType.Load %}
+{% set type = "load" %}
+{% else %}
+{% set type = "proc" %}
+{% endif %}
+
+{% include "wsl_template_pyscript_utility" with { type: type }%}
+{%br%}
+
+
+{% block "ExecuteSQLBlock" %}
+def ExecuteSQLBlock(block):
+  raise Exception("ExecuteSQLBlock not implemented")
+{% endblock %}
+
+{% block "Ws_Call_Procedure" %}
+def Ws_Call_Procedure(procName):
+  raise Exception("Procedure not implemented")
+{% endblock %}
+
+{% block "ExecuteProcedure" %}
+def ExecuteProcedure(procName):
+  raise Exception("ExecuteProcedure  not implemented")
+{% endblock %}
+
+
+def ExecuteScript(name):
+  env = dict(os.environ)
+  # Environment variables specific to the script (e.g. WORKDIR, which comes
+  # from the script's connection) are stored prefixed. We copy such variables
+  # to their unprefixed name.
+  prefix = 'WSL_SCRIPT_{}_'.format(name)
+  command = os.getenv(prefix + 'COMMAND')
+  if not command:
+    raise Exception("Script {} is not defined".format(name))
+  write_audit("Executing command: {}".format(command))
+  for var in os.environ:
+    if var.startswith(prefix):
+      unprefixedvar = 'WSL_' + var[len(prefix):]
+      write_audit("Overriding environment: {} -> {}".format(var, unprefixedvar))
+      env[unprefixedvar] = os.environ[var]
+  # Assume that we can just pass all the output from the script as our output
+  # and the return code indicates success/failure
+  result = subprocess.run(command, shell=True, env=env, stderr=subprocess.PIPE, text=True)
+  return_code = result.returncode if result.returncode < 2**31 else result.returncode - 2**32
+  if result.stderr != "" or str(return_code) != "0":
+    write_error("Script execution failed. Check detail log for failure reason")
+    if result.stderr != "":
+        write_error(str(result.stderr))
+    raise Exception(f"Error occurred while executing script") 
+
+
+
+{# ########################### #}
+{# ACTION PROCESSING FUNCTIONS #}
+{# ########################### #}
+
+{# --------------- #}
+{# SOURCE MAPPINGS #}
+{# --------------- #}
+{% if table.sourceMappingId is defined %}
+def Primary():{%br%}
+{%- fetch table.updateProcedure %}
+{% if table.updateProcedure is defined -%}
+  {{ RoutineExecuteCode(table.updateProcedure,1) }}
+{%- else %}{%br%}
+  # nothing to do{%br%}
+  pass{%br%}
+{%- endif %}
+
+def Secondary():{%br%}
+{%- fetch table.customProcedure %}
+{% if table.customProcedure is defined -%}
+  {{ RoutineExecuteCode(table.customProcedure,2) }}
+{%- else %}{%br%}
+  # nothing to do{%br%}
+  pass{%br%}
+{%- endif %}
+
+
+
+{# ---------- #}
+{# PROCEDURES #}
+{# ---------- #}
+{% elseif table.objectType == Types.ObjectType.Procedure %}
+    {%- set routine = table -%}
+{% if routine.procedureType == Types.ProcedureType.Procedure or routine.procedureType == Types.ProcedureType.Function %}
+{# STORED PROCEDURES #}
+
+
+def CreateProcedure():
+  sql_block_path = os.environ.get("WSL_SCRIPT_1_COMMAND")
+  sql_file = open(sql_block_path,'r')
+  sql_block = sql_file.read()
+  sql_file.close()
+  ExecuteSQLBlock(sql_block)
+
+
+
+{% block "DropProcedure" %}
+def DropProcedure():
+
+  ExecuteSQLBlock(r"""
+DROP PROCEDURE {{ FullyQualifyProcedure(table) }}{%br%}
+""")
+{% endblock %}
+
+
+def CallProcedure():
+  {{ RoutineExecuteCode(table) }}
+
+{% else %}
+{# BLOCKS #}
+def CreateProcedure():
+  sql_block_path = os.environ.get("WSL_SCRIPT_1_COMMAND")
+  sql_file = open(sql_block_path,'r')
+  sql_block = sql_file.read()
+  sql_file.close()
+  ExecuteSQLBlock(sql_block)
+
+def DropProcedure():
+  raise Exception("SQL Blocks cannot be dropped")
+
+def ExecuteProcedure():
+  sql_block_path = os.environ.get("WSL_SCRIPT_1_COMMAND")
+  ExecuteSQLBlock(sql_block_path)
+{% endif %}
+
+
+{# ------------ #}
+{# HOST SCRIPTS #}
+{# ------------ #}
+{% elseif table.objectType == Types.ObjectType.Script %}
+  {% error "Host Script objects shouldn't have Action Scripts!" %}
+
+
+{# ------- #}
+{# INDEXES #}
+{# ------- #}
+{% elseif table.objectType == Types.ObjectType.Index %}
+def CreateIndex():
+  ExecuteSQLBlock(r"""{%br%}
+{{FetchLinkedTemplate(Types.OperationType.IndexCreateDDL, table=table.table, index=table)}}{%br%}
+"""){%br%}
+def DropIndex():
+  ExecuteSQLBlock(r"""{%br%}
+{{FetchLinkedTemplate(Types.OperationType.IndexDropDDL, table=table.table, index=table)}}{%br%}
+"""){%br%}
+{#def AnalyzeIndex():#}
+  raise Exception("Not implemented")
+
+
+{# ----- #}
+{# VIEWS #}
+{# ----- #}
+{% elseif table.objectType == Types.ObjectType.View %}
+def CreateView():
+  result = ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.CreateDDL)}}{%br%}
+"""){%br%}
+{%- for alias in table.viewInfo.viewAliases %}
+  {%- fetch alias %}
+  ExecuteSQLBlock(r"""
+  CREATE OR REPLACE VIEW {{alias.database}}.{{alias.schema}}.{{alias.name}} ({% br %}
+{%- fetch table -%}
+{%- for column in table.columns %}
+  {%- set sTargetColumn = column.name %}
+  {%- if loop.last %}
+    {{sTargetColumn }}{%- br %}
+  {%- else -%}
+    {{sTargetColumn }},{%- br %}
+  {%- endif -%}
+{%- endfor -%}
+)COPY GRANTS{%- br %}
+AS{%- br %}
+SELECT {% if table.viewInfo.distinct %} DISTINCT{% endif %}{%- br %}
+{%- for column in table.columns %}
+{%-   if column.source | trim != "" %}
+{%-      set sSourceColumn = column.source %}
+{%-   else -%}
+{%-      set sSourceColumn = column.transform %}
+{%-   endif -%}
+{%-   if loop.last %}
+    {{table.name}}.{{column.name}}{%- br %}
+{%-   else -%}
+    {{table.name}}.{{column.name}},{%- br %}
+{%-   endif -%}
+{%- endfor -%}
+
+{%- if table.viewInfo.whereClause | trim == "" %}
+  FROM {{table.database}}.$OBJECT${%br%}
+{%- elseif table.viewInfo.whereClause | trim | upper | slice(0,4) != "FROM" %}
+  FROM {{table.database}}.$OBJECT${%br%}
+{%- endif -%}
+{%- if alias.viewInfo.whereClause | trim != "" %}
+  {{alias.viewInfo.whereClause | trim}}{%br%}
+{%- endif %}
+"""){%br%}
+{%- endfor %}
+  if result == True:
+    write_audit("Create of View $OBJECT$ completed successfully")
+
+def DropView():{%br%}
+  {%- fetch table.target %}
+  result = ExecuteSQLBlock(r"""
+DROP VIEW IF EXISTS [{{table.schema}}].[{{table.name}}]
+"""){%br%}
+{%- for alias in table.viewInfo.viewAliases %}
+  {%- fetch alias %}
+  ExecuteSQLBlock(r"""
+DROP VIEW IF EXISTS [{{alias.schema}}].[{{alias.name}}]{%br%}"""){%br%}
+{%- endfor %}
+  if result == True:
+    write_audit("Dropped View $OBJECT$")
+
+def Primary():{%br%}
+  # nothing to do{%br%}
+  pass{%br%}
+  {%br%}
+
+def Secondary():{%br%}
+  {%- fetch table.customProcedure %}
+  {% if table.customProcedure is defined -%}
+    {{ RoutineExecuteCode(table.customProcedure,2) }}
+  {%- else %}{%br%}
+    # nothing to do{%br%}
+    pass{%br%}
+  {%- endif %}
+
+def Process():{%br%}
+  DropView()
+  CreateView()
+  Primary()
+
+
+{# ------- #}
+{# EXPORTS #}
+{# ------- #}
+{% elseif table.objectType == Types.ObjectType.Export %}
+def RunPreExportSQL():{%br%}
+  ExecuteSQLBlock(r"""
+{{table.exportInfo.preExportSql}}{%br%}
+"""){%br%}
+
+def Primary():
+  RunPreExportSQL()
+  ExecuteScript('1')
+
+def Secondary():
+  {%- fetch table.postExportProcedure %}
+  {% if table.postExportProcedure is defined -%}
+    {{ RoutineExecuteCode(table.postExportProcedure,2) }}
+  {%- else %}{%br%}
+    # nothing to do{%br%}
+    pass{%br%}
+  {%- endif %}
+
+def Process():{%br%}
+  Primary()
+  {%- if table.postExportProcedure is defined %}{%br%}
+  Secondary(){%br%}
+  {%- endif %}{%br%}
+
+{# ---------------------- #}
+{# LOAD TABLE #}
+{# ---------------------- #}
+{% elseif table.objectType == Types.ObjectType.Load %}
+def CreateTable():
+  result = ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.CreateDDL)}}{%br%}
+""")
+  if result == True:
+    write_audit("Create of Table $OBJECT$ completed successfully")
+
+def DropTable():
+  result = ExecuteSQLBlock(r"""
+{{table.target.connection.dropTableSQL}}{%br%}
+""")
+  if result == True:
+    write_audit("Dropped table $OBJECT$")
+
+def TruncateTable():{%br%}
+  {%- fetch table.target %}
+  result = ExecuteSQLBlock(r"""
+{{table.target.connection.truncateSQL}}{%br%}
+""")
+  if result == True:
+    write_audit("Truncated this table $OBJECT$")
+
+def RunPreLoadSQL():{%br%}
+  {% if table.objectType == Types.ObjectType.Load %}
+  ExecuteSQLBlock(r"""
+{{table.loadInfo.preLoadSql}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {% endif %}
+
+def PreDrop():{%br%}
+  {%- from table.indexes as index where index.dropBeforeUpdate %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexDropDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def DssAfterLoad(): {%br%}
+  {%- from table.columns as col where (col.transformType.name == "A") %}
+  {%- set isDSS = col.transformType.name  %}
+  {%- endfrom %}
+  {%- if isDSS == "A"  %}
+  result = ExecuteSQLBlock(r"""
+  {{postLoad()}}
+  """){%br%}
+  if result == True:{%br%}
+    write_audit("DSS Columns Updated"){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endif %}
+
+def DropAll():{%br%}
+  {%- from table.indexes as index %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexDropDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def Build():{%br%}
+  {%- from table.indexes as index where index.dropBeforeUpdate %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexCreateDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def BuildAll():{%br%}
+  {%- from table.indexes as index %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexCreateDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def Process():{%br%}
+  {%br%}
+
+{#  {%- from table.columns as col where col.transformType.code == "A" and not col.dss %}#}
+{#    {%- set isDSS = true -%}#}
+{#  {% endfrom %}{%br%}#}
+  preLoadAction = "{{table.loadInfo.preLoadAction.name}}"{%br%}
+  if preLoadAction == "Truncate":{%br%}
+    TruncateTable()
+  elif preLoadAction == "Execute Pre-Load SQL":{%br%}
+    ExecuteSQLBlock(r"""{%br%}
+{{table.loadInfo.preLoadSql}}
+"""){%br%}
+  elif preLoadAction == "Both Truncate and Execute Pre-Load SQL":{%br%}
+    TruncateTable()
+    ExecuteSQLBlock(r"""{%br%}
+{{table.loadInfo.preLoadSql}}
+"""){%br%}
+  PreDrop()
+  Primary()
+  Build()
+  DssAfterLoad()
+  {%- if table.postLoadProcedure is defined %}{%br%}
+  Secondary(){%br%}
+  {%- endif %}{%br%}
+{#  ExecuteSQLBlock(r"""{%br%}#}
+{# {{- postLoad()}} #}
+{#"""){%br%}#}
+
+def Initial():
+  DropAll()
+  Secondary()
+  BuildAll()
+
+def Primary():
+  ExecuteScript('1')
+
+def Secondary():{%br%}
+  {%- fetch table.postLoadProcedure %}{%br%}
+  {% if table.postLoadProcedure is defined -%}{%br%}
+    {{ RoutineExecuteCode(table.postLoadProcedure,2) }}{%br%}
+  {%- else %}{%br%}
+  pass{%br%}
+  {%- endif %}{%br%}
+
+def AnalyzeTable():
+  raise Exception("Not implemented")
+
+
+{# ---------------------- #}
+{# OTHER TABLES #}
+{# ---------------------- #}
+{% else %}
+def CreateTable():
+  result = ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.CreateDDL)}}{%br%}
+""")
+  if result == True:
+    write_audit("Create of Table $OBJECT$ completed successfully")
+
+def DropTable():
+  result = ExecuteSQLBlock(r"""
+{{table.target.connection.dropTableSQL}}{%br%}
+""")
+  if result == True:
+    write_audit("Dropped table $OBJECT$")
+
+def TruncateTable():{%br%}
+  {%- fetch table.target %}
+  result = ExecuteSQLBlock(r"""
+{{table.target.connection.truncateSQL}}{%br%}
+""")
+  if result == True:
+    write_audit("Truncated table $OBJECT$")
+
+def RunPreLoadSQL():{%br%}
+  {% if table.objectType == Types.ObjectType.Load %}
+  ExecuteSQLBlock(r"""
+{{table.loadInfo.preLoadSql}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {% endif %}
+
+def PreDrop():{%br%}
+  {%- from table.indexes as index where index.dropBeforeUpdate %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexDropDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def DssAfterLoad(): {%br%}
+  result = ExecuteSQLBlock(r"""
+    UPDATE $OBJECT$ {% br %}
+    SET {% br %}
+    {%- from table.columns as column where (column.transformType.code == "A") %}
+    {%- set columnName = "" -%}
+    {%- if column.name is defined and column.transformType.code == "A"-%}
+        {%- set columnName = column.name | trim -%}
+    {%- endif -%}{% br %}
+	{%- set isDSS = true -%}
+    {{ columnName }} = {{column.source}}{% br %}
+    {%- if not loop.last -%}
+        ,
+    {%- endif -%}
+    {%- endfrom -%}{% br %}
+  """){%br%}
+  if result == True:
+    write_audit("DSS Columns Updated")
+
+def DropAll():{%br%}
+  {%- from table.indexes as index %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexDropDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def Build():{%br%}
+  {%- from table.indexes as index where index.dropBeforeUpdate %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexCreateDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def BuildAll():{%br%}
+  {%- from table.indexes as index %}
+    {%- fetch index %}
+  ExecuteSQLBlock(r"""
+{{FetchLinkedTemplate(Types.OperationType.IndexCreateDDL)}}{%br%}
+"""){%br%}
+  {%- else %}
+  pass{%br%}
+  {%- endfrom %}
+
+def Process():{%br%}
+  {%br%}
+{#  {%- set isDSS = false %}{%br%}#}
+{#  {%- from table.columns as col where col.transformType.code == "D" or col.transformType.code == "A" %}#}
+{#    {%- set isDSS = true -%}#}
+{#  {% endfrom %}{%br%}#}
+  PreDrop()
+  Primary()
+  Build()
+  {%- if isDSS == true %}{%br%}
+  DssAfterLoad()
+  {%- endif %}
+  {%- if table.postLoadProcedure is defined %}{%br%}
+  Secondary(){%br%}
+  {%- endif %}{%br%}
+{#  ExecuteSQLBlock(r"""{%br%}#}
+{# {{- postLoad()}} #}
+{#"""){%br%}#}
+
+def Initial():
+  DropAll()
+  Secondary()
+  BuildAll()
+
+def Primary():{%br%}
+{%- fetch table.updateProcedure %}
+{% if table.updateProcedure is defined -%}
+  {{ RoutineExecuteCode(table.updateProcedure,1) }}{%br%}
+{%- else %}
+  pass{%br%}
+{%- endif %}
+
+def Secondary():{%br%}
+{%- fetch table.customProcedure %}
+{% if table.customProcedure is defined -%}
+  {{ RoutineExecuteCode(table.customProcedure,2) }}
+{%- else %}
+  pass{%br%}
+{%- endif %}
+
+def AnalyzeTable():
+  raise Exception("Not implemented")
+{% endif %}
+
+
+{# ################## #}
+{# SCRIPT ENTRY POINT #}
+{# ################## #}
+
+actions = {
+{% if table.sourceMappingId is defined %}
+  "{{Types.TaskActionType.Update.code}}" : Primary,
+  "{{Types.TaskActionType.Custom.code}}" : Secondary,
+{% elseif table.objectType == Types.ObjectType.Procedure %}
+  "{{Types.TaskActionType.Create.code}}" : CreateProcedure,
+  "{{Types.TaskActionType.Drop.code}}" : DropProcedure,
+  "{{Types.TaskActionType.Execute.code}}" : CallProcedure,
+{% elseif table.objectType == Types.ObjectType.Script %}
+  {% error "Host Script objects don't have Action Scripts!" %}
+{% elseif table.objectType == Types.ObjectType.Index %}
+  "{{Types.TaskActionType.Build.code}}" : CreateIndex,
+  "{{Types.TaskActionType.Drop.code}}" : DropIndex,
+  "{{Types.TaskActionType.Analyze.code}}" : AnalyzeIndex,
+{% elseif table.objectType == Types.ObjectType.View %}
+  "{{Types.TaskActionType.Create.code}}" : CreateView,
+  "{{Types.TaskActionType.Drop.code}}" : DropView,
+  "{{Types.TaskActionType.Update.code}}" : Primary,
+  "{{Types.TaskActionType.Custom.code}}" : Secondary,
+  "{{Types.TaskActionType.Process.code}}" : Process
+{% elseif table.objectType == Types.ObjectType.Export %}
+  "{{Types.TaskActionType.Execute.code}}" : RunPreExportSQL,
+  "{{Types.TaskActionType.Process.code}}" : Primary,
+  "{{Types.TaskActionType.Custom.code}}" : Secondary,
+  "{{Types.TaskActionType.Process.code}}" : Process
+{% elseif table.objectType == Types.ObjectType.Load %}
+  "{{Types.TaskActionType.Create.code}}" : CreateTable,
+  "{{Types.TaskActionType.Drop.code}}" : DropTable,
+  "{{Types.TaskActionType.Truncate.code}}" : TruncateTable,
+  "{{Types.TaskActionType.PreDrop.code}}" : PreDrop,
+  "{{Types.TaskActionType.DropAll.code}}" : DropAll,
+  "{{Types.TaskActionType.Build.code}}" : Build,
+  "{{Types.TaskActionType.BuildAll.code}}" : BuildAll,
+  "{{Types.TaskActionType.Update.code}}" : Primary,
+  "{{Types.TaskActionType.Custom.code}}" : Secondary,
+  "{{Types.TaskActionType.Process.code}}" : Process,
+  "{{Types.TaskActionType.Initial.code}}" : Initial,
+  "{{Types.TaskActionType.Analyze.code}}" : AnalyzeTable
+{% else %} {#- other objects #}
+  "{{Types.TaskActionType.Create.code}}" : CreateTable,
+  "{{Types.TaskActionType.Drop.code}}" : DropTable,
+  "{{Types.TaskActionType.Truncate.code}}" : TruncateTable,
+  "{{Types.TaskActionType.PreDrop.code}}" : PreDrop,
+  "{{Types.TaskActionType.DropAll.code}}" : DropAll,
+  "{{Types.TaskActionType.Build.code}}" : Build,
+  "{{Types.TaskActionType.BuildAll.code}}" : BuildAll,
+  "{{Types.TaskActionType.Update.code}}" : Primary,
+  "{{Types.TaskActionType.Custom.code}}" : Secondary,
+  "{{Types.TaskActionType.Process.code}}" : Process,
+  "{{Types.TaskActionType.Initial.code}}" : Initial,
+  "{{Types.TaskActionType.Analyze.code}}" : AnalyzeTable,
+{% endif %}
+}
+
+try:
+  if len(sys.argv) > 1:
+    action = sys.argv[1]
+  else:
+    raise Exception("Missing action code command-line parameter")
+
+  if action not in actions:
+    raise Exception("Action code {} is not implemented for {} {}".format(action, "{{table.objectType.name}}", "{{table.name}}"))
+
+  actionFunc = actions[action]
+
+  actionFunc()
+  actionName = str(actions[action])[str(actions[action]).find("function")+9:str(actions[action]).find(" at")]
+except Exception as exceptionError:
+  write_error("{} failed".format(exceptionError.args))
+  write_error(traceback.format_exc())
+  exitCode = 2
+  exitMessage = 'Script run failed'
+else: {%- br %}
+    exitCode = 0
+    exitMessage = "{} completed successfully".format(actionName)
+{%- br %}
+finally: {%- br %}
+    exit_script(exitCode, exitMessage)

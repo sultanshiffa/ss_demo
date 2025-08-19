@@ -1,0 +1,442 @@
+{
+  "objectsByName": {
+    "STAGE_ADDRESS": {
+      "codeGenSettings": {
+        "1": {
+          "batchDateGrain": "",
+          "batchJoinTableColumn": "",
+          "batchProcessingField": "",
+          "changeDetectionEndCurrent": "",
+          "changeDetectionEndExpiring": "",
+          "changeDetectionStartInitial": "",
+          "changeDetectionStartNew": "",
+          "changeDetectionUpdateCurrentRecordsOnly": true,
+          "createStorageIndexAfterCTAS": false,
+          "dateBasedPartitioningInfo": {
+            "dateDimensionColumn": {
+              "name": "",
+              "table": {
+                "name": ""
+              }
+            },
+            "endDateKey": 0,
+            "partitionType": {
+              "_REF": "/Types/DateBasedPartitioningType/None"
+            },
+            "startDateKey": 0
+          },
+          "deleteBeforeInsert": true,
+          "deleteBeforeInsertMultiPass": false,
+          "deleteBeforeInsertTruncate": true,
+          "deleteNumberOfRecordsPerTransaction": 50000,
+          "deleteRowsNotInSource": false,
+          "deleteTruncateOption": "",
+          "deleteWhereClause": "",
+          "dssCurrentFlagColumnName": "DSS_CURRENT_FLAG",
+          "dssEndDateColumnName": "DSS_END_DATE",
+          "dssStartDateColumnName": "DSS_START_DATE",
+          "enableParallelDml": false,
+          "includeExplicitLock": false,
+          "includeInitialLoadInsert": false,
+          "insert": false,
+          "insertHint": "",
+          "insertMinusHint": "",
+          "insertNewRowIdentificationMethodExcept": "",
+          "insertNewRowsOnly": false,
+          "insertZeroKeyRecord": true,
+          "lockClause": "",
+          "merge": false,
+          "mergeChangedRowsOnly": false,
+          "mergeHint": "",
+          "mergeMinusHint": "",
+          "mergeNewRowIdentificationMethodExcept": "",
+          "minimalLogging": false,
+          "nullSupport": false,
+          "parameters": [],
+          "partitionExchangeTable": {
+            "name": ""
+          },
+          "procedureName": {
+            "_REF": "/procedureName"
+          },
+          "processByBatch": false,
+          "selectHint": "",
+          "sourceJoinDetails": {
+            "distinct": false,
+            "groupBy": "",
+            "join": "FROM [TABLEOWNER].[LOAD_ADDRESS] LOAD_ADDRESS",
+            "where": ""
+          },
+          "sourceTablesByName": {
+            "LOAD_ADDRESS": {
+              "lockingMethod": "",
+              "sourceTable": {
+                "_REF": "/objectsByName/LOAD_ADDRESS"
+              }
+            }
+          },
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_proc_stage"
+          },
+          "update": false,
+          "updateChangeRowIdentificationMethodExcept": "",
+          "updateChangedRowsOnly": false,
+          "updateCurrentRowsOnly": false,
+          "updateHint": "",
+          "updateMinusHint": "",
+          "warnOnDelete": false
+        },
+        "2": {
+          "batchDateGrain": "",
+          "batchJoinTableColumn": "",
+          "batchProcessingField": "",
+          "changeDetectionEndCurrent": "",
+          "changeDetectionEndExpiring": "",
+          "changeDetectionStartInitial": "",
+          "changeDetectionStartNew": "",
+          "changeDetectionUpdateCurrentRecordsOnly": true,
+          "createStorageIndexAfterCTAS": false,
+          "dateBasedPartitioningInfo": {
+            "dateDimensionColumn": {
+              "name": "",
+              "table": {
+                "name": ""
+              }
+            },
+            "endDateKey": 0,
+            "partitionType": {
+              "_REF": "/Types/DateBasedPartitioningType/None"
+            },
+            "startDateKey": 0
+          },
+          "deleteBeforeInsert": false,
+          "deleteBeforeInsertMultiPass": false,
+          "deleteBeforeInsertTruncate": false,
+          "deleteNumberOfRecordsPerTransaction": 50000,
+          "deleteRowsNotInSource": false,
+          "deleteTruncateOption": "",
+          "deleteWhereClause": "",
+          "dssCurrentFlagColumnName": "DSS_CURRENT_FLAG",
+          "dssEndDateColumnName": "DSS_END_DATE",
+          "dssStartDateColumnName": "DSS_START_DATE",
+          "enableParallelDml": false,
+          "includeExplicitLock": false,
+          "includeInitialLoadInsert": false,
+          "insert": false,
+          "insertHint": "",
+          "insertMinusHint": "",
+          "insertNewRowIdentificationMethodExcept": "",
+          "insertNewRowsOnly": false,
+          "insertZeroKeyRecord": true,
+          "lockClause": "",
+          "merge": false,
+          "mergeChangedRowsOnly": false,
+          "mergeHint": "",
+          "mergeMinusHint": "",
+          "mergeNewRowIdentificationMethodExcept": "",
+          "minimalLogging": false,
+          "nullSupport": false,
+          "parameters": [],
+          "partitionExchangeTable": {
+            "name": ""
+          },
+          "procedureName": {
+            "_REF": "/procedureName"
+          },
+          "processByBatch": false,
+          "selectHint": "",
+          "sourceJoinDetails": {
+            "distinct": false,
+            "groupBy": "",
+            "join": "FROM [TABLEOWNER].[LOAD_ADDRESS] LOAD_ADDRESS\r\n",
+            "where": ""
+          },
+          "sourceTablesByName": {
+            "LOAD_ADDRESS": {
+              "lockingMethod": "",
+              "sourceTable": {
+                "_REF": "/objectsByName/LOAD_ADDRESS"
+              }
+            }
+          },
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_proc_stage"
+          },
+          "update": false,
+          "updateChangeRowIdentificationMethodExcept": "",
+          "updateChangedRowsOnly": false,
+          "updateCurrentRowsOnly": false,
+          "updateHint": "",
+          "updateMinusHint": "",
+          "warnOnDelete": false
+        },
+        "3": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_create_table"
+          }
+        },
+        "4": {},
+        "5": {},
+        "7": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_create_index"
+          }
+        },
+        "8": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_drop_index"
+          }
+        },
+        "9": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_alter_ddl"
+          }
+        },
+        "a": {},
+        "b": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        },
+        "c": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        }
+      },
+      "columns": [
+        {
+          "_REF": "/objectsByName/STAGE_ADDRESS/columnsByName/ADDRESS_ID"
+        },
+        {
+          "_REF": "/objectsByName/STAGE_ADDRESS/columnsByName/ADDRESS_TYPE_CODE"
+        }
+      ],
+      "columnsByName": {
+        "ADDRESS_ID": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "integer",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 26,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "integer",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS ID",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "integer",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_ID",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "LOAD_ADDRESS.ADDRESS_ID",
+          "sourceColumn": {
+            "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_ID"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "table": {
+            "_REF": "/objectsByName/STAGE_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ADDRESS_TYPE_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(20)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 27,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 20,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS TYPE CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(20)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_TYPE_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "LOAD_ADDRESS.ADDRESS_TYPE_CODE",
+          "sourceColumn": {
+            "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_TYPE_CODE"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "table": {
+            "_REF": "/objectsByName/STAGE_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        }
+      },
+      "customProcedure": null,
+      "database": "sqlredtgt",
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "description": "",
+      "displayName": "",
+      "exportScript": null,
+      "extendedPropertyValuesByName": {
+        "Auto_Add_Flag": ""
+      },
+      "getFunction": null,
+      "indexes": [],
+      "loadScript": null,
+      "name": "STAGE_ADDRESS",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Stage"
+      },
+      "postExportProcedure": null,
+      "postLoadProcedure": null,
+      "relations": [],
+      "relationships": [],
+      "schema": "Stage",
+      "shortName": "STAGE_ADDRESS",
+      "sourceJoinDetails": {
+        "distinct": false,
+        "groupBy": "",
+        "join": "FROM [TABLEOWNER].[LOAD_ADDRESS] LOAD_ADDRESS",
+        "where": ""
+      },
+      "sourceMappings": [],
+      "storage": {
+        "bufferPool": "(None)",
+        "dataBlockSize": "",
+        "distributionColumns": [],
+        "distributionMethod": "",
+        "fallback": false,
+        "fileGroup": "",
+        "freeSpace": 0,
+        "hiveStorage": {
+          "additionalTableProperties": {},
+          "clusterBuckets": 0,
+          "clusterColumns": [],
+          "clusterSortColumns": [],
+          "clustered": false,
+          "external": false,
+          "externalLocation": "",
+          "native": true,
+          "nativeStorage": {
+            "delimitedRowFormat": {
+              "additionalProperties": "",
+              "delimiter": "",
+              "escapedBy": "",
+              "lineTerminator": "",
+              "nullAs": ""
+            },
+            "fileFormat": {
+              "inputFormatClass": "",
+              "outputFormatClass": "",
+              "storedAs": ""
+            },
+            "rowFormat": "",
+            "serdeRowFormat": {
+              "serdeName": "",
+              "serdeProperties": ""
+            }
+          },
+          "nonNativeStorage": {
+            "serdeProperties": "",
+            "storageClass": ""
+          },
+          "skew": false,
+          "skewAsDirectories": false,
+          "skewColumns": [],
+          "skewValues": "",
+          "skipFirstRow": false
+        },
+        "initialExtent": 0,
+        "maxExtent": 0,
+        "minExtent": 0,
+        "multiSet": false,
+        "nextExtent": 0,
+        "optionalCreateClause": "",
+        "organizingColumns": [],
+        "partitionFunction": "",
+        "partitionScheme": "",
+        "partitioned": false,
+        "partitioningColumns": [],
+        "percentageFree": 0,
+        "percentageIncrease": 0,
+        "primaryIndex": "",
+        "primaryIndexColumn": "",
+        "primaryIndexName": "",
+        "sqlVarDecimal": false,
+        "storageIndex": null,
+        "tableCompression": "",
+        "tableSpace": ""
+      },
+      "subType": "Stage",
+      "target": {
+        "color": "#000000",
+        "connection": "Data Warehouse",
+        "database": "",
+        "name": "Stage",
+        "schema": "Stage"
+      },
+      "updateProcedure": {
+        "_REF": "/objectsByName/UPDATE_STAGE_ADDRESS"
+      }
+    }
+  }
+}

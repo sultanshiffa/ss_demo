@@ -1,0 +1,1820 @@
+{
+  "objectsByName": {
+    "LOAD_ADDRESS": {
+      "codeGenSettings": {
+        "1": {},
+        "2": {
+          "batchDateGrain": "",
+          "batchJoinTableColumn": "",
+          "batchProcessingField": "",
+          "changeDetectionEndCurrent": "",
+          "changeDetectionEndExpiring": "",
+          "changeDetectionStartInitial": "",
+          "changeDetectionStartNew": "",
+          "changeDetectionUpdateCurrentRecordsOnly": true,
+          "createStorageIndexAfterCTAS": false,
+          "dateBasedPartitioningInfo": {
+            "dateDimensionColumn": {
+              "name": "",
+              "table": {
+                "name": ""
+              }
+            },
+            "endDateKey": 0,
+            "partitionType": {
+              "_REF": "/Types/DateBasedPartitioningType/None"
+            },
+            "startDateKey": 0
+          },
+          "deleteBeforeInsert": false,
+          "deleteBeforeInsertMultiPass": false,
+          "deleteBeforeInsertTruncate": false,
+          "deleteNumberOfRecordsPerTransaction": 50000,
+          "deleteRowsNotInSource": false,
+          "deleteTruncateOption": "",
+          "deleteWhereClause": "",
+          "dssCurrentFlagColumnName": "DSS_CURRENT_FLAG",
+          "dssEndDateColumnName": "DSS_END_DATE",
+          "dssStartDateColumnName": "DSS_START_DATE",
+          "enableParallelDml": false,
+          "includeExplicitLock": false,
+          "includeInitialLoadInsert": false,
+          "insert": false,
+          "insertHint": "",
+          "insertMinusHint": "",
+          "insertNewRowIdentificationMethodExcept": "",
+          "insertNewRowsOnly": false,
+          "insertZeroKeyRecord": true,
+          "lockClause": "",
+          "merge": false,
+          "mergeChangedRowsOnly": false,
+          "mergeHint": "",
+          "mergeMinusHint": "",
+          "mergeNewRowIdentificationMethodExcept": "",
+          "minimalLogging": false,
+          "nullSupport": false,
+          "parameters": [],
+          "partitionExchangeTable": {
+            "name": ""
+          },
+          "procedureName": {
+            "_REF": "/procedureName"
+          },
+          "processByBatch": false,
+          "selectHint": "",
+          "sourceJoinDetails": {
+            "distinct": false,
+            "groupBy": "",
+            "join": "FROM [TABLEOWNER].[LOAD_ADDRESS] LOAD_ADDRESS\r\n",
+            "where": ""
+          },
+          "sourceTablesByName": {
+            "address": {
+              "lockingMethod": "",
+              "sourceTable": {
+                "name": "address"
+              }
+            }
+          },
+          "update": false,
+          "updateChangeRowIdentificationMethodExcept": "",
+          "updateChangedRowsOnly": false,
+          "updateCurrentRowsOnly": false,
+          "updateHint": "",
+          "updateMinusHint": "",
+          "warnOnDelete": false
+        },
+        "3": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_create_table"
+          }
+        },
+        "4": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_load"
+          }
+        },
+        "5": {},
+        "7": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_create_index"
+          }
+        },
+        "8": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_drop_index"
+          }
+        },
+        "9": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_alter_ddl"
+          }
+        },
+        "a": {},
+        "b": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        },
+        "c": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        }
+      },
+      "columns": [
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_ID"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_TYPE_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_LINE_1"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_LINE_2"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_LINE_3"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ADDRESS_LINE_4"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/CUSTOMER_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/CITY_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/CITY_NAME"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/STATE_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/ZIP_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/COUNTY_NAME"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/COUNTRY_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/AREA_CODE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/PHONE_NUMBER"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/PRIMARY_CONTACT_PERSON"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/SECONDARY_CONTACT_PERSON"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/CREATING_EMPLOYEE_ID"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/CREATED_DATETIME"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/LAST_CHANGE_EMPLOYEE_ID"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/LAST_CHANGE_DATETIME"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/DSS_RECORD_SOURCE"
+        },
+        {
+          "_REF": "/objectsByName/LOAD_ADDRESS/columnsByName/DSS_LOAD_DATE"
+        }
+      ],
+      "columnsByName": {
+        "ADDRESS_ID": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "integer",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 3,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "integer",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS ID",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "integer",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_ID",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.address_id",
+          "sourceColumn": {
+            "name": "address_id",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ADDRESS_LINE_1": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 5,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS LINE 1",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_LINE_1",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.address_line_1",
+          "sourceColumn": {
+            "name": "address_line_1",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ADDRESS_LINE_2": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 6,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS LINE 2",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_LINE_2",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.address_line_2",
+          "sourceColumn": {
+            "name": "address_line_2",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ADDRESS_LINE_3": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 7,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS LINE 3",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_LINE_3",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.address_line_3",
+          "sourceColumn": {
+            "name": "address_line_3",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ADDRESS_LINE_4": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 8,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS LINE 4",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_LINE_4",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.address_line_4",
+          "sourceColumn": {
+            "name": "address_line_4",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ADDRESS_TYPE_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(20)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 4,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 20,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ADDRESS TYPE CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(20)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ADDRESS_TYPE_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.address_type_code",
+          "sourceColumn": {
+            "name": "address_type_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "AREA_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(10)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 16,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 10,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "AREA CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(10)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "AREA_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.area_code",
+          "sourceColumn": {
+            "name": "area_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "CITY_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(3)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 10,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 3,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "CITY CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(3)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "CITY_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.city_code",
+          "sourceColumn": {
+            "name": "city_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "CITY_NAME": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(80)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 11,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 80,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "CITY NAME",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(80)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "CITY_NAME",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.city_name",
+          "sourceColumn": {
+            "name": "city_name",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "COUNTRY_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(3)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 15,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 3,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "COUNTRY CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(3)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "COUNTRY_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.country_code",
+          "sourceColumn": {
+            "name": "country_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "COUNTY_NAME": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(80)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 14,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 80,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "COUNTY NAME",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(80)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "COUNTY_NAME",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.county_name",
+          "sourceColumn": {
+            "name": "county_name",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "CREATED_DATETIME": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 21,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "CREATED DATETIME",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "CREATED_DATETIME",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "CONVERT(VARCHAR,created_datetime,120)",
+          "sourceColumn": {
+            "name": "created_datetime",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "CONVERT(VARCHAR,created_datetime,120)",
+          "transformType": {
+            "_REF": "/Types/TransformType/During"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "CREATING_EMPLOYEE_ID": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "integer",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 20,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "integer",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "CREATING EMPLOYEE ID",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "integer",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "CREATING_EMPLOYEE_ID",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.creating_employee_id",
+          "sourceColumn": {
+            "name": "creating_employee_id",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "CUSTOMER_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(10)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 9,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 10,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "CUSTOMER CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(10)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "CUSTOMER_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.customer_code",
+          "sourceColumn": {
+            "name": "customer_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "DSS_LOAD_DATE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 1,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Load date.",
+          "displayName": "DSS LOAD DATE",
+          "dss": true,
+          "dssEndDate": false,
+          "dssLoadDate": true,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "DSS_LOAD_DATE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "getdate()",
+          "sourceColumn": null,
+          "sourceSystem": false,
+          "sourceTable": null,
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "getdate()",
+          "transformType": {
+            "_REF": "/Types/TransformType/After"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "DSS_RECORD_SOURCE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 2,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "Record source.",
+          "displayName": "DSS RECORD SOURCE",
+          "dss": true,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": true,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "DSS_RECORD_SOURCE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "'Sales.dbo.address'",
+          "sourceColumn": null,
+          "sourceSystem": false,
+          "sourceTable": null,
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "'Sales.dbo.address'",
+          "transformType": {
+            "_REF": "/Types/TransformType/After"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "LAST_CHANGE_DATETIME": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 23,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "LAST CHANGE DATETIME",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "LAST_CHANGE_DATETIME",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "CONVERT(VARCHAR,last_change_datetime,120)",
+          "sourceColumn": {
+            "name": "last_change_datetime",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "CONVERT(VARCHAR,last_change_datetime,120)",
+          "transformType": {
+            "_REF": "/Types/TransformType/During"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "LAST_CHANGE_EMPLOYEE_ID": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "integer",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 22,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "integer",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "LAST CHANGE EMPLOYEE ID",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "integer",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "LAST_CHANGE_EMPLOYEE_ID",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.last_change_employee_id",
+          "sourceColumn": {
+            "name": "last_change_employee_id",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "PHONE_NUMBER": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(20)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 17,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 20,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "PHONE NUMBER",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(20)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "PHONE_NUMBER",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.phone_number",
+          "sourceColumn": {
+            "name": "phone_number",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "PRIMARY_CONTACT_PERSON": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 18,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "PRIMARY CONTACT PERSON",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "PRIMARY_CONTACT_PERSON",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.primary_contact_person",
+          "sourceColumn": {
+            "name": "primary_contact_person",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "SECONDARY_CONTACT_PERSON": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(255)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 19,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 255,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "SECONDARY CONTACT PERSON",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(255)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "SECONDARY_CONTACT_PERSON",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.secondary_contact_person",
+          "sourceColumn": {
+            "name": "secondary_contact_person",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "STATE_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(5)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 12,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 5,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "STATE CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(5)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "STATE_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.state_code",
+          "sourceColumn": {
+            "name": "state_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "ZIP_CODE": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(20)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 13,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 20,
+          "defaultValue": "",
+          "description": "",
+          "displayName": "ZIP CODE",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(20)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "ZIP_CODE",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "address.zip_code",
+          "sourceColumn": {
+            "name": "zip_code",
+            "table": {
+              "name": "address"
+            }
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "name": "address"
+          },
+          "table": {
+            "_REF": "/objectsByName/LOAD_ADDRESS"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        }
+      },
+      "customProcedure": null,
+      "database": "sqlredtgt",
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "description": "",
+      "displayName": "",
+      "exportScript": null,
+      "extendedPropertyValuesByName": {
+        "AZ_DEBUG_MODE": "",
+        "AZ_INDEX_TYPE_NAME": "",
+        "AZ_SPLIT_THRESHOLD": "",
+        "AZ_UNICODE_SUPPORT": "",
+        "AZ_UNLOAD_DELIMITER": "",
+        "AZ_UNLOAD_ENCLOSED_BY": "",
+        "AZ_UNLOAD_ESCAPE_CHAR": "",
+        "AZ_UNLOAD_RECORD_CHAR": "",
+        "BLOB_TEMP_CONTAINER": "",
+        "TEMP_DATA_SOURCE": ""
+      },
+      "getFunction": null,
+      "indexes": [],
+      "loadInfo": {
+        "archiveFile": {
+          "charSet": "",
+          "escapeEncoding": "",
+          "fieldDelimiter": "|",
+          "fieldEnclosure": "\"",
+          "headerLine": false,
+          "name": "",
+          "nonStringNullEncoding": "",
+          "nullEncoding": "",
+          "path": "",
+          "recordDelimiter": ""
+        },
+        "fileLoaderOptions": "",
+        "fileParsed": false,
+        "loadType": {
+          "_REF": "/Types/LoadType/NativeODBC"
+        },
+        "overrideLoadSQL": "",
+        "overrideSourceColumns": "address.address_id,address.address_type_code,address.address_line_1,\r\naddress.address_line_2,address.address_line_3,address.address_line_4,\r\naddress.customer_code,address.city_code,address.city_name,\r\naddress.state_code,address.zip_code,address.county_name,\r\naddress.country_code,address.area_code,address.phone_number,\r\naddress.primary_contact_person,address.secondary_contact_person,\r\naddress.creating_employee_id,address.created_datetime,\r\naddress.last_change_employee_id,address.last_change_datetime",
+        "pdwOptions": {
+          "loadMode": "",
+          "stagingDatabase": "",
+          "upsertKeyColumns": "",
+          "useMultiTransMode": false,
+          "useStagingDatabase": false
+        },
+        "preLoadAction": {
+          "_REF": "/Types/PreLoadActionType/Truncate"
+        },
+        "preLoadSql": "",
+        "scriptConnection": {
+          "_REF": "/objectsByName/Default Windows Runtime"
+        },
+        "selectDistinctValues": false,
+        "sourceConnection": {
+          "_REF": "/objectsByName/Sales"
+        },
+        "sourceConnectionType": {
+          "_REF": "/Types/ConnectionType/ODBC"
+        },
+        "sourceFile": {
+          "charSet": "",
+          "escapeEncoding": "",
+          "fieldDelimiter": "|",
+          "fieldEnclosure": "\"",
+          "headerLine": false,
+          "name": "",
+          "nonStringNullEncoding": "",
+          "nullEncoding": "",
+          "path": "",
+          "recordDelimiter": ""
+        },
+        "sourceSchema": "dbo",
+        "sourceTables": "address",
+        "sqoopOptions": {
+          "baseTempDir": "",
+          "genericArguments": "",
+          "splitByColumn": null,
+          "toolArguments": ""
+        },
+        "sqoopSourceFileEnclosureType": {
+          "_REF": "/Types/SqoopFieldEnclosureType/None"
+        },
+        "ssisOptions": {
+          "acquireTableLock": true,
+          "commitInterval": 2147483647,
+          "destinationAlwaysUseDefaultCodePage": false,
+          "destinationCodePage": null,
+          "destinationIdentifierCaseConversion": {
+            "_REF": "/Types/CaseConversion/None"
+          },
+          "enableFastLoad": false,
+          "loadMode": "",
+          "rollbackOnTableFailure": false,
+          "rowsPerBatch": null,
+          "sourceAlwaysUseDefaultCodePage": false,
+          "sourceCodePage": null,
+          "sourceIdentifierCaseConversion": {
+            "_REF": "/Types/CaseConversion/None"
+          },
+          "sourceIdentifierEncapsulation": "",
+          "stagingDatabase": "",
+          "upsertKeyColumns": "",
+          "useRowCountLog": false,
+          "useStagingDatabase": false
+        },
+        "tempDatabase": "sqlredtgt",
+        "tptHadoopHost": "",
+        "tptOptions": {
+          "characterSet": "",
+          "jobName": "",
+          "loadOperatorAttributes": "",
+          "odbcOperatorAttributes": "",
+          "readInstances": 1,
+          "sessionsMax": null,
+          "sessionsMin": 1,
+          "sharedMemorySize": "",
+          "tbuildOptions": "",
+          "tlogviewOptions": "",
+          "tptRoutine": "BULK INSERT",
+          "writeInstances": 1
+        },
+        "triggerArchiveFile": {
+          "charSet": "",
+          "escapeEncoding": "",
+          "fieldDelimiter": "",
+          "fieldEnclosure": "",
+          "headerLine": false,
+          "name": "",
+          "nonStringNullEncoding": "",
+          "nullEncoding": "",
+          "path": "",
+          "recordDelimiter": ""
+        },
+        "triggerFile": {
+          "charSet": "",
+          "escapeEncoding": "",
+          "fieldDelimiter": "",
+          "fieldEnclosure": "",
+          "headerLine": false,
+          "name": "",
+          "nonStringNullEncoding": "",
+          "nullEncoding": "",
+          "path": "",
+          "recordDelimiter": ""
+        },
+        "triggerParameterNamePrefix": "",
+        "useOverrideSourceColumns": false,
+        "wait": false,
+        "waitAction": {
+          "_REF": "/Types/WaitAction/None"
+        },
+        "waitSeconds": 0,
+        "whereAndGroupByClauses": ""
+      },
+      "loadScript": {
+        "_REF": "/objectsByName/SCRIPT_LOAD_ADDRESS"
+      },
+      "name": "LOAD_ADDRESS",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Load"
+      },
+      "postExportProcedure": null,
+      "postLoadProcedure": null,
+      "relations": [],
+      "relationships": [],
+      "schema": "Stage",
+      "shortName": "LOAD_ADDRESS",
+      "sourceJoinDetails": {
+        "distinct": false,
+        "groupBy": "",
+        "join": "",
+        "where": ""
+      },
+      "sourceMappings": [],
+      "storage": {
+        "bufferPool": "(None)",
+        "dataBlockSize": "",
+        "distributionColumns": [],
+        "distributionMethod": "",
+        "fallback": false,
+        "fileGroup": "",
+        "freeSpace": 0,
+        "hiveStorage": {
+          "additionalTableProperties": {},
+          "clusterBuckets": 0,
+          "clusterColumns": [],
+          "clusterSortColumns": [],
+          "clustered": false,
+          "external": false,
+          "externalLocation": "",
+          "native": true,
+          "nativeStorage": {
+            "delimitedRowFormat": {
+              "additionalProperties": "",
+              "delimiter": "",
+              "escapedBy": "",
+              "lineTerminator": "",
+              "nullAs": ""
+            },
+            "fileFormat": {
+              "inputFormatClass": "",
+              "outputFormatClass": "",
+              "storedAs": ""
+            },
+            "rowFormat": "",
+            "serdeRowFormat": {
+              "serdeName": "",
+              "serdeProperties": ""
+            }
+          },
+          "nonNativeStorage": {
+            "serdeProperties": "",
+            "storageClass": ""
+          },
+          "skew": false,
+          "skewAsDirectories": false,
+          "skewColumns": [],
+          "skewValues": "",
+          "skipFirstRow": false
+        },
+        "initialExtent": 0,
+        "maxExtent": 0,
+        "minExtent": 0,
+        "multiSet": false,
+        "nextExtent": 0,
+        "optionalCreateClause": "",
+        "organizingColumns": [],
+        "partitionFunction": "",
+        "partitionScheme": "",
+        "partitioned": false,
+        "partitioningColumns": [],
+        "percentageFree": 0,
+        "percentageIncrease": 0,
+        "primaryIndex": "",
+        "primaryIndexColumn": "",
+        "primaryIndexName": "",
+        "sqlVarDecimal": false,
+        "storageIndex": null,
+        "tableCompression": "",
+        "tableSpace": ""
+      },
+      "subType": "",
+      "target": {
+        "color": "#000000",
+        "connection": "Data Warehouse",
+        "database": "",
+        "name": "Stage",
+        "schema": "Stage"
+      },
+      "updateProcedure": null
+    }
+  }
+}

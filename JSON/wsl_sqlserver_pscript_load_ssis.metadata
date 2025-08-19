@@ -1,0 +1,32 @@
+{
+  "objectsByName": {
+    "wsl_sqlserver_pscript_load_ssis": {
+      "code": {
+        "_REF": "/objectsByName/wsl_sqlserver_pscript_load_ssis/code"
+      },
+      "databaseType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "wsl_sqlserver_pscript_load_ssis",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Template"
+      },
+      "purpose": "This template was inserted by WhereScape RED CLI",
+      "readOnly": false,
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      },
+      "templateType": {
+        "_REF": "/Types/TemplateType/UserDefinedScript"
+      }
+    }
+  }
+}

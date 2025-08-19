@@ -1,0 +1,50 @@
+{
+  "objectsByName": {
+    "UPDATE_STAGE_ADDRESS_copy": {
+      "code": {
+        "_REF": "/objectsByName/UPDATE_STAGE_ADDRESS_copy/code"
+      },
+      "codeGenSettings": {
+        "1": {},
+        "2": {},
+        "3": {},
+        "4": {},
+        "5": {},
+        "7": {},
+        "8": {},
+        "9": {},
+        "a": {},
+        "b": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        },
+        "c": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        }
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "UPDATE_STAGE_ADDRESS_copy",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Procedure"
+      },
+      "procedureType": {
+        "_REF": "/Types/ProcedureType/Procedure"
+      },
+      "purpose": "UPDATE_STAGE_ADDRESS_copy",
+      "target": {
+        "color": "#000000",
+        "connection": "Data Warehouse",
+        "database": "",
+        "name": "Stage",
+        "schema": "Stage"
+      }
+    }
+  }
+}

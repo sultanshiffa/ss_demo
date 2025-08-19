@@ -1,0 +1,9 @@
+
+    {
+        "Operation": "modify",
+        "Configuration": {
+            "name": "Data Warehouse",
+            "dtm-set-name": "Azure SQL Server from Azure SQL Server",
+            "table/column information sql block": "wsl_sqlserver_table_information"
+        }
+    }

@@ -1,0 +1,50 @@
+{
+  "objectsByName": {
+    "Sales": {
+      "automaticIndexCreation": false,
+      "connectionType": {
+        "_REF": "/Types/ConnectionType/ODBC"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "defaultSchema": "dbo",
+      "dropTableSQL": "",
+      "dropViewSQL": "",
+      "dsnArchitecture": "64",
+      "extendedPropertyValuesByName": {
+        "AZ_DEBUG_MODE": "",
+        "AZ_INDEX_TYPE_NAME": "",
+        "AZ_SPLIT_THRESHOLD": "",
+        "AZ_UNICODE_SUPPORT": "",
+        "AZ_UNLOAD_DELIMITER": "",
+        "AZ_UNLOAD_ENCLOSED_BY": "",
+        "AZ_UNLOAD_ESCAPE_CHAR": "",
+        "AZ_UNLOAD_RECORD_CHAR": "",
+        "BLOB_ACCOUNT": "",
+        "BLOB_KEY": "",
+        "BLOB_TEMP_CONTAINER": "",
+        "BUILD_NAME": "",
+        "TEMP_DATA_SOURCE": ""
+      },
+      "jdbcConnectString": "",
+      "jdbcDriverClass": "",
+      "name": "Sales",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Connection"
+      },
+      "odbcDsn": "Sales",
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      },
+      "targets": [],
+      "truncateSQL": "",
+      "workDirectory": "C:\\temp\\"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "objectsByName": {
+    "Runtime Connection for GIT Scripts": {
+      "connectionType": {
+        "_REF": "/Types/ConnectionType/Windows"
+      },
+      "databaseName": "",
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "defaultBrowsePath": "",
+      "extendedPropertyValuesByName": {
+        "BLOB_ACCOUNT": "",
+        "BLOB_KEY": "",
+        "BLOB_TEMP_CONTAINER": "",
+        "TEMP_DATA_SOURCE": ""
+      },
+      "hostName": "",
+      "name": "Runtime Connection for GIT Scripts",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Connection"
+      },
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      },
+      "targets": [],
+      "workDirectory": "c:\\temp"
+    }
+  }
+}

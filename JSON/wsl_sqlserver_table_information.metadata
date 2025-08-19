@@ -1,0 +1,42 @@
+{
+  "objectsByName": {
+    "wsl_sqlserver_table_information": {
+      "code": {
+        "_REF": "/objectsByName/wsl_sqlserver_table_information/code"
+      },
+      "codeGenSettings": {
+        "1": {},
+        "2": {},
+        "3": {},
+        "4": {},
+        "5": {},
+        "7": {},
+        "8": {},
+        "9": {},
+        "a": {},
+        "b": {},
+        "c": {}
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "wsl_sqlserver_table_information",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Procedure"
+      },
+      "procedureType": {
+        "_REF": "/Types/ProcedureType/Block"
+      },
+      "purpose": "This procedure was inserted by WhereScape RED CLI",
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      }
+    }
+  }
+}

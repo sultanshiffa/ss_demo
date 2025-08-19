@@ -1,0 +1,46 @@
+{
+  "objectsByName": {
+    "Repository": {
+      "automaticIndexCreation": false,
+      "connectionType": {
+        "_REF": "/Types/ConnectionType/Database"
+      },
+      "databaseName": "wsred_ss_demo_d_sultanshiffa",
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "defaultSchema": "red",
+      "dropTableSQL": "",
+      "dropViewSQL": "",
+      "dsnArchitecture": "64",
+      "extendedPropertyValuesByName": {},
+      "jdbcConnectString": "",
+      "jdbcDriverClass": "",
+      "name": "Repository",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Connection"
+      },
+      "odbcDsn": "wsred_ss_demo_d_sultanshiffa",
+      "serverName": "localhost",
+      "serverPort": "5432",
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      },
+      "targets": [
+        {
+          "color": "#000000",
+          "connection": "Repository",
+          "database": "",
+          "name": "",
+          "schema": ""
+        }
+      ],
+      "truncateSQL": ""
+    }
+  }
+}

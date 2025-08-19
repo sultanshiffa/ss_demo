@@ -1,0 +1,42 @@
+{# -- TemplateVersion:001 MinVersion:8510 MaxVersion:* TargetType:SqlServer ModelType:* TemplateType:DDL                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# --    © WhereScape Inc 2024. Wherescape Inc permits you to copy this Template solely for use with the RED software, and to modify this Template          -- #}
+{# --    for the purposes of using that modified Template with the RED software, but does not permit copying or modification for any other purpose.         -- #}
+{# --                                                                                                                                                       -- #}
+{# -- =============================================================================                                                                         -- #}
+{# --                                                                                                                                                       -- #}
+{# -- DBMS Name          : Azure SQL Server                                                                                                                     -- #}
+{# -- Template Name      : wsl_sqlserver_create_table                                                                                                           -- #}
+{# -- Template Version   : 8.5.1.0                                                                                                                          -- #}
+{# -- Description        : This template creates a Azure SQL DB database table                                                                              -- #}
+{# --                                                                                                                                                       -- #}
+{# -- =============================================================================                                                                         -- #}
+{# --                                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# -- Notes / History                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# --                                                                                                                                                       -- #}
+{# -- Macro to create table with constraints and tablespace option                                                                                          -- #}
+{%- macro createTable( table, tableName ) -%}
+	CREATE TABLE {{tableName}} ({% br %}
+  {%- for column in table.columns %}
+    {%- if loop.first -%}  {% else %}, {% endif -%}
+    {{column.name}} {{column.fullDataType}}
+    {%- if not column.nullAllowed %} NOT NULL {%- endif -%}
+    {%- if column.defaultValue is not null and column.defaultValue!="" %} DEFAULT {{column.defaultValue}}{%- endif -%}
+    {%- br %}
+  {%- endfor %}
+){% br %}
+{%- if table.storage.fileGroup | trim != "" %}{% br %}
+ON {{table.storage.fileGroup}} {% br %}
+{%- endif -%}{% br %}
+{%- if table.storage.tableCompression | trim != "" %}{% br %}
+WITH ( DATA_COMPRESSION={{table.storage.tableCompression}} ){% br %}
+{%- endif -%}{% br %}
+  {%- for optLine in (table.storage.optionalCreateClause | trim | lines) -%}
+    {{- optLine }}{% br %}
+  {%- endfor %}
+  {{- options.endOfStatement}}{% br %}
+	{%- endmacro -%}
+
+{{- createTable ( table = table, tableName = "$OBJECT$" ) -}}

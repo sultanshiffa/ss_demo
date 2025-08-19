@@ -1,0 +1,86 @@
+{
+  "objectsByName": {
+    "Data Warehouse": {
+      "automaticIndexCreation": false,
+      "connectionType": {
+        "_REF": "/Types/ConnectionType/ODBC"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "defaultSchema": "",
+      "dropTableSQL": "DROP TABLE $OBJECT$",
+      "dropViewSQL": "DROP VIEW $SCHEMA$.$TABLE$",
+      "dsnArchitecture": "64",
+      "extendedPropertyValuesByName": {
+        "AZ_DEBUG_MODE": "TRUE",
+        "AZ_INDEX_TYPE_NAME": "",
+        "AZ_SPLIT_THRESHOLD": "100000",
+        "AZ_UNICODE_SUPPORT": "TRUE",
+        "AZ_UNLOAD_DELIMITER": "|",
+        "AZ_UNLOAD_ENCLOSED_BY": "\"",
+        "AZ_UNLOAD_ESCAPE_CHAR": "#",
+        "AZ_UNLOAD_RECORD_CHAR": "\\n",
+        "BLOB_ACCOUNT": "",
+        "BLOB_KEY": "",
+        "BLOB_TEMP_CONTAINER": "",
+        "BUILD_NAME": "RED10_TargetEP_SqlServer_release-250701-1948",
+        "TEMP_DATA_SOURCE": ""
+      },
+      "jdbcConnectString": "",
+      "jdbcDriverClass": "",
+      "name": "Data Warehouse",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Connection"
+      },
+      "odbcDsn": "sqlredtgt",
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      },
+      "targets": [
+        {
+          "color": "#000000",
+          "connection": "Data Warehouse",
+          "database": "",
+          "name": "Mart",
+          "schema": "Mart"
+        },
+        {
+          "color": "#000000",
+          "connection": "Data Warehouse",
+          "database": "",
+          "name": "Stage",
+          "schema": "Stage"
+        },
+        {
+          "color": "#000000",
+          "connection": "Data Warehouse",
+          "database": "",
+          "name": "ODS",
+          "schema": "ODS"
+        },
+        {
+          "color": "#000000",
+          "connection": "Data Warehouse",
+          "database": "",
+          "name": "dv",
+          "schema": "dv"
+        },
+        {
+          "color": "#000000",
+          "connection": "Data Warehouse",
+          "database": "",
+          "name": "bv",
+          "schema": "bv"
+        }
+      ],
+      "truncateSQL": "TRUNCATE TABLE $OBJECT$",
+      "workDirectory": "C:\\temp\\"
+    }
+  }
+}

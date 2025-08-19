@@ -1,0 +1,57 @@
+{# -- TemplateVersion:001 MinVersion:8510 MaxVersion:* TargetType:* ModelType:* TemplateType:Utility       -- #}
+interactiveLog = ''
+if debugModeExt == 'TRUE':{%br%}
+    debugMode = True
+else:{%br%}
+    debugMode = False
+{%br%}
+def write_audit(message = '', logType = 'audit', statusCode = 'I'):{%br%}
+    # statusCodes 'E' = error, 'W' Warning, 'I' information, 'S' Success
+    global interactiveLog
+    if is_red_interactive():{%br%}
+        #message = ' : '.join([logType,statusCode,message])
+        interactiveLog = '\n'.join([interactiveLog, message])
+    else:{%br%}
+        outputJson = json.dumps({"type": logType, "message": message, "statusCode": statusCode})
+        print(outputJson, flush=True)
+{%br%}
+def write_error(message = ''):{%br%}
+    write_audit(message, 'audit', 'E')
+{%br%}
+def write_detail(message = '', statusCode = 'I'):{%br%}
+    if debugMode:{%br%}
+        write_audit(message, 'detail', statusCode)
+{%br%}
+def write_result(message = '', statusCode = 'S'):{%br%}
+    write_audit(message, 'result', statusCode)
+{%br%}
+def is_red_interactive():{%br%}
+    {% if type == "load" %}{%br%}
+    if os.environ.get('WSL_JOB_KEY','') == '0' and os.environ.get('WSL_JOB_NAME','') == 'Develop':{%br%}
+        return True
+    else:{%br%}
+        return False
+    {% else %}{%br%}
+    if os.environ.get('WSL_JOB_KEY','') == '0' and os.environ.get('WSL_JOB_NAME','') == 'Develop':{%br%}
+        return False
+    else:{%br%}
+        return False
+    {%- endif %}{%br%}
+{%br%}
+def exit_script(exitCode = 0, message = 'Executed the script'):{%br%}
+    if is_red_interactive():{%br%}
+        if exitCode != 0:{%br%}
+            print(-2, flush=True)
+        else:{%br%}
+            print(1, flush=True)
+        print(message, flush=True)
+        print(interactiveLog, flush=True)
+        sys.exit(0)
+    else:{%br%}
+        if exitCode != 0:{%br%}
+            write_result(message,'E')
+        else:{%br%}
+            write_result(message,'S')
+        sys.exit(exitCode)
+{%br%}
+{%br%}

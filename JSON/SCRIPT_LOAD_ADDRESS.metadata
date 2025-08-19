@@ -1,0 +1,29 @@
+{
+  "objectsByName": {
+    "SCRIPT_LOAD_ADDRESS": {
+      "code": {
+        "_REF": "/objectsByName/SCRIPT_LOAD_ADDRESS/code"
+      },
+      "dbType": {
+        "_REF": "/Types/DatabaseType/PostgreSQL"
+      },
+      "extendedPropertyValuesByName": {},
+      "name": "SCRIPT_LOAD_ADDRESS",
+      "notes": "",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Script"
+      },
+      "purpose": "SCRIPT_LOAD_ADDRESS",
+      "scriptType": {
+        "_REF": "/Types/ScriptType/UserDefined"
+      },
+      "target": {
+        "color": "#000000",
+        "connection": "Repository",
+        "database": "",
+        "name": "",
+        "schema": ""
+      }
+    }
+  }
+}

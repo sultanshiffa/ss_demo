@@ -1,0 +1,163 @@
+# ScriptVersion:005 MinVersion:8310 MaxVersion:* TargetType:* ModelType:* ScriptType:Python
+# --    (c) WhereScape Inc 2024. WhereScape Inc permits you to copy this module solely for use with the RED software, and to modify this module            -- #
+# --    for the purposes of using that modified module with the RED software, but does not permit copying or modification for any other purpose.           -- #
+# --                                                                                                                                                       -- #
+#=====================================================================================================
+# Module Name      :    WslPythonAzureSQK
+# DBMS Name        :    Modules specific for Azure SQL
+# Description      :    Generic python functions module used by many
+#                       different templates, scripts and database specific
+#                       modules
+# Author           :    Wherescape Inc
+#======================================================================================================
+# Notes / History
+#  NB:  1.0.0   2023-07-18   First Version
+#======================================================================================================
+
+from azure.storage.blob import BlobServiceClient
+from azure.core.exceptions import ResourceNotFoundError
+import WslPythonCommon
+import pyodbc
+import time
+import os
+import glob
+import sys
+
+#Get a list of all files from the folder
+def list_files_in_folder(account_key, account_name, container_name, folder_name):
+    connection_string = f"DefaultEndpointsProtocol=https;AccountName={account_name};AccountKey={account_key};EndpointSuffix=core.windows.net"
+
+    blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+    container_client = blob_service_client.get_container_client(container_name)
+
+    blob_prefix = folder_name + "/"
+    blob_list = container_client.walk_blobs(name_starts_with=blob_prefix)
+
+    file_names = []
+
+    for blob in blob_list:
+        file_name = blob.name[len(blob_prefix):]
+        file_names.append(file_name)
+
+    return file_names
+
+
+class AzureBlobStorage:
+    def __init__(self, write_audit, write_detail, write_error, connection_string, container_name):
+        self.connection_string = connection_string
+        self.container_name = container_name
+        self.blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
+        self.write_audit = write_audit
+        self.write_detail = write_detail
+        self.write_error = write_error
+
+
+    def upload(self, local_file_path, blob_folder):
+        if os.path.isdir(local_file_path):
+            try:
+                self.upload_folder(local_file_path, blob_folder)
+            except Exception as e:
+                self.write_error(f"Error uploading folder: '{local_file_path}' to blob: '{blob_folder}'\n" + str(e))
+                raise e
+        else:
+            file_name = os.path.basename(local_file_path)
+            if '*' in file_name or '?' in file_name:
+                try:
+                    self.upload_files_with_wildcard(local_file_path, blob_folder)
+                except Exception as e:
+                    self.write_error(f"Error uploading files with wildcard: '{local_file_path}' to blob: '{blob_folder}'\n" + str(e))
+                    raise e
+            else:
+                try:
+                    self.upload_file(local_file_path, blob_folder)
+                except Exception as e:
+                    self.write_error(f"Error uploading file: '{local_file_path}' to blob: '{blob_folder}'\n" + str(e))
+                    raise e
+
+
+    def upload_file(self, file_path, blob_folder):
+        container_client = self.blob_service_client.get_container_client(self.container_name)
+        blob_name = os.path.join(blob_folder, os.path.basename(file_path))
+        blob_client = container_client.get_blob_client(blob_name)
+
+        with open(file_path, 'rb') as data:
+            self.write_detail(f"Uploading file: '{file_path}' to blob: '{blob_name}'")
+            blob_client.upload_blob(data)
+
+
+    def upload_files_with_wildcard(self, local_file_path, blob_folder):
+        folder_path = os.path.dirname(local_file_path)
+        wildcard_pattern = os.path.basename(local_file_path)
+
+        container_client = self.blob_service_client.get_container_client(self.container_name)
+        files = glob.glob(os.path.join(folder_path, wildcard_pattern), recursive=True)
+
+        for file_path in files:
+            if os.path.isfile(file_path):
+                relative_path = os.path.relpath(file_path, folder_path)
+                blob_name = os.path.join(blob_folder, relative_path)
+                blob_client = container_client.get_blob_client(blob_name)
+
+                with open(file_path, 'rb') as data:
+                    self.write_detail(f"Uploading file: '{file_path}' to blob: '{blob_name}'")
+                    blob_client.upload_blob(data)
+
+
+    def upload_folder(self, folder_path, blob_folder):
+        container_client = self.blob_service_client.get_container_client(self.container_name)
+        for root, _, files in os.walk(folder_path):
+            self.write_detail(f"Uploading folder: '{root}' to blob: '{blob_folder}'")
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                relative_path = os.path.relpath(file_path, folder_path)
+                blob_name = os.path.join(blob_folder, relative_path)
+                blob_client = container_client.get_blob_client(blob_name)
+
+                with open(file_path, 'rb') as data:
+                    self.write_detail(f"Uploading file: '{file_path}' to blob: '{blob_name}'")
+                    blob_client.upload_blob(data)
+
+
+    def delete(self, blob_name):
+        container_client = self.blob_service_client.get_container_client(self.container_name)
+        
+        if blob_name.endswith("/"):
+            blob_name_prefix = blob_name
+        else:
+            blob_name_prefix = blob_name + "/"
+
+        try:
+            for blob in container_client.list_blobs(name_starts_with=blob_name_prefix):
+                container_client.delete_blob(blob.name)
+        except ResourceNotFoundError as r:
+            # Handle the case when the folder itself does not exist
+            raise r
+
+        # Check if the folder itself exists and delete it
+        try:
+            container_client.delete_blob(blob_name)
+        except ResourceNotFoundError:
+            pass
+
+
+    def download(self, blob_folder, local_folder,local_name):
+        container_client = self.blob_service_client.get_container_client(self.container_name)
+
+        # Ensure local folder exists
+        os.makedirs(local_folder, exist_ok=True)
+
+        # List blobs in the blob folder
+        blobs = container_client.list_blobs(name_starts_with=blob_folder)
+
+        for blob in blobs:
+            blob_name = blob.name
+
+            # Create local file path
+            local_file_path = os.path.join(local_folder,local_name)
+
+            # Download blob to local file
+            with open(local_file_path, "wb") as file:
+                blob_data = container_client.download_blob(blob_name)
+                blob_data.readinto(file)
+
+            self.write_detail(f"Downloaded blob: '{blob_name}' to '{local_file_path}'")

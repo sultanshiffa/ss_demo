@@ -1,0 +1,3421 @@
+{
+  "objectsByName": {
+    "dim_date_azsql": {
+      "codeGenSettings": {
+        "1": {
+          "batchDateGrain": "",
+          "batchJoinTableColumn": "",
+          "batchProcessingField": "",
+          "changeDetectionEndCurrent": "",
+          "changeDetectionEndExpiring": "",
+          "changeDetectionStartInitial": "",
+          "changeDetectionStartNew": "",
+          "changeDetectionUpdateCurrentRecordsOnly": true,
+          "createStorageIndexAfterCTAS": false,
+          "dateBasedPartitioningInfo": {
+            "dateDimensionColumn": {
+              "name": "",
+              "table": {
+                "name": ""
+              }
+            },
+            "endDateKey": 0,
+            "partitionType": {
+              "_REF": "/Types/DateBasedPartitioningType/None"
+            },
+            "startDateKey": 0
+          },
+          "deleteBeforeInsert": false,
+          "deleteBeforeInsertMultiPass": false,
+          "deleteBeforeInsertTruncate": false,
+          "deleteNumberOfRecordsPerTransaction": 50000,
+          "deleteRowsNotInSource": false,
+          "deleteTruncateOption": "",
+          "deleteWhereClause": "",
+          "dssCurrentFlagColumnName": "DSS_CURRENT_FLAG",
+          "dssEndDateColumnName": "DSS_END_DATE",
+          "dssStartDateColumnName": "DSS_START_DATE",
+          "enableParallelDml": false,
+          "includeExplicitLock": false,
+          "includeInitialLoadInsert": false,
+          "insert": false,
+          "insertHint": "",
+          "insertMinusHint": "",
+          "insertNewRowIdentificationMethodExcept": "",
+          "insertNewRowsOnly": false,
+          "insertZeroKeyRecord": true,
+          "lockClause": "",
+          "merge": false,
+          "mergeChangedRowsOnly": false,
+          "mergeHint": "",
+          "mergeMinusHint": "",
+          "mergeNewRowIdentificationMethodExcept": "",
+          "minimalLogging": false,
+          "nullSupport": false,
+          "parameters": [],
+          "partitionExchangeTable": {
+            "name": ""
+          },
+          "procedureName": {
+            "_REF": "/procedureName"
+          },
+          "processByBatch": false,
+          "selectHint": "",
+          "sourceJoinDetails": {
+            "distinct": false,
+            "groupBy": "",
+            "join": "FROM [TABLEOWNER].[dim_date_azsql] dim_date_azsql",
+            "where": ""
+          },
+          "sourceTablesByName": {},
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_proc_perm"
+          },
+          "update": false,
+          "updateChangeRowIdentificationMethodExcept": "",
+          "updateChangedRowsOnly": false,
+          "updateCurrentRowsOnly": false,
+          "updateHint": "",
+          "updateMinusHint": "",
+          "warnOnDelete": false
+        },
+        "2": {
+          "batchDateGrain": "",
+          "batchJoinTableColumn": "",
+          "batchProcessingField": "",
+          "changeDetectionEndCurrent": "",
+          "changeDetectionEndExpiring": "",
+          "changeDetectionStartInitial": "",
+          "changeDetectionStartNew": "",
+          "changeDetectionUpdateCurrentRecordsOnly": true,
+          "createStorageIndexAfterCTAS": false,
+          "dateBasedPartitioningInfo": {
+            "dateDimensionColumn": {
+              "name": "",
+              "table": {
+                "name": ""
+              }
+            },
+            "endDateKey": 0,
+            "partitionType": {
+              "_REF": "/Types/DateBasedPartitioningType/None"
+            },
+            "startDateKey": 0
+          },
+          "deleteBeforeInsert": false,
+          "deleteBeforeInsertMultiPass": false,
+          "deleteBeforeInsertTruncate": false,
+          "deleteNumberOfRecordsPerTransaction": 50000,
+          "deleteRowsNotInSource": false,
+          "deleteTruncateOption": "",
+          "deleteWhereClause": "",
+          "dssCurrentFlagColumnName": "DSS_CURRENT_FLAG",
+          "dssEndDateColumnName": "DSS_END_DATE",
+          "dssStartDateColumnName": "DSS_START_DATE",
+          "enableParallelDml": false,
+          "includeExplicitLock": false,
+          "includeInitialLoadInsert": false,
+          "insert": false,
+          "insertHint": "",
+          "insertMinusHint": "",
+          "insertNewRowIdentificationMethodExcept": "",
+          "insertNewRowsOnly": false,
+          "insertZeroKeyRecord": true,
+          "lockClause": "",
+          "merge": false,
+          "mergeChangedRowsOnly": false,
+          "mergeHint": "",
+          "mergeMinusHint": "",
+          "mergeNewRowIdentificationMethodExcept": "",
+          "minimalLogging": false,
+          "nullSupport": false,
+          "parameters": [],
+          "partitionExchangeTable": {
+            "name": ""
+          },
+          "procedureName": {
+            "_REF": "/procedureName"
+          },
+          "processByBatch": false,
+          "selectHint": "",
+          "sourceJoinDetails": {
+            "distinct": false,
+            "groupBy": "",
+            "join": "FROM [TABLEOWNER].[dim_date_azsql] dim_date_azsql\r\n",
+            "where": ""
+          },
+          "sourceTablesByName": {},
+          "update": false,
+          "updateChangeRowIdentificationMethodExcept": "",
+          "updateChangedRowsOnly": false,
+          "updateCurrentRowsOnly": false,
+          "updateHint": "",
+          "updateMinusHint": "",
+          "warnOnDelete": false
+        },
+        "3": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_create_table"
+          }
+        },
+        "4": {},
+        "5": {},
+        "7": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_create_index"
+          }
+        },
+        "8": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_drop_index"
+          }
+        },
+        "9": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_alter_ddl"
+          }
+        },
+        "a": {},
+        "b": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        },
+        "c": {
+          "template": {
+            "_REF": "/objectsByName/wsl_sqlserver_pyscript_action"
+          }
+        }
+      },
+      "columns": [
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/dim_date_key"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/calendar_date"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_week"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_week_no"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_week_in_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_month_no"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_month_name"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_quarter_no"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_quarter"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/financial_date"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_week"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_week_no"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_week_in_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_week_in_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_month_no"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_month_name"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_period"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_quarter_no"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_quarter"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_day"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_week"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_mtd"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_ytd"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/moving_cal_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_day"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_week"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_month"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_quarter"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_mtd"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_ytd"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/moving_fin_quarter"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/moving_fin_year"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/week_day_flag"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/week_end_flag"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/holiday_flag"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/holiday_desc"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/trading_day_flag"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/trading_days_in_mth"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/trading_days_so_far"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/dss_create_time"
+        },
+        {
+          "_REF": "/objectsByName/dim_date_azsql/columnsByName/dss_update_time"
+        }
+      ],
+      "columnsByName": {
+        "cal_day_in_month": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 5,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The day in the month 1-31.",
+          "displayName": "cal day in month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_day_in_month",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_day_in_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_day_in_week": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 3,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "The day in the week. Format DDD. Example: mon, tue, wed.",
+          "displayName": "cal day in week",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_day_in_week",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_day_in_week",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_week"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "cal_day_in_week_no": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 4,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The day number in the week. 1-7 where Sunday is day 1.",
+          "displayName": "cal day in week no",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_day_in_week_no",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_day_in_week_no",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_week_no"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_day_in_year": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 6,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The day in the year 1-366.",
+          "displayName": "cal day in year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_day_in_year",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_day_in_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_day_in_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_month": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 9,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The calendar month representation. Format YYYYMM. Example: 200206.",
+          "displayName": "cal month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_month",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_month_name": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 10,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "The calendar month name. Format MON. Examples: jan, feb, mar.",
+          "displayName": "cal month name",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_month_name",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_month_name",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_month_name"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "cal_month_no": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 8,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The calendar month number 1-12.",
+          "displayName": "cal month no",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_month_no",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_month_no",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_month_no"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_quarter": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 12,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The calendar quarter representation. Format YYYYQQ. Example 200204.",
+          "displayName": "cal quarter",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_quarter",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_quarter",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_quarter"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_quarter_no": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 11,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The calendar quarter number 1-4.",
+          "displayName": "cal quarter no",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_quarter_no",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_quarter_no",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_quarter_no"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_week_in_year": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 7,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The week in the year 0-53.",
+          "displayName": "cal week in year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_week_in_year",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_week_in_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_week_in_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "cal_year": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 13,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The calendar year. Format YYYY",
+          "displayName": "cal year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "cal_year",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.cal_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/cal_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "calendar_date": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": true,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 2,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The calendar date for this row.",
+          "displayName": "calendar date",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/Primary"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "calendar_date",
+          "nullAllowed": false,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.calendar_date",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/calendar_date"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "current_cal_day": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 28,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current day. Normally set to the last day information was updated in the data warehouse.",
+          "displayName": "current cal day",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_cal_day",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_cal_day",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_day"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_cal_month": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 30,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current month. Set as per current_cal_day.",
+          "displayName": "current cal month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_cal_month",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_cal_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_cal_mtd": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 32,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days in the current month to date. Set as per current_cal_day.",
+          "displayName": "current cal mtd",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_cal_mtd",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_cal_mtd",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_mtd"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_cal_week": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 29,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current week. Set as per current_cal_day.",
+          "displayName": "current cal week",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_cal_week",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_cal_week",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_week"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_cal_year": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 31,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current year. Set as per current_cal_day.",
+          "displayName": "current cal year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_cal_year",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_cal_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_cal_ytd": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 33,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days in the current year to date. Set as per current_cal_day.",
+          "displayName": "current cal ytd",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_cal_ytd",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_cal_ytd",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_cal_ytd"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_day": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 35,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current financial day. Normally set to the last financial day information was updated in the data warehouse.",
+          "displayName": "current fin day",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_day",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_day",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_day"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_month": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 37,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current financial month. Set as per current_fin_day.",
+          "displayName": "current fin month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_month",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_mtd": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 40,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days in the current financial month to date. Set as per current_fin_day.",
+          "displayName": "current fin mtd",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_mtd",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_mtd",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_mtd"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_quarter": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 38,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current financial quarter. Set as per current_fin_day.",
+          "displayName": "current fin quarter",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_quarter",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_quarter",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_quarter"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_week": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 36,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current financial week. Set as per current_fin_day.",
+          "displayName": "current fin week",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_week",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_week",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_week"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_year": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 39,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate the current financial year. Set as per current_fin_day.",
+          "displayName": "current fin year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_year",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "current_fin_ytd": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 41,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days in the current financial year to date. Set as per current_fin_day.",
+          "displayName": "current fin ytd",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "current_fin_ytd",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.current_fin_ytd",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/current_fin_ytd"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "dim_date_key": {
+          "additive": false,
+          "artificial": true,
+          "baseDataType": "integer",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 1,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "integer",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Generated key for the date dimension. Nominal format is YYYYMMDD, but DD equal to 0 and greater than 31 permited for special date handling.",
+          "displayName": "dim date key",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "integer",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/Artificial"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "dim_date_key",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.dim_date_key",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/dim_date_key"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "0"
+        },
+        "dss_create_time": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 51,
+          "createTime": true,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Date and time the row was created in the data warehouse.",
+          "displayName": "dss create time",
+          "dss": true,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "dss_create_time",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dss_create_time",
+          "sourceColumn": {
+            "name": "dss_create_time",
+            "table": null
+          },
+          "sourceSystem": false,
+          "sourceTable": null,
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "dss_update_time": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 52,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Date and time the row was updated in the data warehouse.",
+          "displayName": "dss update time",
+          "dss": true,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "dss_update_time",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dss_update_time",
+          "sourceColumn": {
+            "name": "dss_update_time",
+            "table": null
+          },
+          "sourceSystem": false,
+          "sourceTable": null,
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": true,
+          "zeroKeyValue": ""
+        },
+        "fin_day_in_month": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 17,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial day in the month. Normally the same as calendar day in the month, unless the financial period starts mid calendar month.",
+          "displayName": "fin day in month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_day_in_month",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_day_in_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_day_in_week": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 15,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "The financial day in the week. Format DDD. Example: mon,tue,wed.",
+          "displayName": "fin day in week",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_day_in_week",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_day_in_week",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_week"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "fin_day_in_week_no": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 16,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Day number in the current financial week.",
+          "displayName": "fin day in week no",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_day_in_week_no",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_day_in_week_no",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_week_no"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_day_in_year": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 18,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial day in the year. Number of days since the start of the financial year.",
+          "displayName": "fin day in year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_day_in_year",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_day_in_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_day_in_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_month": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 22,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial month representation. Fromat YYYYMM. Examples: 200101, 200102.",
+          "displayName": "fin month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_month",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_month_name": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 23,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Financial month. Format MON. Examples: jan, feb, mar.",
+          "displayName": "fin month name",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_month_name",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_month_name",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_month_name"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "fin_month_no": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 21,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial month number. Format MM. Examples: 1,2,3.",
+          "displayName": "fin month no",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_month_no",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_month_no",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_month_no"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_period": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 24,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Financial period. Format (YYYY-MM) MON-YYYY. Example: (2001-02) Feb-2002.",
+          "displayName": "fin period",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_period",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_period",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_period"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "fin_quarter": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 26,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial quarter representation. Format YYYYQQ. Example: 198901.",
+          "displayName": "fin quarter",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_quarter",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_quarter",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_quarter"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_quarter_no": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 25,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial quarter number (1-4).",
+          "displayName": "fin quarter no",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_quarter_no",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_quarter_no",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_quarter_no"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_week_in_month": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 19,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial week in the financial month.",
+          "displayName": "fin week in month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_week_in_month",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_week_in_month",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_week_in_month"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_week_in_year": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 20,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial week in the financial year. Number of weeks since the start of the financial year",
+          "displayName": "fin week in year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_week_in_year",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_week_in_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_week_in_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "fin_year": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 27,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Financial year. Format YYYY.",
+          "displayName": "fin year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "fin_year",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.fin_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/fin_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "financial_date": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "datetime",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 14,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "datetime",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "The financial date. Same as calendar date.",
+          "displayName": "financial date",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "datetime",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "financial_date",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.financial_date",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/financial_date"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "holiday_desc": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(64)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 47,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 64,
+          "defaultValue": "",
+          "description": "Description of the holiday when a holiday.",
+          "displayName": "holiday desc",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(64)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "holiday_desc",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.holiday_desc",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/holiday_desc"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "holiday_flag": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 46,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate that the day in question is a holiday. Y=holiday, N=normal.",
+          "displayName": "holiday flag",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "holiday_flag",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.holiday_flag",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/holiday_flag"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "moving_cal_year": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 34,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days that constitute a full year counting back from the current day. Set as per current_cal_day.",
+          "displayName": "moving cal year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "moving_cal_year",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.moving_cal_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/moving_cal_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "moving_fin_quarter": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 42,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days that constitute a quarter counting back from the current financial day. Set as per current_fin_day.",
+          "displayName": "moving fin quarter",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "moving_fin_quarter",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.moving_fin_quarter",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/moving_fin_quarter"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "moving_fin_year": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 43,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate days that constitute a financial year counting back from the current financial day. Set as per current_fin_day.",
+          "displayName": "moving fin year",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "moving_fin_year",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.moving_fin_year",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/moving_fin_year"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "trading_day_flag": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 48,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate a trading day. Y=trading, N=non trading.",
+          "displayName": "trading day flag",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "trading_day_flag",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.trading_day_flag",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/trading_day_flag"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "trading_days_in_mth": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 49,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Number of trading days in this calendar month.",
+          "displayName": "trading days in cal month",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "trading_days_in_mth",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.trading_days_in_mth",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/trading_days_in_mth"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "trading_days_so_far": {
+          "additive": true,
+          "artificial": false,
+          "baseDataType": "int",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 50,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "int",
+          "dataTypeScale": -1,
+          "dataTypeSize": -1,
+          "defaultValue": "",
+          "description": "Number of trading days in the month so far.",
+          "displayName": "trading days in month so far",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "#,##0",
+          "fullDataType": "int",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "trading_days_so_far",
+          "nullAllowed": true,
+          "numeric": true,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.trading_days_so_far",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/trading_days_so_far"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": ""
+        },
+        "week_day_flag": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 44,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate if a week day Y=week day N=week end.",
+          "displayName": "week day flag",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "week_day_flag",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.week_day_flag",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/week_day_flag"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        },
+        "week_end_flag": {
+          "additive": false,
+          "artificial": false,
+          "baseDataType": "varchar(30)",
+          "businessKey": false,
+          "changeHashKey": false,
+          "changeHashMultiActiveSeqSortColumns": [],
+          "columnId": 45,
+          "createTime": false,
+          "currentFlag": false,
+          "dataType": "varchar",
+          "dataTypeScale": -1,
+          "dataTypeSize": 30,
+          "defaultValue": "",
+          "description": "Flag to indicate a week end day. Y=week end, N=week day.",
+          "displayName": "week end flag",
+          "dss": false,
+          "dssEndDate": false,
+          "dssLoadDate": false,
+          "dssRecordSource": false,
+          "dssStartDate": false,
+          "dssVersion": false,
+          "format": "",
+          "fullDataType": "varchar(30)",
+          "hashKeyImmediateSources": [],
+          "hashKeySources": [],
+          "hubHashKey": false,
+          "keyType": {
+            "_REF": "/Types/UpdateKeyType/None"
+          },
+          "linkHashKey": false,
+          "lookupKey": false,
+          "name": "week_end_flag",
+          "nullAllowed": true,
+          "numeric": false,
+          "partition": false,
+          "rangeEnd": false,
+          "rangeStart": false,
+          "slowlyChanging": false,
+          "source": "dim_date_azsql.week_end_flag",
+          "sourceColumn": {
+            "_REF": "/objectsByName/dim_date_azsql/columnsByName/week_end_flag"
+          },
+          "sourceSystem": false,
+          "sourceTable": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "table": {
+            "_REF": "/objectsByName/dim_date_azsql"
+          },
+          "transform": "",
+          "transformType": {
+            "_REF": "/Types/TransformType/None"
+          },
+          "updateTime": false,
+          "zeroKeyValue": "Unknown"
+        }
+      },
+      "customProcedure": null,
+      "database": "sqlredtgt",
+      "dbType": {
+        "_REF": "/Types/DatabaseType/SqlServer"
+      },
+      "description": "",
+      "displayName": "dim_date_azsql1",
+      "exportScript": null,
+      "extendedPropertyValuesByName": {},
+      "getFunction": null,
+      "indexes": [],
+      "loadScript": null,
+      "name": "dim_date_azsql",
+      "objectType": {
+        "_REF": "/Types/ObjectType/Dimension"
+      },
+      "postExportProcedure": null,
+      "postLoadProcedure": null,
+      "relations": [],
+      "relationships": [],
+      "schema": "Mart",
+      "shortName": "dim_date_azsql",
+      "sourceJoinDetails": {
+        "distinct": false,
+        "groupBy": "",
+        "join": "FROM [TABLEOWNER].[dim_date_azsql] dim_date_azsql",
+        "where": ""
+      },
+      "sourceMappings": [],
+      "storage": {
+        "bufferPool": "(None)",
+        "dataBlockSize": "",
+        "distributionColumns": [],
+        "distributionMethod": "",
+        "fallback": false,
+        "fileGroup": "",
+        "freeSpace": 0,
+        "hiveStorage": {
+          "additionalTableProperties": {},
+          "clusterBuckets": 0,
+          "clusterColumns": [],
+          "clusterSortColumns": [],
+          "clustered": false,
+          "external": false,
+          "externalLocation": "",
+          "native": true,
+          "nativeStorage": {
+            "delimitedRowFormat": {
+              "additionalProperties": "",
+              "delimiter": "",
+              "escapedBy": "",
+              "lineTerminator": "",
+              "nullAs": ""
+            },
+            "fileFormat": {
+              "inputFormatClass": "",
+              "outputFormatClass": "",
+              "storedAs": ""
+            },
+            "rowFormat": "",
+            "serdeRowFormat": {
+              "serdeName": "",
+              "serdeProperties": ""
+            }
+          },
+          "nonNativeStorage": {
+            "serdeProperties": "",
+            "storageClass": ""
+          },
+          "skew": false,
+          "skewAsDirectories": false,
+          "skewColumns": [],
+          "skewValues": "",
+          "skipFirstRow": false
+        },
+        "initialExtent": 0,
+        "maxExtent": 0,
+        "minExtent": 0,
+        "multiSet": false,
+        "nextExtent": 0,
+        "optionalCreateClause": "",
+        "organizingColumns": [],
+        "partitionFunction": "",
+        "partitionScheme": "",
+        "partitioned": false,
+        "partitioningColumns": [],
+        "percentageFree": 0,
+        "percentageIncrease": 0,
+        "primaryIndex": "",
+        "primaryIndexColumn": "",
+        "primaryIndexName": "",
+        "sqlVarDecimal": false,
+        "storageIndex": null,
+        "tableCompression": "",
+        "tableSpace": ""
+      },
+      "subType": "Time Dimension",
+      "target": {
+        "color": "#000000",
+        "connection": "Data Warehouse",
+        "database": "",
+        "name": "Mart",
+        "schema": "Mart"
+      },
+      "updateProcedure": {
+        "_REF": "/objectsByName/update_dim_date_azsql"
+      }
+    }
+  }
+}
