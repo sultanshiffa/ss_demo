@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://www.wherescape.com/xml/Template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wherescape.com/xml/Template template_2.xsd">
+  <xml_version>2</xml_version>
+  <name>ws3d_validate_generic_model</name>
+  <type>validation</type>
+  <metatags>
+    <metatag name="Version">230927-1450</metatag>
+  </metatags>
+  <content><![CDATA[{#- ======================================== -#}
+{#- Sample Validation Template               -#}
+{#- Purpose:                                 -#} 
+{#- Perform validation checks on models      -#}    
+{#- ======================================== -#}
+{#- Pre-declared parameters                  -#}
+{#-    Should be provided by process         -#}
+{#- ======================================== -#}
+{%- declare status = null -%}
+{%- declare information = null -%}
+{#- ======================================== -#}
+
+{#- Highlight tables with no entity type -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}  
+    {%- if table.entityTypes is empty -%}
+        {%- set loopIndex = loopIndex + 1 -%} 
+        {%- if loopIndex == 1 -%}{{"Entities with missing entity types"}}{% br %}{%- endif -%}
+        {%- indent -%}{{"- " + table.name}} {% br %}
+        {%- set status = -1 -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{#- Highlight tables with MCTemp_ extended properties -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+     {%- from table.extendedProperties as extProp where extProp.name contains "MCTemp_" -%}
+        {%- set loopIndex = loopIndex + 1 -%} 
+        {%- if loopIndex == 1 -%}{% br %}{{"Entities with MCTemp_ extended properties"}}{% br %}{%- endif -%}
+        {%- indent -%}{{"- " + table.name}} {% br %}
+        {%- set status = -1 -%}
+    {%- endfrom -%}   
+{%- endfor -%}
+
+{#- Highlight columns with MCTemp_ extended properties -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+    {%- set loop2Index = 0 -%}
+    {%- from table.columns as column  -%}
+        {%- from column.extendedProperties as extProp where extProp.name contains "MCTemp_"  -%}
+            {%- set loopIndex = loopIndex + 1 -%}
+            {%- set loop2Index = loop2Index + 1 -%}
+            {%- if loopIndex == 1 -%}{% br %}{{"Attributes with 'MCTemp_' extended properties"}}{% br %}{%- endif -%}
+            {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+            {%- indent 2 -%}{{"- " + column.name}}{% br %}
+            {%- set status = -1 -%}
+        {%- endfrom -%}
+    {%- endfrom -%}
+{%- endfor -%}
+
+{#- Highlight columns with MCTemp_ attribute type -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+    {%- set loop2Index = 0 -%}
+    {%- from table.columns as column  -%}
+        {%- if column.attributeTypes contains "MCTemp_"  -%}
+            {%- set loopIndex = loopIndex + 1 -%}
+            {%- set loop2Index = loop2Index + 1 -%}
+            {%- if loopIndex == 1 -%}{% br %}{{"Attributes with 'MCTemp_' attribute type"}}{% br %}{%- endif -%}
+            {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+            {%- indent 2 -%}{{"- " + column.name}}{% br %}
+            {%- set status = -1 -%}
+        {%- endif -%}
+    {%- endfrom -%}
+{%- endfor -%}
+
+{#- Highlight columns with no attribute type -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+    {%- set loop2Index = 0 -%}
+    {%- from table.columns as column  -%}
+        {%- if column.attributeTypes is empty  -%}
+            {%- set loopIndex = loopIndex + 1 -%}
+            {%- set loop2Index = loop2Index + 1 -%}
+            {%- if loopIndex == 1 -%}{% br %}{{"Attributes with missing attribute type"}}{% br %}{%- endif -%}
+            {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+            {%- indent 2 -%}{{"- " + column.name}}{% br %}
+            {%- set status = -1 -%}
+        {%- endif -%}
+    {%- endfrom -%}
+{%- endfor -%}
+
+{#- Highlight columns with no data type -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+    {%- set loop2Index = 0 -%}
+    {%- from table.columns as column  -%}       
+        {%- if column.datatype is empty  -%}
+            {%- set loopIndex = loopIndex + 1 -%}
+            {%- set loop2Index = loop2Index + 1 -%}
+            {%- if loopIndex == 1 -%}{% br %}{{"Attributes with missing data type"}}{% br %}{%- endif -%}
+            {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%} 
+            {%- indent 2 -%}{{"- " + column.name}}{% br %}
+            {%- set status = -1 -%}
+        {%- endif -%}
+    {%- endfrom -%}
+{%- endfor -%}
+
+
+{#- Highlight tables with no source mappings -#} 
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}  
+    {%- if table.sourceTables is empty  -%}
+        {%- set loopIndex = loopIndex + 1 -%}
+        {%- if loopIndex == 1 -%}{% br %}{{"Entities with missing source mappings"}}{% br %}{%- endif -%}
+        {%- indent -%}{{"- " +  table.name}} {% br %}
+        {%- set status = -1 -%}
+    {%- endif -%}
+{%- endfor -%}
+
+{#- Highlight columns with no source mappings or data transformations -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+    {%- set loop2Index = 0 -%}
+    {%- from table.columns as column  -%}
+        {%- if ((column.sourceColumns is empty) and (column.dataTransformations is empty))  -%}
+            {%- from column.sourceSets as sSet where (sSet.dataTransformations is empty) -%}      
+                {%- set loopIndex = loopIndex + 1 -%}
+                {%- set loop2Index = loop2Index + 1 -%}
+                {%- if loopIndex == 1 -%}{% br %}{{"Attributes with no data transformation or source mapping"}}{% br %}{%- endif -%}
+                {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+                {%- indent 2 -%}{{"- " + column.name}}{% br %}
+                {%- set status = -1 -%}
+            {%- endfrom -%}
+        {%- endif -%}
+    {%- endfrom -%}
+{%- endfor -%}
+
+{#- Highlight columns with multiple data transformations -#}
+{%- set loopIndex = 0 -%}
+{%- for table in tables -%}
+    {%- set loop2Index = 0 -%}
+    {%- from table.columns as column  -%}
+        {%- if (column.dataTransformations | length > 1)  -%}
+            {%- set loopIndex = loopIndex + 1 -%}
+            {%- set loop2Index = loop2Index + 1 -%}
+            {%- if loopIndex == 1 -%}{% br %}{{"Attributes with multiple data transformations"}}{% br %}{%- endif -%}
+            {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+            {%- indent 2 -%}{{"- " + column.name}}{% br %}
+            {%- set status = -1 -%}
+        {%- elseif (column.dataTransformations | length == 1) -%}
+            {%- from column.sourceSets as sSet where (not (sSet.dataTransformations is empty)) -%}
+                {%- if sSet.dataTransformations | length > 0 -%}  
+                    {%- set loopIndex = loopIndex + 1 -%}
+                    {%- set loop2Index = loop2Index + 1 -%}
+                    {%- if loopIndex == 1 -%}{% br %}{{"Attributes with multiple data transformations"}}{% br %}{%- endif -%}
+                    {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+                    {%- indent 2 -%}{{"- " + column.name}}{% br %}
+                    {%- set status = -1 -%}
+                {%- endif -%}  
+            {%- endfrom -%}
+        {%- else -%}
+            {%- from column.sourceSets as sSet where (not (sSet.dataTransformations is empty)) -%}
+                {%- if sSet.dataTransformations | length > 1 -%}  
+                    {%- set loopIndex = loopIndex + 1 -%}
+                    {%- set loop2Index = loop2Index + 1 -%}
+                    {%- if loopIndex == 1 -%}{% br %}{{"Attributes with multiple data transformations"}}{% br %}{%- endif -%}
+                    {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%}
+                    {%- indent 2 -%}{{"- " + column.name}}{% br %}
+                    {%- set status = -1 -%}
+                {%- endif -%}  
+            {%- endfrom -%}
+        {%- endif -%}
+    {%- endfrom -%}
+{%- endfor -%}
+
+{#- Only important in the RED Export category -#}
+{%- if tables[0].modelVersion.category == "RED Export" -%}
+
+{#- Highlight columns with tgt_ data type -#}
+    {%- set loopIndex = 0 -%}
+    {%- for table in tables -%} 
+        {%- set loop2Index = 0 -%}
+        {%- from table.columns as column  -%}        
+            {%- if startsWithIgnoreCase(column.datatype, "tgt_")  -%}
+                {%- set loopIndex = loopIndex + 1 -%}
+                {%- set loop2Index = loop2Index + 1 -%}
+                {%- if loopIndex == 1 and loopIndex == 1 -%}{% br %}{{"Attributes with 'tgt_' data type"}}{% br %}{%- endif -%}
+                {%- if loop2Index == 1 -%}{%- indent -%}{{"- "+ table.name}}{% br %}{%- endif -%} 
+                {%- indent 2 -%}{{"Data type of " + column.datatype + " on: " + column.name}} {% br %}
+                {%- set status = -1 -%}
+            {%- endif -%}        
+        {%- endfrom -%}
+    {%- endfor -%}
+
+    {#- Highlight tables with no target location -#}
+    {%- set loopIndex = 0 -%}
+    {%- for table in tables -%}
+        {%- if table.TargetLocation is empty -%}
+            {%- set loopIndex = loopIndex + 1 -%} 
+            {%- if loopIndex == 1 -%}{% br %}{{"Entities with missing target location"}}{% br %}{%- endif -%}
+            {%- indent -%}{{"- " + table.name}} {% br %}
+            {%- set status = -1 -%}
+        {%- endif -%}   
+    {%- endfor -%}
+{%- endif -%}
+   
+{%- if status == -1 -%}
+    {%- set information = "Issues detected" -%}
+{%- else -%}
+    {%- set status = 1 -%}
+    {%- set information = "Validation successful" -%}
+{%- endif -%}]]></content>
+</template>

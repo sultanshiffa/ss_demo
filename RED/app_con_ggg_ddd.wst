@@ -1,0 +1,11 @@
+46;WRuntime Connection for Scripts
+45;OSales
+44;OData Warehouse
+2;WDefault Windows Runtime
+1;DRepository
+56;WRuntime Connection for GIT Scripts
+_WS&TARGET_Mart;1;44;2;;Mart;;C:\ProgramData\WhereScape\Work;TGTCOLOR=000000000;
+_WS&TARGET_Stage;2;44;2;;Stage;;C:\ProgramData\WhereScape\Work;TGTCOLOR=000000000;
+_WS&TARGET_ODS;3;44;2;;ODS;;C:\ProgramData\WhereScape\Work;TGTCOLOR=000000000;
+_WS&TARGET_dv;4;44;2;;dv;;C:\ProgramData\WhereScape\Work;TGTCOLOR=000000000;
+_WS&TARGET_bv;5;44;2;;bv;;C:\ProgramData\WhereScape\Work;TGTCOLOR=000000000;

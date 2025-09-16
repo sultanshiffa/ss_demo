@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xmlns="http://www.wherescape.com/xml/Template" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wherescape.com/xml/Template template_2.xsd">
+  <xml_version>2</xml_version>
+  <name>ws3d_validate_pit_candidate</name>
+  <type>validation</type>
+  <metatags>
+    <metatag name="Version">220214-1745</metatag>
+  </metatags>
+  <content><![CDATA[{#- ======================================== -#}
+{#- ======================================== -#}
+{#- Pre-declared parameters                  -#}
+{#-    Should be provided by process         -#}
+{#- ======================================== -#}
+{%- declare status = null -%}
+{%- declare information = null -%}
+
+{#- ======================================================== -#}
+{#- Check if all PIT Candidates have at least two satellites -#}
+{#- ======================================================== -#}
+
+{%- set NumPITCandidates = 0 -%}  
+    
+{%- for table in tables -%}
+    
+    {%- set NumSatellites = 0 -%}   
+     
+    {%- from table.entityTypes as PIT where PIT.name == "PIT Candidate" -%}
+        
+        {%- set NumPITCandidates = NumPITCandidates + 1 -%}
+        
+        {%- from table.relations as Rel -%}
+            {%- from Rel.fkTable.entityTypes as Sat where Sat.name == "Satellite" -%}
+                {%- set NumSatellites = NumSatellites + 1 -%}
+            {%- endfrom -%}    
+        {%- endfrom -%}
+        
+        {{table.name + " has relationships with " + NumSatellites + " satellites."}}{%br%}
+        
+        {%- if NumSatellites < 2 -%}
+            {%- set status = -2 -%}
+            {%- set information = "Validation failed" -%}
+        {%- else -%}
+            {%- if status != -2 -%}
+                {%- set status = 1 -%}
+            {%- endif -%}
+            {%- set information = "All PIT Candidates validated successfully" -%}            
+        {%- endif -%}
+        
+    {%- endfrom -%}
+    
+    {%- if NumPITCandidates == 0 -%}
+        {%- set status = -1 -%}
+        {%- set information = "No PIT Candidates" -%}          
+    {%- endif -%}
+            
+{%- endfor -%}]]></content>
+</template>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<source_system xmlns="http://www.wherescape.com/xml/3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.wherescape.com/xml/3D ./source_system_50.xsd">
+  <xml_version>50</xml_version>
+  <source_application>WhereScape 3D</source_application>
+  <structure>
+    <tables />
+    <relations />
+    <transformation_group name="Default Group">
+      <description>Default Group</description>
+      <transformations>
+        <transformation name="testvalidation">
+          <version />
+          <description />
+          <properties />
+          <rules>
+            <rule name="add new" type="add-column" value="x" enabled="true" snapshot="false" stopped="false">
+              <rule_attribute name="set-data-type">varchar</rule_attribute>
+              <rule_attribute name="set-size">12</rule_attribute>
+              <rule_attribute name="set-pk">F</rule_attribute>
+              <rule_attribute name="set-auto-inc">F</rule_attribute>
+              <rule_attribute name="set-nullable">F</rule_attribute>
+              <rule_attribute name="set-unique">F</rule_attribute>
+              <rule_attribute name="set-position">Bottom</rule_attribute>
+              <rule_attribute name="duplicate">Ignore</rule_attribute>
+              <rule type="match-logic-on" value="And" stopped="false">
+                <rule_attribute name="table-column-name">%</rule_attribute>
+                <rule_attribute name="table-column-name-case-sensitive">F</rule_attribute>
+              </rule>
+            </rule>
+            <rule name="vali" type="validation" enabled="true" snapshot="false" stopped="false">
+              <rule_attribute name="validation-template">ws3d_validate_generic_model</rule_attribute>
+            </rule>
+          </rules>
+          <validation />
+        </transformation>
+      </transformations>
+    </transformation_group>
+  </structure>
+</source_system>
