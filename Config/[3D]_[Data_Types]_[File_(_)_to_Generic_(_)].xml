@@ -10,9 +10,28 @@
       <output_basic_data_type>char</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="char" output_data_type="char(%length)">
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
     <output_parameters>
       <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="boolean" output_data_type="char(1)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_length>1</output_length>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="boolean" output_data_type="char(1)">
@@ -29,6 +48,20 @@
       <output_basic_data_type>integer</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="integer" output_data_type="integer">
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision)">
+    <match_parameters>
+      <match_precision>0,NULL</match_precision>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision)">
     <match_parameters>
       <match_precision>0,NULL</match_precision>
@@ -43,6 +76,16 @@
       <output_basic_data_type>numeric</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision, %scale)">
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="date" output_data_type="date">
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="date" output_data_type="date">
     <output_parameters>
       <output_basic_data_type>date</output_basic_data_type>
@@ -51,6 +94,16 @@
   <data_type_mapping match_data_type="time" output_data_type="time">
     <output_parameters>
       <output_basic_data_type>time</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="time" output_data_type="time">
+    <output_parameters>
+      <output_basic_data_type>time</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="datetime" output_data_type="timestamp">
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="datetime" output_data_type="timestamp">

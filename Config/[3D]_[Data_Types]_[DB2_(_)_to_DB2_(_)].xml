@@ -110,6 +110,15 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="character" output_data_type="char(%length)">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="nchar" output_data_type="char(255)">
     <match_parameters>
       <match_length>256-*</match_length>
@@ -118,6 +127,27 @@
     <output_parameters>
       <output_basic_data_type>char</output_basic_data_type>
       <output_length>255</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="nchar" output_data_type="char(255)">
+    <match_parameters>
+      <match_length>256-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_length>255</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="nchar" output_data_type="char(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -142,6 +172,17 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="varchar" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>32705-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
     <match_parameters>
       <match_length>*</match_length>
@@ -149,6 +190,27 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>varchar</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="nvarchar" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>32705-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -173,6 +235,16 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="nvarchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="binary" output_data_type="binary(255)">
     <match_parameters>
       <match_length>256-*</match_length>
@@ -181,6 +253,27 @@
     <output_parameters>
       <output_basic_data_type>binary</output_basic_data_type>
       <output_length>255</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="binary" output_data_type="binary(255)">
+    <match_parameters>
+      <match_length>256-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>binary</output_basic_data_type>
+      <output_length>255</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="binary" output_data_type="binary(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>binary</output_basic_data_type>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -205,6 +298,27 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="varbinary" output_data_type="varbinary(32704)">
+    <match_parameters>
+      <match_length>32705-*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varbinary</output_basic_data_type>
+      <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="varbinary" output_data_type="varbinary(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varbinary</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="varbinary" output_data_type="varbinary(%length)">
     <match_parameters>
       <match_length>*</match_length>
@@ -216,6 +330,28 @@
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="byteint" output_data_type="smallint">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>smallint</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="byteint" output_data_type="smallint">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>smallint</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="smallint" output_data_type="smallint">
     <match_parameters>
       <match_length>*</match_length>
       <match_scale>*</match_scale>
@@ -248,6 +384,17 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="integer" output_data_type="integer">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="int" output_data_type="integer">
     <match_parameters>
       <match_length>*</match_length>
@@ -255,6 +402,28 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>integer</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="int" output_data_type="integer">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="bigint" output_data_type="bigint">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>bigint</output_basic_data_type>
       <output_length>NULL</output_length>
       <output_scale>NULL</output_scale>
     </output_parameters>
@@ -281,6 +450,17 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="smallint">
+    <match_parameters>
+      <match_precision>1-4</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>smallint</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="numeric" output_data_type="integer">
     <match_parameters>
       <match_precision>5-9</match_precision>
@@ -288,6 +468,28 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>integer</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="integer">
+    <match_parameters>
+      <match_precision>5-9</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="bigint">
+    <match_parameters>
+      <match_precision>10-18</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>bigint</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>NULL</output_scale>
     </output_parameters>
@@ -313,6 +515,25 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision,%scale)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -329,6 +550,28 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>real</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="real" output_data_type="real">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>real</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="double" output_data_type="double">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>double</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>NULL</output_scale>
     </output_parameters>
@@ -355,6 +598,17 @@
       <output_scale>4</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="smallmoney" output_data_type="numeric(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_precision>10</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="money" output_data_type="numeric(%precision,%scale)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -364,6 +618,28 @@
       <output_basic_data_type>numeric</output_basic_data_type>
       <output_precision>19</output_precision>
       <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="money" output_data_type="numeric(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_precision>19</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="bit" output_data_type="smallint">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>smallint</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="bit" output_data_type="smallint">
@@ -388,7 +664,40 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="boolean" output_data_type="char(1)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_length>1</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="clob" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="clob" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="nclob" output_data_type="varchar(32704)">
     <match_parameters>
       <match_length>*</match_length>
       <match_scale>*</match_scale>
@@ -421,6 +730,17 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="blob" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="bfile" output_data_type="varchar(32704)">
     <match_parameters>
       <match_length>*</match_length>
@@ -429,6 +749,28 @@
     <output_parameters>
       <output_basic_data_type>varchar</output_basic_data_type>
       <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="bfile" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="date" output_data_type="date">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+      <output_length>NULL</output_length>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -454,12 +796,43 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="time" output_data_type="time">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>time</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp" output_data_type="timestamp">
     <match_parameters>
       <match_scale>*</match_scale>
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp" output_data_type="timestamp">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="rowid" output_data_type="rowid">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>rowid</output_basic_data_type>
+      <output_length>NULL</output_length>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -485,6 +858,26 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="xml" output_data_type="xml">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>xml</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="graphic" output_data_type="graphic">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>graphic</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="graphic" output_data_type="graphic">
     <match_parameters>
       <match_scale>*</match_scale>
@@ -500,6 +893,26 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>vargraphic</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="vargraphic" output_data_type="vargraphic">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>vargraphic</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="double precision" output_data_type="double precision">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>double precision</output_basic_data_type>
+      <output_precision>NULL</output_precision>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -525,6 +938,26 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="float" output_data_type="float">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>float</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decfloat" output_data_type="decfloat">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>decfloat</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="decfloat" output_data_type="decfloat">
     <match_parameters>
       <match_scale>*</match_scale>
@@ -539,6 +972,11 @@
       <output_basic_data_type>dec</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="dec" output_data_type="dec">
+    <output_parameters>
+      <output_basic_data_type>dec</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="decimal" output_data_type="smallint">
     <match_parameters>
       <match_precision>1-4</match_precision>
@@ -546,6 +984,28 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>smallint</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="smallint">
+    <match_parameters>
+      <match_precision>1-4</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>smallint</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="integer">
+    <match_parameters>
+      <match_precision>5-9</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>NULL</output_scale>
     </output_parameters>
@@ -572,6 +1032,27 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="bigint">
+    <match_parameters>
+      <match_precision>10-18</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>bigint</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="decimal(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>decimal</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="decimal" output_data_type="decimal(%precision)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -590,6 +1071,19 @@
       <output_basic_data_type>decimal</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="decimal(%precision,%scale)">
+    <match_parameters>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>decimal</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="decimal">
+    <output_parameters>
+      <output_basic_data_type>decimal</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="decimal" output_data_type="decimal">
     <output_parameters>
       <output_basic_data_type>decimal</output_basic_data_type>
@@ -598,6 +1092,20 @@
   <data_type_mapping match_data_type="number" output_data_type="number">
     <output_parameters>
       <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="number" output_data_type="number">
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="dbclob" output_data_type="dbclob">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>dbclob</output_basic_data_type>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="dbclob" output_data_type="dbclob">
@@ -615,6 +1123,24 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>clob</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="long varchar" output_data_type="clob">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>clob</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="long vargraphic" output_data_type="dbclob">
+    <match_parameters>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>dbclob</output_basic_data_type>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>

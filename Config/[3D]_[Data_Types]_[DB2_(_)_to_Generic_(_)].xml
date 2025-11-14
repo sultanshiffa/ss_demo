@@ -13,6 +13,14 @@
       <output_basic_data_type>char</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="char" output_data_type="char(%length)">
+    <match_parameters>
+      <match_length>*-255</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="char" output_data_type="char(255)">
     <match_parameters>
       <match_length>256-*</match_length>
@@ -20,6 +28,23 @@
     <output_parameters>
       <output_basic_data_type>char</output_basic_data_type>
       <output_length>255</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="char" output_data_type="char(255)">
+    <match_parameters>
+      <match_length>256-*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_length>255</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*-32704</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
@@ -39,6 +64,20 @@
       <output_length>32704</output_length>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="varchar" output_data_type="varchar(32704)">
+    <match_parameters>
+      <match_length>32705-*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>32704</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="smallint" output_data_type="smallint">
+    <output_parameters>
+      <output_basic_data_type>smallint</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="smallint" output_data_type="smallint">
     <output_parameters>
       <output_basic_data_type>smallint</output_basic_data_type>
@@ -49,9 +88,29 @@
       <output_basic_data_type>integer</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="integer" output_data_type="integer">
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="bigint" output_data_type="bigint">
     <output_parameters>
       <output_basic_data_type>bigint</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="bigint" output_data_type="bigint">
+    <output_parameters>
+      <output_basic_data_type>bigint</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision)">
@@ -73,6 +132,25 @@
       <output_basic_data_type>numeric</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="numeric(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="decimal(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>decimal</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="decimal" output_data_type="decimal(%precision)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -92,7 +170,26 @@
       <output_basic_data_type>numeric</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="numeric(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>numeric</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="real" output_data_type="real">
+    <output_parameters>
+      <output_basic_data_type>real</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="real" output_data_type="real">
+    <output_parameters>
+      <output_basic_data_type>real</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="float" output_data_type="real">
     <output_parameters>
       <output_basic_data_type>real</output_basic_data_type>
     </output_parameters>
@@ -107,6 +204,16 @@
       <output_basic_data_type>real</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="decfloat" output_data_type="real">
+    <output_parameters>
+      <output_basic_data_type>real</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="double" output_data_type="double">
+    <output_parameters>
+      <output_basic_data_type>double</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="double" output_data_type="double">
     <output_parameters>
       <output_basic_data_type>double</output_basic_data_type>
@@ -115,6 +222,22 @@
   <data_type_mapping match_data_type="date" output_data_type="date">
     <output_parameters>
       <output_basic_data_type>date</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="date" output_data_type="date">
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="time" output_data_type="time">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>time</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="time" output_data_type="time">
@@ -140,7 +263,29 @@
     </output_parameters>
     <transform_code>TO_CHAR(%column_name, 'YYYY-MM-DD HH:MI:SS')</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp" output_data_type="timestamp">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_length>NULL</output_length>
+      <output_scale>0</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'YYYY-MM-DD HH:MI:SS')</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="clob" output_data_type="clob">
+    <output_parameters>
+      <output_basic_data_type>clob</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="clob" output_data_type="clob">
+    <output_parameters>
+      <output_basic_data_type>clob</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="long varchar" output_data_type="clob">
     <output_parameters>
       <output_basic_data_type>clob</output_basic_data_type>
     </output_parameters>
@@ -155,9 +300,24 @@
       <output_basic_data_type>clob</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="nclob" output_data_type="clob">
+    <output_parameters>
+      <output_basic_data_type>clob</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="blob" output_data_type="blob">
     <output_parameters>
       <output_basic_data_type>blob</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="blob" output_data_type="blob">
+    <output_parameters>
+      <output_basic_data_type>blob</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="rowid" output_data_type="rowid">
+    <output_parameters>
+      <output_basic_data_type>rowid</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="rowid" output_data_type="rowid">

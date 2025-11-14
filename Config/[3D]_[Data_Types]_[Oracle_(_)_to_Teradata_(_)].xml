@@ -16,6 +16,27 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_integer" output_data_type="integer">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>integer</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_char" output_data_type="char(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="tgt_char" output_data_type="char(%length)">
     <match_parameters>
       <match_length>*</match_length>
@@ -33,6 +54,27 @@
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>varchar</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_varchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_date" output_data_type="date">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>date</output_basic_data_type>
+      <output_precision>NULL</output_precision>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -58,6 +100,25 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="tgt_datetime" output_data_type="timestamp">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="char" output_data_type="char(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="char" output_data_type="char(%length)">
     <match_parameters>
       <match_length>*</match_length>
@@ -67,6 +128,22 @@
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="varchar" output_data_type="varchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="varchar2" output_data_type="varchar(%length)">
     <match_parameters>
       <match_length>*</match_length>
     </match_parameters>
@@ -90,12 +167,39 @@
       <output_basic_data_type>char</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="nchar" output_data_type="nchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>char</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="nvarchar2" output_data_type="nvarchar(%length)">
     <match_parameters>
       <match_length>*</match_length>
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="nvarchar2" output_data_type="nvarchar(%length)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="number" output_data_type="number">
+    <match_parameters>
+      <match_precision>0,NULL</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="number" output_data_type="number">
@@ -117,6 +221,27 @@
     <output_parameters>
       <output_basic_data_type>number</output_basic_data_type>
       <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="number" output_data_type="number(38)">
+    <match_parameters>
+      <match_precision>38-*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="number" output_data_type="number(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -142,10 +267,39 @@
   <data_type_mapping match_data_type="number" output_data_type="number(%precision,%scale)">
     <match_parameters>
       <match_precision>*</match_precision>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="number" output_data_type="number(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
       <match_scale>*</match_scale>
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="number" output_data_type="number(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="number">
+    <match_parameters>
+      <match_precision>0,NULL</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="numeric" output_data_type="number">
@@ -167,6 +321,27 @@
     <output_parameters>
       <output_basic_data_type>number</output_basic_data_type>
       <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="number(38)">
+    <match_parameters>
+      <match_precision>38-*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="number(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -192,10 +367,39 @@
   <data_type_mapping match_data_type="numeric" output_data_type="number(%precision,%scale)">
     <match_parameters>
       <match_precision>*</match_precision>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="number(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
       <match_scale>*</match_scale>
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="numeric" output_data_type="number(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="number">
+    <match_parameters>
+      <match_precision>0,NULL</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="decimal" output_data_type="number">
@@ -217,6 +421,27 @@
     <output_parameters>
       <output_basic_data_type>number</output_basic_data_type>
       <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="number(38)">
+    <match_parameters>
+      <match_precision>38-*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+      <output_precision>38</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="number(%precision)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0,NULL</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
@@ -242,6 +467,24 @@
   <data_type_mapping match_data_type="decimal" output_data_type="number(%precision,%scale)">
     <match_parameters>
       <match_precision>*</match_precision>
+      <match_scale>1-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="number(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>number</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="decimal" output_data_type="number(%precision,%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
       <match_scale>*</match_scale>
     </match_parameters>
     <output_parameters>
@@ -249,6 +492,28 @@
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="real" output_data_type="float">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>float</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="real" output_data_type="float">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>float</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="float" output_data_type="float">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -281,7 +546,40 @@
       <output_scale>NULL</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="binary_float" output_data_type="float">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>float</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="double precision" output_data_type="double precision">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>double precision</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="double precision" output_data_type="double precision">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>double precision</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>NULL</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="binary_double" output_data_type="double precision">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -315,6 +613,30 @@
     </output_parameters>
     <transform_code>CAST(%column_name AS CHAR(19))</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="date" output_data_type="timestamp(0)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>0</output_scale>
+    </output_parameters>
+    <transform_code>CAST(%column_name AS CHAR(19))</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>0</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>CAST(%column_name AS TIMESTAMP(1))</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp" output_data_type="timestamp(1)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -336,6 +658,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
     </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp" output_data_type="timestamp(%scale)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*-5</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp" output_data_type="timestamp">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>6-*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp" output_data_type="timestamp">
     <match_parameters>
@@ -361,6 +705,18 @@
     </output_parameters>
     <transform_code>CAST(%column_name AS TIMESTAMP(1))</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(0)" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>CAST(%column_name AS TIMESTAMP(1))</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(1)" output_data_type="timestamp(1)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -370,6 +726,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(1)" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(2)" output_data_type="timestamp(2)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(2)" output_data_type="timestamp(2)">
@@ -394,6 +772,28 @@
       <output_scale>3</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(3)" output_data_type="timestamp(3)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(4)" output_data_type="timestamp(4)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(4)" output_data_type="timestamp(4)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -414,6 +814,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>5</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(5)" output_data_type="timestamp(5)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(6)" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(6)" output_data_type="timestamp(6)">
@@ -439,7 +861,43 @@
     </output_parameters>
     <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(7)" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(8)" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(8)" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(9)" output_data_type="timestamp(6)">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -479,6 +937,19 @@
   <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(1) with time zone">
     <match_parameters>
       <match_precision>*</match_precision>
+      <match_scale>0</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1TZH:TZM') AS CHAR(27))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(1)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(1) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
       <match_scale>1</match_scale>
     </match_parameters>
     <output_parameters>
@@ -488,6 +959,32 @@
     </output_parameters>
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1TZH:TZM') AS CHAR(27))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(1)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(1) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>1</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1TZH:TZM') AS CHAR(27))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(1)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(2) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>2</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF2TZH:TZM') AS CHAR(28))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(2)Z</format_value>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(2) with time zone">
     <match_parameters>
@@ -515,6 +1012,19 @@
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF3TZH:TZM') AS CHAR(29))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(3)Z</format_value>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(3) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>3</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF3TZH:TZM') AS CHAR(29))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(3)Z</format_value>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(4) with time zone">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -527,6 +1037,32 @@
     </output_parameters>
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF4TZH:TZM') AS CHAR(30))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(4)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(4) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>4</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF4TZH:TZM') AS CHAR(30))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(4)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(5) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>5</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF5TZH:TZM') AS CHAR(31))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(5)Z</format_value>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(5) with time zone">
     <match_parameters>
@@ -554,7 +1090,46 @@
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with time zone" output_data_type="timestamp(6) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(0) with time zone" output_data_type="timestamp(1) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1TZH:TZM') AS CHAR(27))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(1)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(0) with time zone" output_data_type="timestamp(1) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1TZH:TZM') AS CHAR(27))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(1)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(1) with time zone" output_data_type="timestamp(1) with time zone">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -593,6 +1168,19 @@
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF2TZH:TZM') AS CHAR(28))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(2)Z</format_value>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(2) with time zone" output_data_type="timestamp(2) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF2TZH:TZM') AS CHAR(28))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(2)Z</format_value>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(3) with time zone" output_data_type="timestamp(3) with time zone">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -605,6 +1193,32 @@
     </output_parameters>
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF3TZH:TZM') AS CHAR(29))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(3)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(3) with time zone" output_data_type="timestamp(3) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF3TZH:TZM') AS CHAR(29))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(3)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(4) with time zone" output_data_type="timestamp(4) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF4TZH:TZM') AS CHAR(30))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(4)Z</format_value>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(4) with time zone" output_data_type="timestamp(4) with time zone">
     <match_parameters>
@@ -632,6 +1246,32 @@
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF5TZH:TZM') AS CHAR(31))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(5)Z</format_value>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(5) with time zone" output_data_type="timestamp(5) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF5TZH:TZM') AS CHAR(31))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(5)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(6) with time zone" output_data_type="timestamp(6) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(6) with time zone" output_data_type="timestamp(6) with time zone">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -658,7 +1298,46 @@
     <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
     <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(7) with time zone" output_data_type="timestamp(6) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(8) with time zone" output_data_type="timestamp(6) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(8) with time zone" output_data_type="timestamp(6) with time zone">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp with time zone</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>CAST(TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6TZH:TZM') AS CHAR(32))</transform_code>
+    <format_value>YYYY-MM-DDBHH:MI:SS.S(6)Z</format_value>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(9) with time zone" output_data_type="timestamp(6) with time zone">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -699,12 +1378,46 @@
   <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(1)">
     <match_parameters>
       <match_precision>*</match_precision>
+      <match_scale>0</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
       <match_scale>1</match_scale>
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>1</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(2)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>2</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(2)">
@@ -729,6 +1442,17 @@
       <output_scale>3</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(3)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>3</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(4)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -738,6 +1462,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(4)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>4</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(5)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>5</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(5)">
@@ -763,6 +1509,30 @@
     </output_parameters>
     <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time z" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(0) with local time z" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1')</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(0) with local time z" output_data_type="timestamp(1)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -784,6 +1554,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(1) with local time z" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(2) with local time z" output_data_type="timestamp(2)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(2) with local time z" output_data_type="timestamp(2)">
@@ -808,6 +1600,28 @@
       <output_scale>3</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(3) with local time z" output_data_type="timestamp(3)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(4) with local time z" output_data_type="timestamp(4)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(4) with local time z" output_data_type="timestamp(4)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -828,6 +1642,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>5</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(5) with local time z" output_data_type="timestamp(5)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(6) with local time z" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(6) with local time z" output_data_type="timestamp(6)">
@@ -853,7 +1689,43 @@
     </output_parameters>
     <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(7) with local time z" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(8) with local time z" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(8) with local time z" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(9) with local time z" output_data_type="timestamp(6)">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -892,12 +1764,46 @@
   <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(1)">
     <match_parameters>
       <match_precision>*</match_precision>
+      <match_scale>0</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
       <match_scale>1</match_scale>
     </match_parameters>
     <output_parameters>
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>1</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(2)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>2</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(2)">
@@ -922,6 +1828,17 @@
       <output_scale>3</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(3)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>3</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(4)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -931,6 +1848,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(4)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>4</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(5)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>5</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(5)">
@@ -956,6 +1895,30 @@
     </output_parameters>
     <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp with local time zone" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(0) with local time zone" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF1')</transform_code>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(0) with local time zone" output_data_type="timestamp(1)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -977,6 +1940,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(1) with local time zone" output_data_type="timestamp(1)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>1</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(2) with local time zone" output_data_type="timestamp(2)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>2</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(2) with local time zone" output_data_type="timestamp(2)">
@@ -1001,6 +1986,17 @@
       <output_scale>3</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(3) with local time zone" output_data_type="timestamp(3)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>3</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(4) with local time zone" output_data_type="timestamp(4)">
     <match_parameters>
       <match_precision>*</match_precision>
@@ -1010,6 +2006,28 @@
       <output_basic_data_type>timestamp</output_basic_data_type>
       <output_precision>NULL</output_precision>
       <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(4) with local time zone" output_data_type="timestamp(4)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>4</output_scale>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(5) with local time zone" output_data_type="timestamp(5)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>5</output_scale>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(5) with local time zone" output_data_type="timestamp(5)">
@@ -1034,7 +2052,42 @@
       <output_scale>6</output_scale>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(6) with local time zone" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="timestamp(7) with local time zone" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(7) with local time zone" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(8) with local time zone" output_data_type="timestamp(6)">
     <match_parameters>
       <match_precision>*</match_precision>
       <match_scale>*</match_scale>
@@ -1070,6 +2123,26 @@
     </output_parameters>
     <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
   </data_type_mapping>
+  <data_type_mapping match_data_type="timestamp(9) with local time zone" output_data_type="timestamp(6)">
+    <match_parameters>
+      <match_precision>*</match_precision>
+      <match_scale>*</match_scale>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>timestamp</output_basic_data_type>
+      <output_precision>NULL</output_precision>
+      <output_scale>6</output_scale>
+    </output_parameters>
+    <transform_code>TO_CHAR(%column_name, 'yyyy-mm-dd HH24:MI:SS.FF6')</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="lob" output_data_type="varchar(%precision)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="lob" output_data_type="varchar(%precision)">
     <match_parameters>
       <match_length>*</match_length>
@@ -1079,6 +2152,26 @@
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="clob" output_data_type="varchar(31000)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>31000</output_length>
+    </output_parameters>
+    <transform_code>CAST(%column_name as VARCHAR(31000))</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="clob" output_data_type="varchar(31000)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>31000</output_length>
+    </output_parameters>
+    <transform_code>CAST(%column_name as VARCHAR(31000))</transform_code>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="nclob" output_data_type="varchar(31000)">
     <match_parameters>
       <match_length>*</match_length>
     </match_parameters>
@@ -1107,7 +2200,34 @@
       <output_length>31000</output_length>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="long" output_data_type="varchar(31000)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>31000</output_length>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="blob" output_data_type="varchar(31000)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>31000</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="blob" output_data_type="varchar(31000)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>31000</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="raw" output_data_type="varchar(31000)">
     <match_parameters>
       <match_length>*</match_length>
     </match_parameters>
@@ -1134,9 +2254,31 @@
       <output_length>31000</output_length>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="long raw" output_data_type="varchar(31000)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>31000</output_length>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="bfile" output_data_type="bfile">
     <output_parameters>
       <output_basic_data_type>bfile</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="bfile" output_data_type="bfile">
+    <output_parameters>
+      <output_basic_data_type>bfile</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="xml" output_data_type="varchar(%precision)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="xml" output_data_type="varchar(%precision)">
@@ -1152,12 +2294,40 @@
       <output_basic_data_type>rowid</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
+  <data_type_mapping match_data_type="rowid" output_data_type="rowid">
+    <output_parameters>
+      <output_basic_data_type>rowid</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="urowid" output_data_type="rowid">
+    <output_parameters>
+      <output_basic_data_type>rowid</output_basic_data_type>
+    </output_parameters>
+  </data_type_mapping>
   <data_type_mapping match_data_type="urowid" output_data_type="rowid">
     <output_parameters>
       <output_basic_data_type>rowid</output_basic_data_type>
     </output_parameters>
   </data_type_mapping>
   <data_type_mapping match_data_type="interval day to second" output_data_type="varchar(20)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>20</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="interval day to second" output_data_type="varchar(20)">
+    <match_parameters>
+      <match_length>*</match_length>
+    </match_parameters>
+    <output_parameters>
+      <output_basic_data_type>varchar</output_basic_data_type>
+      <output_length>20</output_length>
+    </output_parameters>
+  </data_type_mapping>
+  <data_type_mapping match_data_type="interval year to month" output_data_type="varchar(20)">
     <match_parameters>
       <match_length>*</match_length>
     </match_parameters>

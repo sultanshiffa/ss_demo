@@ -358,7 +358,7 @@
         <function name="Truncate Datetime (DATE_TRUNC)">
           <function_id>truncate</function_id>
           <function_expression>DATE_TRUNC</function_expression>
-          <description>Truncates a timestamp, date, or time to a specified precision of 'YEAR', 'MONTH’, 'DAY', 'HOUR', 'MINUTE', or 'SECOND'. \r\nExample to return the date truncated to the start of the day: Example: DATE_TRUNC('DAY',load_sample.date1)</description>
+          <description>Truncates a timestamp, date, or time to a specified precision of 'YEAR', 'MONTH?, 'DAY', 'HOUR', 'MINUTE', or 'SECOND'. \r\nExample to return the date truncated to the start of the day: Example: DATE_TRUNC('DAY',load_sample.date1)</description>
           <syntax>DATE_TRUNC('PRECISION',date_column)</syntax>
           <model>DATE_TRUNC('PRECISION',date_column)</model>
           <default_column_start>23</default_column_start>

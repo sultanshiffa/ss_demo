@@ -710,6 +710,262 @@
             </robot>
           </robots>
         </table_type>
+        <table_type>
+          <name>Fact</name>
+          <group>Fact</group>
+          <description>A fact table</description>
+          <colour>102,255,102</colour>
+          <object_icon>Fact.png</object_icon>
+          <positioning_characteristic>HUB</positioning_characteristic>
+          <table_prefix>fact_</table_prefix>
+          <foreign_key_postfix>_key</foreign_key_postfix>
+          <robots>
+            <robot name="dss_update_time">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_update_time</generated_object_name>
+              <data_type size="" scale="">tgt_datetime</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Date and time the row was updated in the data warehouse</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_update_time</name>
+                </column_type>
+              </column_types>
+            </robot>
+          </robots>
+        </table_type>
+        <table_type>
+          <name>Dimension</name>
+          <group>Dimension</group>
+          <description>A normal dimension</description>
+          <colour>195,228,234</colour>
+          <object_icon>Dimension.png</object_icon>
+          <positioning_characteristic>TERMINAL</positioning_characteristic>
+          <table_prefix>dim_</table_prefix>
+          <foreign_key_postfix>_key</foreign_key_postfix>
+          <index_postfix>_idx</index_postfix>
+          <assign_pk_types>
+            <column_type>
+              <name>Business key</name>
+            </column_type>
+          </assign_pk_types>
+          <robots>
+            <robot name="dim_key">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dim_%_key</generated_object_name>
+              <data_type size="" scale="">tgt_integer</data_type>
+              <positioning>TOP</positioning>
+              <col_description>Generated artificial key</col_description>
+              <is_pk>true</is_pk>
+              <is_auto_increment>true</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>false</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>Surrogate key</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="dss_update_time">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_update_time</generated_object_name>
+              <data_type size="" scale="">tgt_datetime</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Date and time the row was updated in the data warehouse</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_update_time</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="idx_0">
+              <generated_object>INDEX</generated_object>
+              <generated_object_name>dim_%_idx_0</generated_object_name>
+              <index_types>
+                <index_type>Unique</index_type>
+              </index_types>
+              <indexed_column_names>
+                <column name="dim_%_key" />
+              </indexed_column_names>
+            </robot>
+            <robot name="idx_A">
+              <generated_object>INDEX</generated_object>
+              <generated_object_name>dim_%_idx_A</generated_object_name>
+              <index_types>
+                <index_type>Unique</index_type>
+              </index_types>
+              <all_primary_keys_in_index>true</all_primary_keys_in_index>
+            </robot>
+          </robots>
+        </table_type>
+        <table_type>
+          <name>Changing Dimension</name>
+          <group>Dimension</group>
+          <description>A changing dimension</description>
+          <colour>215,237,241</colour>
+          <object_icon>Dimension.png</object_icon>
+          <positioning_characteristic>TERMINAL</positioning_characteristic>
+          <behaviour>changing</behaviour>
+          <table_prefix>dim_</table_prefix>
+          <foreign_key_postfix>_key</foreign_key_postfix>
+          <index_postfix>_idx</index_postfix>
+          <assign_pk_types>
+            <column_type>
+              <name>Business key</name>
+            </column_type>
+          </assign_pk_types>
+          <robots>
+            <robot name="dim_key">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dim_%_key</generated_object_name>
+              <data_type size="" scale="">tgt_integer</data_type>
+              <positioning>TOP</positioning>
+              <col_description>Generated artificial key</col_description>
+              <is_pk>true</is_pk>
+              <is_auto_increment>true</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>false</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>Surrogate key</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="dss_start_date">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_start_date</generated_object_name>
+              <data_type size="" scale="">tgt_datetime</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Datetime a business key was started in a slowly changing dimension</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_start_date</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="dss_end_date">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_end_date</generated_object_name>
+              <data_type size="" scale="">tgt_datetime</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Datetime a business key was retired in a slowly changing dimension</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_end_date</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="dss_current_flag">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_current_flag</generated_object_name>
+              <data_type size="1" scale="">tgt_varchar</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Flag to indicate the current (latest) version of a business key</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_current_flag</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="dss_version">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_version</generated_object_name>
+              <data_type size="" scale="">tgt_integer</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Version number of a business key in a slowly changing dimension</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_version</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="dss_update_time">
+              <generated_object>COLUMN</generated_object>
+              <generated_object_name>dss_update_time</generated_object_name>
+              <data_type size="" scale="">tgt_datetime</data_type>
+              <positioning>BOTTOM</positioning>
+              <col_description>Date and time the row was updated in the data warehouse</col_description>
+              <is_pk>false</is_pk>
+              <is_auto_increment>false</is_auto_increment>
+              <is_unique>false</is_unique>
+              <is_nullable>true</is_nullable>
+              <column_types>
+                <column_type>
+                  <name>dss_update_time</name>
+                </column_type>
+              </column_types>
+            </robot>
+            <robot name="idx_0">
+              <generated_object>INDEX</generated_object>
+              <generated_object_name>dim_%_idx_0</generated_object_name>
+              <index_types>
+                <index_type>Unique</index_type>
+              </index_types>
+              <indexed_column_names>
+                <column name="dim_%_key" />
+              </indexed_column_names>
+            </robot>
+            <robot name="idx_A">
+              <generated_object>INDEX</generated_object>
+              <generated_object_name>dim_%_idx_A</generated_object_name>
+              <index_types>
+                <index_type>Unique</index_type>
+              </index_types>
+              <all_primary_keys_in_index>true</all_primary_keys_in_index>
+              <indexed_column_names>
+                <column name="dss_current_flag" />
+                <column name="dss_version" />
+              </indexed_column_names>
+            </robot>
+            <robot name="idx_SC">
+              <generated_object>INDEX</generated_object>
+              <generated_object_name>dim_%_idx_SC</generated_object_name>
+              <index_types>
+                <index_type>Unique</index_type>
+              </index_types>
+              <all_primary_keys_in_index>true</all_primary_keys_in_index>
+              <column_types>
+                <column_type>
+                  <name>Changing attribute</name>
+                </column_type>
+              </column_types>
+              <indexed_column_names>
+                <column name="dss_current_flag" />
+                <column name="dss_version" />
+              </indexed_column_names>
+            </robot>
+          </robots>
+        </table_type>
+        <table_type>
+          <name>Predefined</name>
+          <description>A predefined</description>
+          <colour>255,255,255</colour>
+          <positioning_characteristic>TERMINAL</positioning_characteristic>
+        </table_type>
       </table_types>
       <column_types>
         <column_type>
