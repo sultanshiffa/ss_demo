@@ -253,7 +253,7 @@
         <discovered_name>country</discovered_name>
         <discovered_schema>dbo</discovered_schema>
         <discovered_database>srcSales</discovered_database>
-        <comment>my country table</comment>
+        <comment>my country table wurde geändert.</comment>
         <columns>
           <column name="country_code" nullable="true">
             <discovered_name>country_code</discovered_name>
